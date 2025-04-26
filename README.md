@@ -10,6 +10,9 @@ A drag-and-drop application for organizing and planning sermon outlines with eas
 - **Dark/Light Mode**: Toggle between themes for comfortable use.
 - **Local Storage**: Automatically saves your progress.
 
+## 💡 Acknowledgments
+This project was developed with the help of AI tools (e.g., GitHub Copilot, Cursor, v0) for code suggestions, debugging, and optimizations.
+
 ## Installation
 
 1. Clone the repository:
