@@ -36,7 +36,7 @@ export function OutlineSection({
 }: OutlineSectionProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [titleValue, setTitleValue] = useState(section.title)
-  
+
 
   const getSectionColor = (type: string) => {
     switch (type) {
@@ -71,10 +71,8 @@ export function OutlineSection({
   }
 
   const handleResetTitleClick = () => {
-    if (onResetTitle) {
-      onResetTitle(sectionIndex)
-      setIsEditingTitle(false) // Exit edit mode
-    }
+    onResetTitle(sectionIndex);
+    setIsEditingTitle(false);
   }
 
   return (
@@ -91,30 +89,39 @@ export function OutlineSection({
                 className="max-w-[200px] h-8 text-xl font-bold"
                 autoFocus
               />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleResetTitleClick}
-                className="h-7 w-7 rounded-full hover:bg-muted"
-                title="Reset title to default"
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                <span className="sr-only">Reset title</span>
-              </Button>
             </div>
           ) : (
-            <CardTitle className="text-xl font-bold cursor-pointer" onClick={() => setIsEditingTitle(true)}>
+            <CardTitle
+              className="text-xl font-bold cursor-pointer"
+              onClick={() => setIsEditingTitle(true)}
+            >
               {section.title}
             </CardTitle>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={onAddBlock} className="h-8 text-xs flex items-center gap-1">
-            <Plus className="h-3.5 w-3.5" />
-            Add Block
+        <div className="flex items-center gap-1 sm:gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onResetTitle(sectionIndex);
+            }}
+            className="h-8 px-2 sm:px-3 text-xs hover:bg-muted"
+          >
+            <span className="hidden sm:inline">Reset Title</span>
+            <RefreshCw className="h-3.5 w-3.5 sm:ml-1" />
           </Button>
-
+          <Button
+    variant="outline"
+    size="sm"
+    onClick={onAddBlock}
+    className="h-8 px-2 sm:px-3 text-xs hover:bg-muted/50"
+  >
+    <span className="hidden sm:inline">Add Block</span>
+    <Plus className="h-3.5 w-3.5 sm:ml-1" />
+          </Button>
           {section.type === "body" && (
             <Button
               variant="ghost"

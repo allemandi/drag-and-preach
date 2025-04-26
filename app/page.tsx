@@ -371,7 +371,7 @@ export default function SermonOutlinePlanner() {
     const defaultTitle = newSections[sectionIndex].defaultTitle
     newSections[sectionIndex].title = defaultTitle
     setSections(newSections)
-    
+
     toast({
       title: "Title Reset",
       description: "The section title has been reset to its default value.",
@@ -693,7 +693,7 @@ export default function SermonOutlinePlanner() {
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       <header className="mb-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Sermon Outline Planner</h1>
+          <h1 className="text-3xl font-bold">Drag and Preach</h1>
           <Button variant="outline" size="icon" onClick={toggleTheme} className="rounded-full">
             {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </Button>

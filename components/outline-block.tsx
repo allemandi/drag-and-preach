@@ -111,7 +111,7 @@ export function OutlineBlock({
           tabIndex={0}
           aria-label="Drag to reorder block"
           role="button"
-          style={{touchAction: 'none'}}
+          style={{ touchAction: 'none' }}
         >
           <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
@@ -120,26 +120,14 @@ export function OutlineBlock({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {isEditingLabel ? (
-                <div className="flex items-center gap-2">
-                  <Input
-                    value={labelValue}
-                    onChange={handleLabelChange}
-                    onBlur={handleLabelBlur}
-                    onKeyDown={handleLabelKeyDown}
-                    className="max-w-[200px] h-7 text-sm font-medium"
-                    autoFocus
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={onResetLabel}
-                    className="h-6 w-6 rounded-full hover:bg-muted"
-                    title="Reset label to default"
-                  >
-                    <RefreshCw className="h-3 w-3" />
-                    <span className="sr-only">Reset label</span>
-                  </Button>
-                </div>
+                <Input
+                  value={labelValue}
+                  onChange={handleLabelChange}
+                  onBlur={handleLabelBlur}
+                  onKeyDown={handleLabelKeyDown}
+                  className="max-w-[200px] h-7 text-sm font-medium"
+                  autoFocus
+                />
               ) : (
                 <label
                   className="text-sm font-medium text-foreground cursor-pointer"
@@ -150,14 +138,25 @@ export function OutlineBlock({
               )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onResetLabel();
+                }}
+                className="h-6 px-2 sm:px-3 text-xs hover:bg-muted"
+              >
+                <span className="hidden sm:inline">Reset Label</span>
+                <RefreshCw className="h-3 w-3 sm:ml-1" />
+              </Button>
               {showRemoveButton && (
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={onRemoveBlock}
                   className="h-6 w-6 rounded-full hover:bg-destructive/10 hover:text-destructive"
-                  title="Remove block"
                 >
                   <X className="h-3 w-3" />
                   <span className="sr-only">Remove block</span>
@@ -166,7 +165,7 @@ export function OutlineBlock({
             </div>
           </div>
 
-          <div className="min-h-[60px] w-full" style={{whiteSpace: 'pre-line'}} onClick={() => setIsEditing(true)}>
+          <div className="min-h-[60px] w-full" style={{ whiteSpace: 'pre-line' }} onClick={() => setIsEditing(true)}>
             {isEditing ? (
               <textarea
                 ref={textareaRef}
