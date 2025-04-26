@@ -702,29 +702,37 @@ export default function SermonOutlinePlanner() {
         <p className="text-muted-foreground mb-6">
           Create, organize, and edit your sermon outline with drag-and-drop simplicity
         </p>
-
         <div className="flex flex-wrap gap-4 mb-6">
-          <Button onClick={saveOutlineToLocalStorage} className="flex items-center gap-2">
-            <Save className="h-4 w-4" />
-            Save Outline
-          </Button>
-          <Button onClick={saveOutlineAsJson} variant="outline" className="flex items-center gap-2">
-            <Download className="h-4 w-4" />
-            Download Backup
-          </Button>
-          <Button onClick={triggerFileInput} variant="outline" className="flex items-center gap-2">
-            <Upload className="h-4 w-4" />
-            Load Backup
-          </Button>
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+            <Button onClick={saveOutlineToLocalStorage} className="flex-1 sm:flex-none">
+              <Save className="h-4 w-4 sm:mr-2" />
+              <span className="sm:hidden">Save</span>
+              <span className="hidden sm:inline">Save Outline</span>
+            </Button>
+            <Button onClick={saveOutlineAsJson} variant="outline" className="flex-1 sm:flex-none">
+              <Download className="h-4 w-4 sm:mr-2" />
+              <span className="sm:hidden">Download</span>
+              <span className="hidden sm:inline">Download Backup</span>
+            </Button>
+            <Button onClick={triggerFileInput} variant="outline" className="flex-1 sm:flex-none">
+              <Upload className="h-4 w-4 sm:mr-2" />
+              <span className="sm:hidden">Load</span>
+              <span className="hidden sm:inline">Load Backup</span>
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+            <Button onClick={exportToMarkdown} variant="outline" className="flex-1 sm:flex-none">
+              <Download className="h-4 w-4 sm:mr-2" />
+              <span className="sm:hidden">Markdown</span>
+              <span className="hidden sm:inline">Export as Markdown</span>
+            </Button>
+            <Button onClick={handleResetAll} variant="outline" className="flex-1 sm:flex-none">
+              <RefreshCw className="h-4 w-4 sm:mr-2" />
+              <span className="sm:hidden">Reset</span>
+              <span className="hidden sm:inline">Reset All</span>
+            </Button>
+          </div>
           <input type="file" ref={fileInputRef} onChange={loadOutlineFromJson} accept=".json" className="hidden" />
-          <Button onClick={exportToMarkdown} variant="outline" className="flex items-center gap-2">
-            <Download className="h-4 w-4" />
-            Export as Markdown
-          </Button>
-          <Button onClick={handleResetAll} variant="outline" className="flex items-center gap-2">
-            <RefreshCw className="h-4 w-4" />
-            Reset All
-          </Button>
         </div>
       </header>
 
