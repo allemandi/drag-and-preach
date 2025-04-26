@@ -15,12 +15,7 @@ export default function Footer() {
           © {new Date().getFullYear()} allemandi
         </p>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8"
-          asChild
-        >
+        <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
           <Link
             href="https://github.com/allemandi/drag-and-preach"
             target="_blank"
@@ -53,11 +48,11 @@ export default function Footer() {
           >
             <h2 className="text-xl font-bold mb-4">Help & Instructions</h2>
             <div className="space-y-4">
-              <p>Here's how to use Drag and Preach:</p>
+              <p>Here&apos;s how to use Drag and Preach:</p>
               <ul className="list-disc pl-6 space-y-2">
                 <li>Drag sections/blocks to reorder them</li>
-                <li>Click "Add Body Section" to insert new sections</li>
-                <li>Use "Save Outline" to store your work locally</li>
+                <li>Click &quot;Add Body Section&quot; to insert new sections</li>
+                <li>Use &quot;Save Outline&quot; to store your work locally</li>
               </ul>
             </div>
             <div className="flex justify-end mt-6">

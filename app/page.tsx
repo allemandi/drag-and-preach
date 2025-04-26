@@ -18,12 +18,16 @@ import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifi
 import { OutlineSection } from "@/components/outline-section"
 import { SortableSection } from "@/components/sortable-section"
 import { Button } from "@/components/ui/button"
-import { Download, Save, Upload, Plus, Moon, Sun, RefreshCw } from "lucide-react"
+import { Save, Plus, Moon, Sun, RefreshCw } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useTheme } from "next-themes"
 import type { Section, OutlineBlock } from "@/lib/types"
 import { generateId } from "@/lib/utils"
 import Footer from "@/components/footer";
+import { formatOutline, downloadFile } from "@/lib/utils"
+import { ExportModal } from "@/components/export-modal"
+import { BackupModal } from "@/components/backup-modal";
+
 
 export default function SermonOutlinePlanner() {
   const [sections, setSections] = useState<Section[]>([])
@@ -41,14 +45,14 @@ export default function SermonOutlinePlanner() {
       activationConstraint: {
         delay: 150,
         distance: 5,
-        tolerance: 1,       
+        tolerance: 1,
       }
     }),
     useSensor(PointerSensor, {
       activationConstraint: {
         delay: 100,
         distance: 5,
-        tolerance: 1,  
+        tolerance: 1,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -62,17 +66,17 @@ export default function SermonOutlinePlanner() {
       activationConstraint: {
         delay: 150,
         distance: 5,
-        tolerance: 1,   
+        tolerance: 1,
       }
     }),
     useSensor(PointerSensor, {
       activationConstraint: {
         delay: 100,
         distance: 5,
-        tolerance: 1,   
+        tolerance: 1,
       },
     },),
-   
+
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
@@ -529,47 +533,15 @@ export default function SermonOutlinePlanner() {
     })
   }
 
-  const exportToMarkdown = () => {
-    let markdown = "# Sermon Outline\n\n"
-
-    // Add date and time
-    const now = new Date()
-    markdown += `*Created: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}*\n\n`
-    markdown += "---\n\n"
-
-    sections.forEach((section) => {
-      markdown += `## ${section.title}\n\n`
-
-      section.blocks.forEach((block) => {
-        markdown += `### ${block.label}\n\n`
-
-        if (block.content) {
-          markdown += `${block.content}\n\n`
-        } else {
-          markdown += `*${block.placeholder}*\n\n`
-        }
-
-        markdown += "---\n\n"
-      })
-    })
-
-    // Create a blob and download it
-    const blob = new Blob([markdown], { type: "text/markdown" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `sermon-outline-${now.toISOString().split("T")[0]}.md`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-
+  const handleExport = (format: "pdf" | "docx" | "txt" | "md") => {
+    const formatted = formatOutline(sections, format);
+    downloadFile(formatted, format);
     toast({
-      title: "Outline Exported",
-      description: "Your sermon outline has been exported as Markdown.",
+      title: `Exported as ${format.toUpperCase()}`,
+      description: `Outline downloaded successfully.`,
       duration: 3000,
-    })
-  }
+    });
+  };
 
   const saveOutlineToLocalStorage = () => {
     localStorage.setItem("sermonOutline", JSON.stringify(sections))
@@ -690,8 +662,10 @@ export default function SermonOutlinePlanner() {
 
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
+
+    <div className="container mx-auto px-4 py-8 max-w-5xl pb-24">
       <header className="mb-8">
+
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Drag and Preach</h1>
           <Button variant="outline" size="icon" onClick={toggleTheme} className="rounded-full">
@@ -709,51 +683,41 @@ export default function SermonOutlinePlanner() {
               <span className="sm:hidden">Save</span>
               <span className="hidden sm:inline">Save Outline</span>
             </Button>
-            <Button onClick={saveOutlineAsJson} variant="outline" className="flex-1 sm:flex-none">
-              <Download className="h-4 w-4 sm:mr-2" />
-              <span className="sm:hidden">Download</span>
-              <span className="hidden sm:inline">Download Backup</span>
-            </Button>
-            <Button onClick={triggerFileInput} variant="outline" className="flex-1 sm:flex-none">
-              <Upload className="h-4 w-4 sm:mr-2" />
-              <span className="sm:hidden">Load</span>
-              <span className="hidden sm:inline">Load Backup</span>
-            </Button>
-          </div>
-          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-            <Button onClick={exportToMarkdown} variant="outline" className="flex-1 sm:flex-none">
-              <Download className="h-4 w-4 sm:mr-2" />
-              <span className="sm:hidden">Markdown</span>
-              <span className="hidden sm:inline">Export as Markdown</span>
-            </Button>
-            <Button onClick={handleResetAll} variant="outline" className="flex-1 sm:flex-none">
-              <RefreshCw className="h-4 w-4 sm:mr-2" />
-              <span className="sm:hidden">Reset</span>
-              <span className="hidden sm:inline">Reset All</span>
-            </Button>
-          </div>
-          <input type="file" ref={fileInputRef} onChange={loadOutlineFromJson} accept=".json" className="hidden" />
+            <BackupModal
+  onDownload={saveOutlineAsJson}
+  onUpload={triggerFileInput}
+/>
+          <ExportModal onExport={handleExport} />
+          <Button onClick={handleResetAll} variant="outline" className="flex-1 sm:flex-none">
+            <RefreshCw className="h-4 w-4 sm:mr-2" />
+            <span className="sm:hidden">Reset</span>
+            <span className="hidden sm:inline">Reset All</span>
+          </Button>
         </div>
-      </header>
+        <input type="file" ref={fileInputRef} onChange={loadOutlineFromJson} accept=".json" className="hidden" />
+    </div>
+      </header >
 
-      {/* Reset Confirmation Modal */}
-      {showResetModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-background p-6 rounded-lg shadow-lg max-w-md w-full">
-            <h2 className="text-xl font-bold mb-4">Reset All Sections</h2>
-            <p className="mb-6">Warning: Saves will be overwritten!</p> 
-            <p className="mb-6"> Are you sure you want to reset all sections to their default state?</p>
-            <div className="flex justify-end gap-4">
-              <Button variant="outline" onClick={cancelResetAll}>
-                Cancel
-              </Button>
-              <Button variant="destructive" onClick={confirmResetAll}>
-                Reset
-              </Button>
-            </div>
+    {/* Reset Confirmation Modal */ }
+  {
+    showResetModal && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-background p-6 rounded-lg shadow-lg max-w-md w-full">
+          <h2 className="text-xl font-bold mb-4">Reset All Sections</h2>
+          <p className="mb-6">Warning: Saves will be overwritten!</p>
+          <p className="mb-6"> Are you sure you want to reset all sections to their default state?</p>
+          <div className="flex justify-end gap-4">
+            <Button variant="outline" onClick={cancelResetAll}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmResetAll}>
+              Reset
+            </Button>
           </div>
         </div>
-      )}
+      </div>
+    )
+  }
 
       <div className="space-y-6">
         {/* Introduction Section (not draggable) */}
@@ -867,6 +831,6 @@ export default function SermonOutlinePlanner() {
         )}
       </div>
       <Footer />
-    </div>
+    </div >
   )
 }
