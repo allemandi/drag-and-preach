@@ -655,7 +655,7 @@ export default function SermonOutlinePlanner() {
               <h1 className="text-3xl font-bold">Drag and Preach</h1>
             </div>
             <p className="text-muted-foreground">
-              Create, organize, and edit your sermon outline with drag-and-drop simplicity
+            Organize, structure, and export your sermons with ease.
             </p>
           </div>
           <Button
