@@ -10,6 +10,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  TouchSensor,
   type DragEndEvent,
 } from "@dnd-kit/core"
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
@@ -22,6 +23,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { useTheme } from "next-themes"
 import type { Section, OutlineBlock } from "@/lib/types"
 import { generateId } from "@/lib/utils"
+import Footer from "@/components/footer";
 
 export default function SermonOutlinePlanner() {
   const [sections, setSections] = useState<Section[]>([])
@@ -30,38 +32,49 @@ export default function SermonOutlinePlanner() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [showResetModal, setShowResetModal] = useState(false);
+
 
   // Configure sensors for section dragging
   const sectionSensors = useSensors(
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 150,
+        distance: 5,
+        tolerance: 1,       
+      }
+    }),
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        delay: 100,
+        distance: 5,
+        tolerance: 1,  
       },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-      keyboardCodes: {
-        start: ["Space", "Enter"],
-        cancel: ["Escape"],
-        end: ["Space", "Enter"],
-      },
     }),
   )
 
   // Configure sensors for block dragging
   const blockSensors = useSensors(
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 150,
+        distance: 5,
+        tolerance: 1,   
+      }
+    }),
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        delay: 100,
+        distance: 5,
+        tolerance: 1,   
       },
-    }),
+    },),
+   
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-      keyboardCodes: {
-        start: ["Space", "Enter"],
-        cancel: ["Escape"],
-        end: ["Space", "Enter"],
-      },
     }),
   )
 
@@ -77,7 +90,7 @@ export default function SermonOutlinePlanner() {
           id: "hook",
           label: "Hook / Opening Question",
           defaultLabel: "Hook / Opening Question",
-          placeholder: "Begin with a bold question, story, or statement to engage your listeners...",
+          placeholder: "Begin with bold question, statement, or story:\n'Today, we will be looking at how we are called to...'",
           content: "",
           type: "intro",
         },
@@ -85,7 +98,7 @@ export default function SermonOutlinePlanner() {
           id: "context",
           label: "Context or Background",
           defaultLabel: "Context or Background",
-          placeholder: "Briefly introduce the scriptural passage or real-world context...",
+          placeholder: "Briefly introduce scriptural passage or real-world context:\n'Let me tell you a story from my life.'",
           content: "",
           type: "intro",
         },
@@ -94,7 +107,7 @@ export default function SermonOutlinePlanner() {
           label: "Thesis Statement (Theme)",
           defaultLabel: "Thesis Statement (Theme)",
           placeholder:
-            "Summarize the main message in one sentence: 'This sermon will show how [truth] impacts [life experience].'",
+            "Summarize the main message in one sentence:\n'The Book of Job reveals man's struggle to reconcile suffering with faith in unseen sovereignty.'",
           content: "",
           type: "intro",
         },
@@ -110,7 +123,7 @@ export default function SermonOutlinePlanner() {
           id: "body-1-topic",
           label: "Main Point / Topic Sentence",
           defaultLabel: "Main Point / Topic Sentence",
-          placeholder: "Introduce your point: 'God's promises often come through delay.'",
+          placeholder: "Introduce point, relate to thesis:\n'Faith is constantly challenged, and we know...'",
           content: "",
           type: "body",
         },
@@ -118,7 +131,7 @@ export default function SermonOutlinePlanner() {
           id: "body-1-scripture",
           label: "Scripture",
           defaultLabel: "Scripture",
-          placeholder: "E.g. Genesis 37:1–11 – Joseph's dreams and early life...",
+          placeholder: "Job 42:1–6.",
           content: "",
           type: "body",
         },
@@ -126,7 +139,7 @@ export default function SermonOutlinePlanner() {
           id: "body-1-explanation",
           label: "Explanation",
           defaultLabel: "Explanation",
-          placeholder: "Unpack the meaning or lesson from the Scripture...",
+          placeholder: "Unpack the meaning or lesson from the Scripture:\n'Job accepts it's okay to be...'",
           content: "",
           type: "body",
         },
@@ -134,15 +147,15 @@ export default function SermonOutlinePlanner() {
           id: "body-1-application",
           label: "Application",
           defaultLabel: "Application",
-          placeholder: "How does this truth apply to real-life situations today?",
+          placeholder: "How does this apply to today?\n'We all know that...",
           content: "",
           type: "body",
         },
         {
           id: "body-1-transition",
-          label: "Transition or Mini-Conclusion",
-          defaultLabel: "Transition or Mini-Conclusion",
-          placeholder: "Wrap up this point or segue into the next...",
+          label: "Summary Sentence",
+          defaultLabel: "Summary Sentence",
+          placeholder: "Tie and transition:\n'The passage teaches us that we can only..",
           content: "",
           type: "body",
         },
@@ -158,7 +171,7 @@ export default function SermonOutlinePlanner() {
           id: "restate-thesis",
           label: "Theme Recap",
           defaultLabel: "Theme Recap",
-          placeholder: "Reword and reinforce your central message clearly...",
+          placeholder: "Reword central message clearly:\n'Through Job, we know our struggles are accompanied by choices to trust...",
           content: "",
           type: "conclusion",
         },
@@ -166,7 +179,7 @@ export default function SermonOutlinePlanner() {
           id: "summary",
           label: "Summary",
           defaultLabel: "Summary",
-          placeholder: "Briefly recap the body sections in a list or sentence...",
+          placeholder: "Briefly recap body sections:\n'We are challenged to live in faith, so...",
           content: "",
           type: "conclusion",
         },
@@ -174,7 +187,7 @@ export default function SermonOutlinePlanner() {
           id: "call-to-action",
           label: "Final Word or Challenge",
           defaultLabel: "Final Word or Challenge",
-          placeholder: "Encourage or challenge the listener with a takeaway...",
+          placeholder: "Give something to consider and practice:\n'Today, I ask you to examine...",
           content: "",
           type: "conclusion",
         },
@@ -182,7 +195,7 @@ export default function SermonOutlinePlanner() {
           id: "closing",
           label: "Closing Prayer or Scripture",
           defaultLabel: "Closing Prayer or Scripture",
-          placeholder: "End with a brief prayer or a powerful final verse...",
+          placeholder: "End with prayer or passage\n'Let's end with a short passage in Colossians Chapter...",
           content: "",
           type: "conclusion",
         },
@@ -248,10 +261,6 @@ export default function SermonOutlinePlanner() {
     })
 
     if (!activeBlockInfo || !overBlockInfo) return
-
-    // Get the section types
-    const activeSection = sections[activeBlockInfo.sectionIndex]
-    const overSection = sections[overBlockInfo.sectionIndex]
 
     // If blocks are in the same section
     if (activeBlockInfo.sectionIndex === overBlockInfo.sectionIndex) {
@@ -400,7 +409,7 @@ export default function SermonOutlinePlanner() {
           id: `body-${newBodyIndex}-topic`,
           label: "Main Point / Topic Sentence",
           defaultLabel: "Main Point / Topic Sentence",
-          placeholder: "Introduce your point: 'God's promises often come through delay.'",
+          placeholder: "Introduce point, relate to thesis:\n'Faith is constantly challenged, and we know...'",
           content: "",
           type: "body",
         },
@@ -408,7 +417,7 @@ export default function SermonOutlinePlanner() {
           id: `body-${newBodyIndex}-scripture`,
           label: "Scripture",
           defaultLabel: "Scripture",
-          placeholder: "E.g. Genesis 37:1–11 – Joseph's dreams and early life...",
+          placeholder: "Job 42:1–6.",
           content: "",
           type: "body",
         },
@@ -416,7 +425,7 @@ export default function SermonOutlinePlanner() {
           id: `body-${newBodyIndex}-explanation`,
           label: "Explanation",
           defaultLabel: "Explanation",
-          placeholder: "Unpack the meaning or lesson from the Scripture...",
+          placeholder: "Unpack the meaning or lesson from the Scripture:\n'Job accepts it's okay to be...'",
           content: "",
           type: "body",
         },
@@ -424,15 +433,15 @@ export default function SermonOutlinePlanner() {
           id: `body-${newBodyIndex}-application`,
           label: "Application",
           defaultLabel: "Application",
-          placeholder: "How does this truth apply to real-life situations today?",
+          placeholder: "How does this apply to today?\n'We all know that...",
           content: "",
           type: "body",
         },
         {
           id: `body-${newBodyIndex}-transition`,
-          label: "Transition or Mini-Conclusion",
-          defaultLabel: "Transition or Mini-Conclusion",
-          placeholder: "Wrap up this point or segue into the next...",
+          label: "Summary Sentence",
+          defaultLabel: "Summary Sentence",
+          placeholder: "Tie and transition:\n'The passage teaches us that we can only.",
           content: "",
           type: "body",
         },
@@ -591,15 +600,26 @@ export default function SermonOutlinePlanner() {
       duration: 3000,
     })
   }
-
   const handleResetAll = () => {
-    setSections(getDefaultSections())
+    setShowResetModal(true);
+  };
+
+  const confirmResetAll = () => {
+    const defaultSections = getDefaultSections();
+    setSections(defaultSections);
+    localStorage.setItem("sermonOutline", JSON.stringify(defaultSections));
+    setShowResetModal(false);
+
     toast({
       title: "Outline Reset",
-      description: "All sections and blocks have been reset to their default state. Your previous Saved state is still preserved.",
+      description: "All sections and blocks have been reset to their default state.",
       duration: 2000,
-    })
-  }
+    });
+  };
+
+  const cancelResetAll = () => {
+    setShowResetModal(false);
+  };
 
   const loadOutlineFromJson = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -668,11 +688,12 @@ export default function SermonOutlinePlanner() {
   // Get only the body section IDs for the sortable context
   const bodySectionIds = sections.filter((section) => section.type === "body").map((section) => section.id)
 
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       <header className="mb-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Sermon Outline Planner</h1>
+          <h1 className="text-3xl font-bold">Drag and Preach</h1>
           <Button variant="outline" size="icon" onClick={toggleTheme} className="rounded-full">
             {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </Button>
@@ -681,31 +702,58 @@ export default function SermonOutlinePlanner() {
         <p className="text-muted-foreground mb-6">
           Create, organize, and edit your sermon outline with drag-and-drop simplicity
         </p>
-
         <div className="flex flex-wrap gap-4 mb-6">
-          <Button onClick={saveOutlineToLocalStorage} className="flex items-center gap-2">
-            <Save className="h-4 w-4" />
-            Save Outline
-          </Button>
-          <Button onClick={saveOutlineAsJson} variant="outline" className="flex items-center gap-2">
-            <Download className="h-4 w-4" />
-            Download JSON
-          </Button>
-          <Button onClick={triggerFileInput} variant="outline" className="flex items-center gap-2">
-            <Upload className="h-4 w-4" />
-            Load JSON
-          </Button>
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+            <Button onClick={saveOutlineToLocalStorage} className="flex-1 sm:flex-none">
+              <Save className="h-4 w-4 sm:mr-2" />
+              <span className="sm:hidden">Save</span>
+              <span className="hidden sm:inline">Save Outline</span>
+            </Button>
+            <Button onClick={saveOutlineAsJson} variant="outline" className="flex-1 sm:flex-none">
+              <Download className="h-4 w-4 sm:mr-2" />
+              <span className="sm:hidden">Download</span>
+              <span className="hidden sm:inline">Download Backup</span>
+            </Button>
+            <Button onClick={triggerFileInput} variant="outline" className="flex-1 sm:flex-none">
+              <Upload className="h-4 w-4 sm:mr-2" />
+              <span className="sm:hidden">Load</span>
+              <span className="hidden sm:inline">Load Backup</span>
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+            <Button onClick={exportToMarkdown} variant="outline" className="flex-1 sm:flex-none">
+              <Download className="h-4 w-4 sm:mr-2" />
+              <span className="sm:hidden">Markdown</span>
+              <span className="hidden sm:inline">Export as Markdown</span>
+            </Button>
+            <Button onClick={handleResetAll} variant="outline" className="flex-1 sm:flex-none">
+              <RefreshCw className="h-4 w-4 sm:mr-2" />
+              <span className="sm:hidden">Reset</span>
+              <span className="hidden sm:inline">Reset All</span>
+            </Button>
+          </div>
           <input type="file" ref={fileInputRef} onChange={loadOutlineFromJson} accept=".json" className="hidden" />
-          <Button onClick={exportToMarkdown} variant="outline" className="flex items-center gap-2">
-            <Download className="h-4 w-4" />
-            Export as Markdown
-          </Button>
-          <Button onClick={handleResetAll} variant="outline" className="flex items-center gap-2">
-            <RefreshCw className="h-4 w-4" />
-            Reset All
-          </Button>
         </div>
       </header>
+
+      {/* Reset Confirmation Modal */}
+      {showResetModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-background p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">Reset All Sections</h2>
+            <p className="mb-6">Warning: Saves will be overwritten!</p> 
+            <p className="mb-6"> Are you sure you want to reset all sections to their default state?</p>
+            <div className="flex justify-end gap-4">
+              <Button variant="outline" onClick={cancelResetAll}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={confirmResetAll}>
+                Reset
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-6">
         {/* Introduction Section (not draggable) */}
@@ -818,6 +866,7 @@ export default function SermonOutlinePlanner() {
           </DndContext>
         )}
       </div>
+      <Footer />
     </div>
   )
 }

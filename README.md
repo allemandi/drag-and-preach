@@ -1,4 +1,4 @@
-# Sermon Outline Planner
+# Drag and Preach
 
 A drag-and-drop application for organizing and planning sermon outlines with ease.
 
