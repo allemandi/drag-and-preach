@@ -34,6 +34,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+
 export default function SermonOutlinePlanner() {
   const [sections, setSections] = useState<Section[]>([])
   const [loading, setLoading] = useState(true)
@@ -50,7 +51,7 @@ export default function SermonOutlinePlanner() {
       tolerance: 1,
     },
   }), []);
-  
+
   const pointerSensorConfig = useMemo(() => ({
     activationConstraint: {
       delay: 100,
@@ -58,26 +59,26 @@ export default function SermonOutlinePlanner() {
       tolerance: 1,
     },
   }), []);
-  
+
   const keyboardSensorConfig = useMemo(() => ({
     coordinateGetter: sortableKeyboardCoordinates,
   }), []);
 
   const touchSensor = useSensor(TouchSensor, touchSensorConfig);
-const pointerSensor = useSensor(PointerSensor, pointerSensorConfig);
-const keyboardSensor = useSensor(KeyboardSensor, keyboardSensorConfig);
+  const pointerSensor = useSensor(PointerSensor, pointerSensorConfig);
+  const keyboardSensor = useSensor(KeyboardSensor, keyboardSensorConfig);
 
-const sectionSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
-const blockSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
- 
+  const sectionSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
+  const blockSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
 
 
-  const bodySectionIds = useMemo(() => 
+
+  const bodySectionIds = useMemo(() =>
     sections.filter((section) => section.type === "body").map((section) => section.id),
     [sections]
   );
 
-   // Default sections for initialization and reset
+  // Default sections for initialization and reset
   const getDefaultSections = (): Section[] => [
     {
       id: "intro-section",
@@ -236,32 +237,20 @@ const blockSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
     }
   }, [mounted]) // Only run this effect when mounted changes
 
+
+
   const handleBlockDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
-
-    if (!over || active.id === over.id) return
-
-    // Find which section contains the dragged block
-    const activeBlockId = active.id as string
-    const overBlockId = over.id as string
-
-    let activeBlockInfo: { sectionIndex: number; blockIndex: number } | null = null
-    let overBlockInfo: { sectionIndex: number; blockIndex: number } | null = null
-
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const blockMap = new Map<string, { sectionIndex: number, blockIndex: number }>();
     sections.forEach((section, sectionIndex) => {
       section.blocks.forEach((block, blockIndex) => {
-        if (block.id === activeBlockId) {
-          activeBlockInfo = { sectionIndex, blockIndex }
-        }
-        if (block.id === overBlockId) {
-          overBlockInfo = { sectionIndex, blockIndex }
-        }
-      })
-    })
-
-    if (!activeBlockInfo || !overBlockInfo) return
-
-    // If blocks are in the same section
+        blockMap.set(block.id, { sectionIndex, blockIndex });
+      });
+    });
+    const activeBlockInfo = blockMap.get(active.id as string);
+    const overBlockInfo = blockMap.get(over.id as string);
+    if (!activeBlockInfo || !overBlockInfo) return;
     if (activeBlockInfo.sectionIndex === overBlockInfo.sectionIndex) {
       const newSections = [...sections]
       const sectionIndex = activeBlockInfo.sectionIndex
@@ -544,14 +533,13 @@ const blockSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
   };
 
   const saveOutlineToLocalStorage = () => {
-    localStorage.setItem("sermonOutline", JSON.stringify(sections))
-
+    localStorage.setItem("sermonOutline", JSON.stringify(sections));
     toast({
       title: "Outline Saved",
       description: "Your sermon outline has been saved to local storage.",
       duration: 3000,
     })
-  }
+  };
 
   const saveOutlineAsJson = () => {
     const now = new Date()
@@ -581,7 +569,6 @@ const blockSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
     setSections(defaultSections);
     localStorage.setItem("sermonOutline", JSON.stringify(defaultSections));
     setShowResetModal(false);
-
     toast({
       title: "Outline Reset",
       description: "All sections and blocks have been reset to their default state.",

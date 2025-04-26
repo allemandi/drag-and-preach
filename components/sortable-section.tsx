@@ -11,7 +11,7 @@ interface SortableSectionProps {
 }
 
 export function SortableSection({ id, children }: SortableSectionProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
     id,
   })
 
