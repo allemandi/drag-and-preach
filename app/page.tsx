@@ -23,6 +23,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { useTheme } from "next-themes"
 import type { Section, OutlineBlock } from "@/lib/types"
 import { generateId } from "@/lib/utils"
+import Footer from "@/components/footer";
 
 export default function SermonOutlinePlanner() {
   const [sections, setSections] = useState<Section[]>([])
@@ -31,6 +32,8 @@ export default function SermonOutlinePlanner() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [showResetModal, setShowResetModal] = useState(false);
+
 
   // Configure sensors for section dragging
   const sectionSensors = useSensors(
@@ -368,7 +371,7 @@ export default function SermonOutlinePlanner() {
     const defaultTitle = newSections[sectionIndex].defaultTitle
     newSections[sectionIndex].title = defaultTitle
     setSections(newSections)
-
+    
     toast({
       title: "Title Reset",
       description: "The section title has been reset to its default value.",
@@ -597,15 +600,26 @@ export default function SermonOutlinePlanner() {
       duration: 3000,
     })
   }
-
   const handleResetAll = () => {
-    setSections(getDefaultSections())
+    setShowResetModal(true);
+  };
+
+  const confirmResetAll = () => {
+    const defaultSections = getDefaultSections();
+    setSections(defaultSections);
+    localStorage.setItem("sermonOutline", JSON.stringify(defaultSections));
+    setShowResetModal(false);
+
     toast({
       title: "Outline Reset",
-      description: "All sections and blocks have been reset to their default state. Your previous Saved state is still preserved.",
+      description: "All sections and blocks have been reset to their default state.",
       duration: 2000,
-    })
-  }
+    });
+  };
+
+  const cancelResetAll = () => {
+    setShowResetModal(false);
+  };
 
   const loadOutlineFromJson = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -674,6 +688,7 @@ export default function SermonOutlinePlanner() {
   // Get only the body section IDs for the sortable context
   const bodySectionIds = sections.filter((section) => section.type === "body").map((section) => section.id)
 
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       <header className="mb-8">
@@ -695,11 +710,11 @@ export default function SermonOutlinePlanner() {
           </Button>
           <Button onClick={saveOutlineAsJson} variant="outline" className="flex items-center gap-2">
             <Download className="h-4 w-4" />
-            Download JSON
+            Download Backup
           </Button>
           <Button onClick={triggerFileInput} variant="outline" className="flex items-center gap-2">
             <Upload className="h-4 w-4" />
-            Load JSON
+            Load Backup
           </Button>
           <input type="file" ref={fileInputRef} onChange={loadOutlineFromJson} accept=".json" className="hidden" />
           <Button onClick={exportToMarkdown} variant="outline" className="flex items-center gap-2">
@@ -712,6 +727,25 @@ export default function SermonOutlinePlanner() {
           </Button>
         </div>
       </header>
+
+      {/* Reset Confirmation Modal */}
+      {showResetModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-background p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">Reset All Sections</h2>
+            <p className="mb-6">Warning: Saves will be overwritten!</p> 
+            <p className="mb-6"> Are you sure you want to reset all sections to their default state?</p>
+            <div className="flex justify-end gap-4">
+              <Button variant="outline" onClick={cancelResetAll}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={confirmResetAll}>
+                Reset
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-6">
         {/* Introduction Section (not draggable) */}
@@ -824,6 +858,7 @@ export default function SermonOutlinePlanner() {
           </DndContext>
         )}
       </div>
+      <Footer />
     </div>
   )
 }

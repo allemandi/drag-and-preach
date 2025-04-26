@@ -65,7 +65,6 @@ export function OutlineBlock({
     e.target.style.height = "auto"
     e.target.style.height = `${e.target.scrollHeight}px`
 
-    // Update content directly without autosave
     onChange(newContent)
   }
 

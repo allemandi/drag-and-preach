@@ -1,11 +1,10 @@
 "use client"
 import { OutlineBlock } from "./outline-block"
 import type React from "react"
-
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { X, Plus, RefreshCw } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import type { Section } from "@/lib/types"
 
@@ -65,6 +64,15 @@ export function OutlineSection({
       handleTitleBlur()
     }
   }
+  useEffect(() => {
+    setTitleValue(section.title)
+  }, [section.title])
+  const handleResetTitleClick = () => {
+    if (onResetTitle) {
+      onResetTitle(sectionIndex)
+      setIsEditingTitle(false) // Exit edit mode
+    }
+  }
 
   return (
     <Card className={`shadow-lg border-2 ${getSectionColor(section.type)} backdrop-blur-sm bg-card/80`}>
@@ -83,7 +91,7 @@ export function OutlineSection({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => onResetTitle(sectionIndex)}
+                onClick={handleResetTitleClick}
                 className="h-7 w-7 rounded-full hover:bg-muted"
                 title="Reset title to default"
               >
