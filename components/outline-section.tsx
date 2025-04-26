@@ -34,7 +34,6 @@ export function OutlineSection({
   onRemoveSection,
   onAddBlock,
   onRemoveBlock,
-  isDraggable,
 }: OutlineSectionProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [titleValue, setTitleValue] = useState(section.title)

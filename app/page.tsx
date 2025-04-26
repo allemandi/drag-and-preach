@@ -1,9 +1,8 @@
 "use client"
 
-import type React from "react"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 
-import { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import {
   DndContext,
   closestCenter,
@@ -241,9 +240,7 @@ export default function SermonOutlinePlanner() {
 
     if (!activeBlockInfo || !overBlockInfo) return
 
-    // Get the section types
-    const activeSection = sections[activeBlockInfo.sectionIndex]
-    const overSection = sections[overBlockInfo.sectionIndex]
+
 
     // If blocks are in the same section
     if (activeBlockInfo.sectionIndex === overBlockInfo.sectionIndex) {
@@ -388,9 +385,6 @@ export default function SermonOutlinePlanner() {
     })
 
     const newBodyIndex = maxBodyNumber + 1
-
-    // Find the index where to insert the new body section (before conclusion)
-    const conclusionIndex = sections.findIndex((section) => section.type === "conclusion")
 
     const newBodySection: Section = {
       id: `body-section-${newBodyIndex}`,
@@ -649,6 +643,14 @@ export default function SermonOutlinePlanner() {
     setTheme(theme === "dark" ? "light" : "dark")
   }
 
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 5000) // 5 second timeout
+
+    return () => clearTimeout(timer)
+  }, [])
+
   if (loading || !mounted) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -664,41 +666,65 @@ export default function SermonOutlinePlanner() {
   const conclusionIndex = sections.findIndex((section) => section.type === "conclusion")
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <div className="container mx-auto py-4 sm:py-8 max-w-5xl">
       <header className="mb-8 border-b border-border pb-4">
-        <div className="container flex h-16 items-center justify-between">
-          <h1 className="text-2xl font-bold">Sermon Outline Planner</h1>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-xl font-bold tracking-tight sm:text-2xl">Sermon Outline Planner</h1>
+            <p className="text-muted-foreground mt-1 text-xs sm:text-sm">
+              Create, organize, and edit your sermon outline with drag-and-drop simplicity
+            </p>
+          </div>
           <Button variant="outline" size="icon" onClick={toggleTheme} className="rounded-full">
-            {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+            {theme === "light" ? <Moon className="h-4 w-4 sm:h-5 sm:w-5" /> : <Sun className="h-4 w-4 sm:h-5 sm:w-5" />}
           </Button>
         </div>
-        <p className="text-muted-foreground mb-6">
-          Create, organize, and edit your sermon outline with drag-and-drop simplicity
-        </p>
-
-        <div className="flex flex-wrap gap-4 mb-6">
-
-          <Button onClick={saveOutlineToLocalStorage} className="flex items-center gap-2">
-            <Save className="h-4 w-4" />
-            Save Outline
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-6 sm:flex sm:flex-wrap">
+          <Button 
+            onClick={saveOutlineToLocalStorage} 
+            variant="outline"
+            size="sm"
+            className="gap-1 sm:gap-2"
+          >
+            <Save className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="text-xs sm:text-sm">Save</span>
           </Button>
-          <Button onClick={saveOutlineAsJson} variant="outline" className="flex items-center gap-2">
-            <Download className="h-4 w-4" />
-            Download JSON
+          <Button 
+            onClick={saveOutlineAsJson} 
+            variant="outline"
+            size="sm"
+            className="gap-1 sm:gap-2"
+          >
+            <Download className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="text-xs sm:text-sm">Export JSON</span>
           </Button>
-          <Button onClick={triggerFileInput} variant="outline" className="flex items-center gap-2">
-            <Upload className="h-4 w-4" />
-            Load JSON
+          <Button 
+            onClick={triggerFileInput} 
+            variant="outline"
+            size="sm"
+            className="gap-1 sm:gap-2"
+          >
+            <Upload className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="text-xs sm:text-sm">Import</span>
           </Button>
           <input type="file" ref={fileInputRef} onChange={loadOutlineFromJson} accept=".json" className="hidden" />
-          <Button onClick={exportToMarkdown} variant="outline" className="flex items-center gap-2">
-            <Download className="h-4 w-4" />
-            Export as Markdown
+          <Button 
+            onClick={exportToMarkdown} 
+            variant="outline"
+            size="sm"
+            className="gap-1 sm:gap-2"
+          >
+            <Download className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="text-xs sm:text-sm">Markdown</span>
           </Button>
-
-          <Button onClick={() => setShowResetDialog(true)} variant="outline" className="flex items-center gap-2">
-            <RefreshCw className="h-4 w-4" />
-            Reset Default
+          <Button 
+            onClick={() => setShowResetDialog(true)} 
+            variant="outline"
+            size="sm"
+            className="gap-1 sm:gap-2"
+          >
+            <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="text-xs sm:text-sm">Reset</span>
           </Button>
         </div>
       </header>
