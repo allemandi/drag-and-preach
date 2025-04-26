@@ -10,6 +10,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  TouchSensor,
   type DragEndEvent,
 } from "@dnd-kit/core"
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
@@ -33,11 +34,17 @@ export default function SermonOutlinePlanner() {
 
   // Configure sensors for section dragging
   const sectionSensors = useSensors(
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 0,
+        tolerance: 5,
+      }
+    }),
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 5,
         delay: 0,
-        tolerance: 0,
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -47,13 +54,20 @@ export default function SermonOutlinePlanner() {
 
   // Configure sensors for block dragging
   const blockSensors = useSensors(
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 0,
+        tolerance: 5,
+      }
+    }),
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 0,
         delay: 0,
-        tolerance: 0,
+        tolerance: 5,
       },
-    }),
+    },),
+   
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
