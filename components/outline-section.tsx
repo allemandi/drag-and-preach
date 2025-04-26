@@ -36,6 +36,7 @@ export function OutlineSection({
 }: OutlineSectionProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [titleValue, setTitleValue] = useState(section.title)
+  
 
   const getSectionColor = (type: string) => {
     switch (type) {
@@ -50,10 +51,14 @@ export function OutlineSection({
     }
   }
 
+  useEffect(() => {
+    setTitleValue(section.title)
+  }, [section.title])
+
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitleValue(e.target.value)
   }
-
   const handleTitleBlur = () => {
     onTitleChange(sectionIndex, titleValue)
     setIsEditingTitle(false)
@@ -64,9 +69,7 @@ export function OutlineSection({
       handleTitleBlur()
     }
   }
-  useEffect(() => {
-    setTitleValue(section.title)
-  }, [section.title])
+
   const handleResetTitleClick = () => {
     if (onResetTitle) {
       onResetTitle(sectionIndex)
