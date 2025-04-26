@@ -67,7 +67,7 @@ export function OutlineSection({
   }
 
   return (
-    <Card className={`shadow-lg border-2 ${getSectionColor(section.type)} backdrop-blur-sm bg-card/80`}>
+    <Card style={{touchAction: 'none'}} className={`shadow-lg border-2 ${getSectionColor(section.type)} backdrop-blur-sm bg-card/80`}>
       <CardHeader className="flex flex-row items-center justify-between pb-2 pl-12">
         <div className="flex items-center gap-2">
           {isEditingTitle ? (
