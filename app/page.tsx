@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useMemo, useEffect, useRef } from "react"
 import {
   DndContext,
   closestCenter,
@@ -18,7 +18,7 @@ import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifi
 import { OutlineSection } from "@/components/outline-section"
 import { SortableSection } from "@/components/sortable-section"
 import { Button } from "@/components/ui/button"
-import { Save, Plus, Moon, Sun, RefreshCw } from "lucide-react"
+import { ArrowUpDown, Save, Plus, Moon, Sun, RefreshCw } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useTheme } from "next-themes"
 import type { Section, OutlineBlock } from "@/lib/types"
@@ -43,51 +43,41 @@ export default function SermonOutlinePlanner() {
   const [mounted, setMounted] = useState(false)
   const [showResetModal, setShowResetModal] = useState(false);
 
+  const touchSensorConfig = useMemo(() => ({
+    activationConstraint: {
+      delay: 150,
+      distance: 5,
+      tolerance: 1,
+    },
+  }), []);
+  
+  const pointerSensorConfig = useMemo(() => ({
+    activationConstraint: {
+      delay: 100,
+      distance: 5,
+      tolerance: 1,
+    },
+  }), []);
+  
+  const keyboardSensorConfig = useMemo(() => ({
+    coordinateGetter: sortableKeyboardCoordinates,
+  }), []);
 
-  // Configure sensors for section dragging
-  const sectionSensors = useSensors(
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 150,
-        distance: 5,
-        tolerance: 1,
-      }
-    }),
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        delay: 100,
-        distance: 5,
-        tolerance: 1,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  )
+  const touchSensor = useSensor(TouchSensor, touchSensorConfig);
+const pointerSensor = useSensor(PointerSensor, pointerSensorConfig);
+const keyboardSensor = useSensor(KeyboardSensor, keyboardSensorConfig);
 
-  // Configure sensors for block dragging
-  const blockSensors = useSensors(
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 150,
-        distance: 5,
-        tolerance: 1,
-      }
-    }),
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        delay: 100,
-        distance: 5,
-        tolerance: 1,
-      },
-    },),
+const sectionSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
+const blockSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
+ 
 
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  )
 
-  // Default sections for initialization and reset
+  const bodySectionIds = useMemo(() => 
+    sections.filter((section) => section.type === "body").map((section) => section.id),
+    [sections]
+  );
+
+   // Default sections for initialization and reset
   const getDefaultSections = (): Section[] => [
     {
       id: "intro-section",
@@ -339,15 +329,20 @@ export default function SermonOutlinePlanner() {
       return
     }
 
-    // Move the section without renaming
+
     const newSections = arrayMove(sections, oldIndex, newIndex)
     setSections(newSections)
   }
 
-  const handleContentChange = (sectionIndex: number, blockIndex: number, newContent: string) => {
-    const newSections = [...sections]
-    newSections[sectionIndex].blocks[blockIndex].content = newContent
-    setSections(newSections)
+  const handleContentChange = (sectionIndex: number, blockIndex: number, content: string) => {
+    setSections(prev => prev.map((section, i) =>
+      i === sectionIndex ? {
+        ...section,
+        blocks: section.blocks.map((block, j) =>
+          j === blockIndex ? { ...block, content } : block
+        )
+      } : section
+    ))
   }
 
   const handleLabelChange = (sectionIndex: number, blockIndex: number, newLabel: string) => {
@@ -662,17 +657,16 @@ export default function SermonOutlinePlanner() {
     )
   }
 
-  // Get only the body section IDs for the sortable context
-  const bodySectionIds = sections.filter((section) => section.type === "body").map((section) => section.id)
-
-
   return (
 
     <div className="container mx-auto px-4 py-8 max-w-5xl pb-24">
       <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold">Drag and Preach</h1>
+            <div className="flex items-center gap-2">
+              <ArrowUpDown className="h-8 w-8" />
+              <h1 className="text-3xl font-bold">Drag and Preach</h1>
+            </div>
             <p className="text-muted-foreground">
               Create, organize, and edit your sermon outline with drag-and-drop simplicity
             </p>

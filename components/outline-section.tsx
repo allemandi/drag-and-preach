@@ -7,8 +7,6 @@ import { X, Plus, RefreshCw } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import type { Section } from "@/lib/types"
-
-
 interface OutlineSectionProps {
   section: Section
   sectionIndex: number
@@ -96,18 +94,18 @@ export function OutlineSection({
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2">
-        <Button
-  variant="outline"
-  size="sm"
-  onClick={(e) => {
-    e.stopPropagation();
-    onResetTitle(sectionIndex);
-  }}
-  className="h-8 px-2 sm:px-3 text-xs border-muted hover:bg-muted/50"
->
-  <span className="hidden sm:inline">Reset Title</span>
-  <RefreshCw className="h-3.5 w-3.5 sm:ml-1" />
-</Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onResetTitle(sectionIndex);
+            }}
+            className="h-8 px-2 sm:px-3 text-xs hover:bg-muted"
+          >
+            <span className="hidden sm:inline">Reset Title</span>
+            <RefreshCw className="h-3.5 w-3.5 sm:ml-1" />
+          </Button>
           <Button
             variant="outline"
             size="sm"

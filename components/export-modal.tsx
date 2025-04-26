@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, FileText, FileCode2, FileArchive } from "lucide-react";
+import { FileText, FileCode2, FileArchive } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
