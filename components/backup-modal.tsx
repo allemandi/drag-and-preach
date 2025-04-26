@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, Upload } from "lucide-react";
+import { Download, Upload, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,8 +32,8 @@ export function BackupModal({ onDownload, onUpload }: BackupModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="flex-1 sm:flex-none">
-          <Download className="h-4 w-4 sm:mr-2" />
+        <Button variant="outline" className="flex-1 sm:flex-none bg-green-500 hover:bg-green-600 text-white">
+          <Database className="h-4 w-4 sm:mr-2" />
           <span>Backup</span>
         </Button>
       </DialogTrigger>

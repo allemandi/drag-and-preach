@@ -1,25 +1,26 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
-  compress: true,
+  compress: true, // Enables gzip/brotli compression
+  devIndicators: false,
   images: {
-    formats: ["image/avif", "image/webp"],
-    domains: [],
+    formats: ["image/avif", "image/webp"], // Modern image formats
+    domains: [], // Add external domains if needed
   },
-  // Add TypeScript/ESLint build-time ignore rules
+  // TypeScript/ESLint build-time ignore rules
   typescript: {
-    ignoreBuildErrors: true, // Equivalent to ignoreDuringBuilds
+    ignoreBuildErrors: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
   experimental: {
-    optimizeCss: true,
-    scrollRestoration: true,
+    optimizeCss: true, // Optimizes CSS (if using CSS modules)
+    scrollRestoration: true, // Smoother scroll behavior
   },
+  // Cache tuning for development
   onDemandEntries: {
-    maxInactiveAge: 1000 * 60 * 5,
+    maxInactiveAge: 1000 * 60 * 5, // 5 minutes (shorter for dev)
   },
 };
 

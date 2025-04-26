@@ -27,7 +27,12 @@ import Footer from "@/components/footer";
 import { formatOutline, downloadFile } from "@/lib/utils"
 import { ExportModal } from "@/components/export-modal"
 import { BackupModal } from "@/components/backup-modal";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function SermonOutlinePlanner() {
   const [sections, setSections] = useState<Section[]>([])
@@ -664,60 +669,65 @@ export default function SermonOutlinePlanner() {
   return (
 
     <div className="container mx-auto px-4 py-8 max-w-5xl pb-24">
-      <header className="mb-8">
-
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Drag and Preach</h1>
-          <Button variant="outline" size="icon" onClick={toggleTheme} className="rounded-full">
+      <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold">Drag and Preach</h1>
+            <p className="text-muted-foreground">
+              Create, organize, and edit your sermon outline with drag-and-drop simplicity
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full border-gray-300 dark:border-gray-600"
+          >
             {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </Button>
         </div>
+        <div className="flex flex-wrap gap-4">
 
-        <p className="text-muted-foreground mb-6">
-          Create, organize, and edit your sermon outline with drag-and-drop simplicity
-        </p>
-        <div className="flex flex-wrap gap-4 mb-6">
           <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-            <Button onClick={saveOutlineToLocalStorage} className="flex-1 sm:flex-none">
+            <Button onClick={saveOutlineToLocalStorage} className="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-600 text-white">
               <Save className="h-4 w-4 sm:mr-2" />
-              <span className="sm:hidden">Save</span>
-              <span className="hidden sm:inline">Save Outline</span>
+              <span>Save</span>
             </Button>
             <BackupModal
-  onDownload={saveOutlineAsJson}
-  onUpload={triggerFileInput}
-/>
-          <ExportModal onExport={handleExport} />
-          <Button onClick={handleResetAll} variant="outline" className="flex-1 sm:flex-none">
-            <RefreshCw className="h-4 w-4 sm:mr-2" />
-            <span className="sm:hidden">Reset</span>
-            <span className="hidden sm:inline">Reset All</span>
-          </Button>
-        </div>
-        <input type="file" ref={fileInputRef} onChange={loadOutlineFromJson} accept=".json" className="hidden" />
-    </div>
-      </header >
-
-    {/* Reset Confirmation Modal */ }
-  {
-    showResetModal && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-background p-6 rounded-lg shadow-lg max-w-md w-full">
-          <h2 className="text-xl font-bold mb-4">Reset All Sections</h2>
-          <p className="mb-6">Warning: Saves will be overwritten!</p>
-          <p className="mb-6"> Are you sure you want to reset all sections to their default state?</p>
-          <div className="flex justify-end gap-4">
-            <Button variant="outline" onClick={cancelResetAll}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={confirmResetAll}>
-              Reset
+              onDownload={saveOutlineAsJson}
+              onUpload={triggerFileInput}
+            />
+            <ExportModal onExport={handleExport} />
+            <Button onClick={handleResetAll} variant="outline" className="flex-1 sm:flex-none border-red-500 text-red-500 hover:bg-red-50">
+              <RefreshCw className="h-4 w-4 sm:mr-2" />
+              <span className="sm:hidden">Reset</span>
+              <span className="hidden sm:inline">Reset All</span>
             </Button>
           </div>
+          <input type="file" ref={fileInputRef} onChange={loadOutlineFromJson} accept=".json" className="hidden" />
         </div>
-      </div>
-    )
-  }
+      </header >
+
+      <Dialog open={showResetModal} onOpenChange={setShowResetModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reset All Sections</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <p className="text-sm text-muted-foreground mb-4">
+              Warning: Saves will be overwritten! Are you sure you want to reset all sections to their default state?
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={cancelResetAll}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={confirmResetAll}>
+                Reset
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <div className="space-y-6">
         {/* Introduction Section (not draggable) */}
