@@ -35,16 +35,13 @@ export default function SermonOutlinePlanner() {
   const sectionSensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 5,
+        delay: 0,
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-      keyboardCodes: {
-        start: ["Space", "Enter"],
-        cancel: ["Escape"],
-        end: ["Space", "Enter"],
-      },
     }),
   )
 
@@ -52,16 +49,13 @@ export default function SermonOutlinePlanner() {
   const blockSensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 5,
+        delay: 100,
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-      keyboardCodes: {
-        start: ["Space", "Enter"],
-        cancel: ["Escape"],
-        end: ["Space", "Enter"],
-      },
     }),
   )
 
@@ -248,10 +242,6 @@ export default function SermonOutlinePlanner() {
     })
 
     if (!activeBlockInfo || !overBlockInfo) return
-
-    // Get the section types
-    const activeSection = sections[activeBlockInfo.sectionIndex]
-    const overSection = sections[overBlockInfo.sectionIndex]
 
     // If blocks are in the same section
     if (activeBlockInfo.sectionIndex === overBlockInfo.sectionIndex) {
