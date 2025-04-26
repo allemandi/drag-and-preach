@@ -1,8 +1,8 @@
 "use client"
 
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
+import type React from "react"
 
-import React, { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import {
   DndContext,
   closestCenter,
@@ -17,7 +17,7 @@ import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifi
 import { OutlineSection } from "@/components/outline-section"
 import { SortableSection } from "@/components/sortable-section"
 import { Button } from "@/components/ui/button"
-import { Download, Save, Upload, Plus, Moon, Sun, RefreshCw, AlertTriangle } from "lucide-react"
+import { Download, Save, Upload, Plus, Moon, Sun } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useTheme } from "next-themes"
 import type { Section, OutlineBlock } from "@/lib/types"
@@ -30,7 +30,6 @@ export default function SermonOutlinePlanner() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  const [showResetDialog, setShowResetDialog] = useState(false)
 
   // Configure sensors for section dragging
   const sectionSensors = useSensors(
@@ -191,29 +190,39 @@ export default function SermonOutlinePlanner() {
     },
   ]
 
-  // Set dark mode as default
+  // Fix for theme and mounting issues
   useEffect(() => {
+    // Set mounted first to indicate component is in the DOM
     setMounted(true)
+    
+    // Only initialize dark mode if it's not already set
+    if (typeof window !== 'undefined' && !localStorage.getItem('theme')) {
+      setTheme("dark")
+    }
   }, [setTheme])
 
+  // Separate effect for loading data to avoid race conditions
   useEffect(() => {
-    // Load data from localStorage or initialize with default sections
-    const savedOutline = localStorage.getItem("sermonOutline")
-
-    if (savedOutline) {
-      try {
+    // Only proceed if component is mounted
+    if (!mounted) return
+    
+    try {
+      // Load data from localStorage or initialize with default sections
+      const savedOutline = localStorage.getItem("sermonOutline")
+      
+      if (savedOutline) {
         setSections(JSON.parse(savedOutline))
-      } catch (e) {
-        console.error("Error parsing saved outline:", e)
+      } else {
+        // Initialize with default sections
         setSections(getDefaultSections())
       }
-    } else {
-      // Initialize with default sections
+    } catch (e) {
+      console.error("Error loading outline data:", e)
       setSections(getDefaultSections())
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
-  }, [])
+  }, [mounted]) // Only run this effect when mounted changes
 
   const handleBlockDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
@@ -240,7 +249,9 @@ export default function SermonOutlinePlanner() {
 
     if (!activeBlockInfo || !overBlockInfo) return
 
-
+    // Get the section types
+    const activeSection = sections[activeBlockInfo.sectionIndex]
+    const overSection = sections[overBlockInfo.sectionIndex]
 
     // If blocks are in the same section
     if (activeBlockInfo.sectionIndex === overBlockInfo.sectionIndex) {
@@ -340,16 +351,6 @@ export default function SermonOutlinePlanner() {
     })
   }
 
-  const resetOutline = () => {
-    setSections(getDefaultSections())
-    localStorage.setItem("sermonOutline", JSON.stringify(getDefaultSections()))
-    toast({
-      title: "Outline Reset",
-      description: "All sections and blocks have been reset to their default values.",
-      duration: 3000,
-    })
-  }
-
   const handleTitleChange = (sectionIndex: number, newTitle: string) => {
     const newSections = [...sections]
     newSections[sectionIndex].title = newTitle
@@ -385,6 +386,9 @@ export default function SermonOutlinePlanner() {
     })
 
     const newBodyIndex = maxBodyNumber + 1
+
+    // Find the index where to insert the new body section (before conclusion)
+    const conclusionIndex = sections.findIndex((section) => section.type === "conclusion")
 
     const newBodySection: Section = {
       id: `body-section-${newBodyIndex}`,
@@ -643,15 +647,8 @@ export default function SermonOutlinePlanner() {
     setTheme(theme === "dark" ? "light" : "dark")
   }
 
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false)
-    }, 5000) // 5 second timeout
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (loading || !mounted) {
+  // Show a proper loading state
+  if (!mounted || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
@@ -662,69 +659,37 @@ export default function SermonOutlinePlanner() {
   // Get only the body section IDs for the sortable context
   const bodySectionIds = sections.filter((section) => section.type === "body").map((section) => section.id)
 
-  // Find the index of the conclusion section to place the Add Body button
-  const conclusionIndex = sections.findIndex((section) => section.type === "conclusion")
-
   return (
-    <div className="container mx-auto py-4 sm:py-8 max-w-5xl">
-      <header className="mb-8 border-b border-border pb-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-xl font-bold tracking-tight sm:text-2xl">Sermon Outline Planner</h1>
-            <p className="text-muted-foreground mt-1 text-xs sm:text-sm">
-              Create, organize, and edit your sermon outline with drag-and-drop simplicity
-            </p>
-          </div>
+    <div className="container mx-auto px-4 py-8 max-w-5xl">
+      <header className="mb-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">Sermon Outline Planner</h1>
           <Button variant="outline" size="icon" onClick={toggleTheme} className="rounded-full">
-            {theme === "light" ? <Moon className="h-4 w-4 sm:h-5 sm:w-5" /> : <Sun className="h-4 w-4 sm:h-5 sm:w-5" />}
+            {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </Button>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-6 sm:flex sm:flex-wrap">
-          <Button 
-            onClick={saveOutlineToLocalStorage} 
-            variant="outline"
-            size="sm"
-            className="gap-1 sm:gap-2"
-          >
-            <Save className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="text-xs sm:text-sm">Save</span>
+
+        <p className="text-muted-foreground mb-6">
+          Create, organize, and edit your sermon outline with drag-and-drop simplicity
+        </p>
+
+        <div className="flex flex-wrap gap-4 mb-6">
+          <Button onClick={saveOutlineToLocalStorage} className="flex items-center gap-2">
+            <Save className="h-4 w-4" />
+            Save Outline
           </Button>
-          <Button 
-            onClick={saveOutlineAsJson} 
-            variant="outline"
-            size="sm"
-            className="gap-1 sm:gap-2"
-          >
-            <Download className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="text-xs sm:text-sm">Export JSON</span>
+          <Button onClick={saveOutlineAsJson} variant="outline" className="flex items-center gap-2">
+            <Download className="h-4 w-4" />
+            Download JSON
           </Button>
-          <Button 
-            onClick={triggerFileInput} 
-            variant="outline"
-            size="sm"
-            className="gap-1 sm:gap-2"
-          >
-            <Upload className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="text-xs sm:text-sm">Import</span>
+          <Button onClick={triggerFileInput} variant="outline" className="flex items-center gap-2">
+            <Upload className="h-4 w-4" />
+            Load JSON
           </Button>
           <input type="file" ref={fileInputRef} onChange={loadOutlineFromJson} accept=".json" className="hidden" />
-          <Button 
-            onClick={exportToMarkdown} 
-            variant="outline"
-            size="sm"
-            className="gap-1 sm:gap-2"
-          >
-            <Download className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="text-xs sm:text-sm">Markdown</span>
-          </Button>
-          <Button 
-            onClick={() => setShowResetDialog(true)} 
-            variant="outline"
-            size="sm"
-            className="gap-1 sm:gap-2"
-          >
-            <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="text-xs sm:text-sm">Reset</span>
+          <Button onClick={exportToMarkdown} variant="outline" className="flex items-center gap-2">
+            <Download className="h-4 w-4" />
+            Export as Markdown
           </Button>
         </div>
       </header>
@@ -840,33 +805,6 @@ export default function SermonOutlinePlanner() {
           </DndContext>
         )}
       </div>
-
-      <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
-              <AlertDialogTitle>Reset all content?</AlertDialogTitle>
-            </div>
-            <AlertDialogDescription>
-              This will erase your current saved state and permanently reset all sections and blocks to their default values. This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                resetOutline()
-                setShowResetDialog(false)
-              }}
-              className="bg-destructive hover:bg-destructive/90"
-            >
-              Reset
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
-
   )
 }
