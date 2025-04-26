@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useMemo, useEffect, useRef } from "react"
 import {
   DndContext,
   closestCenter,
@@ -18,12 +18,22 @@ import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifi
 import { OutlineSection } from "@/components/outline-section"
 import { SortableSection } from "@/components/sortable-section"
 import { Button } from "@/components/ui/button"
-import { Download, Save, Upload, Plus, Moon, Sun, RefreshCw } from "lucide-react"
+import { ArrowUpDown, Save, Plus, Moon, Sun, RefreshCw } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useTheme } from "next-themes"
 import type { Section, OutlineBlock } from "@/lib/types"
 import { generateId } from "@/lib/utils"
 import Footer from "@/components/footer";
+import { formatOutline, downloadFile } from "@/lib/utils"
+import { ExportModal } from "@/components/export-modal"
+import { BackupModal } from "@/components/backup-modal";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 
 export default function SermonOutlinePlanner() {
   const [sections, setSections] = useState<Section[]>([])
@@ -34,49 +44,39 @@ export default function SermonOutlinePlanner() {
   const [mounted, setMounted] = useState(false)
   const [showResetModal, setShowResetModal] = useState(false);
 
+  const touchSensorConfig = useMemo(() => ({
+    activationConstraint: {
+      delay: 150,
+      distance: 5,
+      tolerance: 1,
+    },
+  }), []);
 
-  // Configure sensors for section dragging
-  const sectionSensors = useSensors(
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 150,
-        distance: 5,
-        tolerance: 1,       
-      }
-    }),
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        delay: 100,
-        distance: 5,
-        tolerance: 1,  
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  )
+  const pointerSensorConfig = useMemo(() => ({
+    activationConstraint: {
+      delay: 100,
+      distance: 5,
+      tolerance: 1,
+    },
+  }), []);
 
-  // Configure sensors for block dragging
-  const blockSensors = useSensors(
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 150,
-        distance: 5,
-        tolerance: 1,   
-      }
-    }),
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        delay: 100,
-        distance: 5,
-        tolerance: 1,   
-      },
-    },),
-   
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  )
+  const keyboardSensorConfig = useMemo(() => ({
+    coordinateGetter: sortableKeyboardCoordinates,
+  }), []);
+
+  const touchSensor = useSensor(TouchSensor, touchSensorConfig);
+  const pointerSensor = useSensor(PointerSensor, pointerSensorConfig);
+  const keyboardSensor = useSensor(KeyboardSensor, keyboardSensorConfig);
+
+  const sectionSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
+  const blockSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
+
+
+
+  const bodySectionIds = useMemo(() =>
+    sections.filter((section) => section.type === "body").map((section) => section.id),
+    [sections]
+  );
 
   // Default sections for initialization and reset
   const getDefaultSections = (): Section[] => [
@@ -237,32 +237,20 @@ export default function SermonOutlinePlanner() {
     }
   }, [mounted]) // Only run this effect when mounted changes
 
+
+
   const handleBlockDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
-
-    if (!over || active.id === over.id) return
-
-    // Find which section contains the dragged block
-    const activeBlockId = active.id as string
-    const overBlockId = over.id as string
-
-    let activeBlockInfo: { sectionIndex: number; blockIndex: number } | null = null
-    let overBlockInfo: { sectionIndex: number; blockIndex: number } | null = null
-
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const blockMap = new Map<string, { sectionIndex: number, blockIndex: number }>();
     sections.forEach((section, sectionIndex) => {
       section.blocks.forEach((block, blockIndex) => {
-        if (block.id === activeBlockId) {
-          activeBlockInfo = { sectionIndex, blockIndex }
-        }
-        if (block.id === overBlockId) {
-          overBlockInfo = { sectionIndex, blockIndex }
-        }
-      })
-    })
-
-    if (!activeBlockInfo || !overBlockInfo) return
-
-    // If blocks are in the same section
+        blockMap.set(block.id, { sectionIndex, blockIndex });
+      });
+    });
+    const activeBlockInfo = blockMap.get(active.id as string);
+    const overBlockInfo = blockMap.get(over.id as string);
+    if (!activeBlockInfo || !overBlockInfo) return;
     if (activeBlockInfo.sectionIndex === overBlockInfo.sectionIndex) {
       const newSections = [...sections]
       const sectionIndex = activeBlockInfo.sectionIndex
@@ -330,15 +318,20 @@ export default function SermonOutlinePlanner() {
       return
     }
 
-    // Move the section without renaming
+
     const newSections = arrayMove(sections, oldIndex, newIndex)
     setSections(newSections)
   }
 
-  const handleContentChange = (sectionIndex: number, blockIndex: number, newContent: string) => {
-    const newSections = [...sections]
-    newSections[sectionIndex].blocks[blockIndex].content = newContent
-    setSections(newSections)
+  const handleContentChange = (sectionIndex: number, blockIndex: number, content: string) => {
+    setSections(prev => prev.map((section, i) =>
+      i === sectionIndex ? {
+        ...section,
+        blocks: section.blocks.map((block, j) =>
+          j === blockIndex ? { ...block, content } : block
+        )
+      } : section
+    ))
   }
 
   const handleLabelChange = (sectionIndex: number, blockIndex: number, newLabel: string) => {
@@ -529,57 +522,24 @@ export default function SermonOutlinePlanner() {
     })
   }
 
-  const exportToMarkdown = () => {
-    let markdown = "# Sermon Outline\n\n"
-
-    // Add date and time
-    const now = new Date()
-    markdown += `*Created: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}*\n\n`
-    markdown += "---\n\n"
-
-    sections.forEach((section) => {
-      markdown += `## ${section.title}\n\n`
-
-      section.blocks.forEach((block) => {
-        markdown += `### ${block.label}\n\n`
-
-        if (block.content) {
-          markdown += `${block.content}\n\n`
-        } else {
-          markdown += `*${block.placeholder}*\n\n`
-        }
-
-        markdown += "---\n\n"
-      })
-    })
-
-    // Create a blob and download it
-    const blob = new Blob([markdown], { type: "text/markdown" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `sermon-outline-${now.toISOString().split("T")[0]}.md`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-
+  const handleExport = (format: "pdf" | "docx" | "txt" | "md") => {
+    const formatted = formatOutline(sections, format);
+    downloadFile(formatted, format);
     toast({
-      title: "Outline Exported",
-      description: "Your sermon outline has been exported as Markdown.",
+      title: `Exported as ${format.toUpperCase()}`,
+      description: `Outline downloaded successfully.`,
       duration: 3000,
-    })
-  }
+    });
+  };
 
   const saveOutlineToLocalStorage = () => {
-    localStorage.setItem("sermonOutline", JSON.stringify(sections))
-
+    localStorage.setItem("sermonOutline", JSON.stringify(sections));
     toast({
       title: "Outline Saved",
       description: "Your sermon outline has been saved to local storage.",
       duration: 3000,
     })
-  }
+  };
 
   const saveOutlineAsJson = () => {
     const now = new Date()
@@ -609,7 +569,6 @@ export default function SermonOutlinePlanner() {
     setSections(defaultSections);
     localStorage.setItem("sermonOutline", JSON.stringify(defaultSections));
     setShowResetModal(false);
-
     toast({
       title: "Outline Reset",
       description: "All sections and blocks have been reset to their default state.",
@@ -685,48 +644,42 @@ export default function SermonOutlinePlanner() {
     )
   }
 
-  // Get only the body section IDs for the sortable context
-  const bodySectionIds = sections.filter((section) => section.type === "body").map((section) => section.id)
-
-
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
-      <header className="mb-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Drag and Preach</h1>
-          <Button variant="outline" size="icon" onClick={toggleTheme} className="rounded-full">
+
+    <div className="container mx-auto px-4 py-8 max-w-5xl pb-24">
+      <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <ArrowUpDown className="h-8 w-8" />
+              <h1 className="text-3xl font-bold">Drag and Preach</h1>
+            </div>
+            <p className="text-muted-foreground">
+            Organize, structure, and export your sermons with ease.
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-full border-gray-300 dark:border-gray-600"
+          >
             {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </Button>
         </div>
+        <div className="flex flex-wrap gap-4">
 
-        <p className="text-muted-foreground mb-6">
-          Create, organize, and edit your sermon outline with drag-and-drop simplicity
-        </p>
-        <div className="flex flex-wrap gap-4 mb-6">
           <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-            <Button onClick={saveOutlineToLocalStorage} className="flex-1 sm:flex-none">
+            <Button onClick={saveOutlineToLocalStorage} className="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-600 text-white">
               <Save className="h-4 w-4 sm:mr-2" />
-              <span className="sm:hidden">Save</span>
-              <span className="hidden sm:inline">Save Outline</span>
+              <span>Save</span>
             </Button>
-            <Button onClick={saveOutlineAsJson} variant="outline" className="flex-1 sm:flex-none">
-              <Download className="h-4 w-4 sm:mr-2" />
-              <span className="sm:hidden">Download</span>
-              <span className="hidden sm:inline">Download Backup</span>
-            </Button>
-            <Button onClick={triggerFileInput} variant="outline" className="flex-1 sm:flex-none">
-              <Upload className="h-4 w-4 sm:mr-2" />
-              <span className="sm:hidden">Load</span>
-              <span className="hidden sm:inline">Load Backup</span>
-            </Button>
-          </div>
-          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-            <Button onClick={exportToMarkdown} variant="outline" className="flex-1 sm:flex-none">
-              <Download className="h-4 w-4 sm:mr-2" />
-              <span className="sm:hidden">Markdown</span>
-              <span className="hidden sm:inline">Export as Markdown</span>
-            </Button>
-            <Button onClick={handleResetAll} variant="outline" className="flex-1 sm:flex-none">
+            <BackupModal
+              onDownload={saveOutlineAsJson}
+              onUpload={triggerFileInput}
+            />
+            <ExportModal onExport={handleExport} />
+            <Button onClick={handleResetAll} variant="outline" className="flex-1 sm:flex-none border-red-500 text-red-500 hover:bg-red-50">
               <RefreshCw className="h-4 w-4 sm:mr-2" />
               <span className="sm:hidden">Reset</span>
               <span className="hidden sm:inline">Reset All</span>
@@ -734,16 +687,18 @@ export default function SermonOutlinePlanner() {
           </div>
           <input type="file" ref={fileInputRef} onChange={loadOutlineFromJson} accept=".json" className="hidden" />
         </div>
-      </header>
+      </header >
 
-      {/* Reset Confirmation Modal */}
-      {showResetModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-background p-6 rounded-lg shadow-lg max-w-md w-full">
-            <h2 className="text-xl font-bold mb-4">Reset All Sections</h2>
-            <p className="mb-6">Warning: Saves will be overwritten!</p> 
-            <p className="mb-6"> Are you sure you want to reset all sections to their default state?</p>
-            <div className="flex justify-end gap-4">
+      <Dialog open={showResetModal} onOpenChange={setShowResetModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reset All Sections</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <p className="text-sm text-muted-foreground mb-4">
+              Warning: Saves will be overwritten! Are you sure you want to reset all sections to their default state?
+            </p>
+            <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={cancelResetAll}>
                 Cancel
               </Button>
@@ -752,8 +707,8 @@ export default function SermonOutlinePlanner() {
               </Button>
             </div>
           </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
 
       <div className="space-y-6">
         {/* Introduction Section (not draggable) */}
@@ -867,6 +822,6 @@ export default function SermonOutlinePlanner() {
         )}
       </div>
       <Footer />
-    </div>
+    </div >
   )
 }

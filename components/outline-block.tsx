@@ -100,7 +100,7 @@ export function OutlineBlock({
     <div
       ref={setNodeRef}
       style={style}
-      className={`rounded-xl border p-3 ${isDragging ? "z-10" : ""} transition-colors backdrop-blur-sm`}
+      className={`rounded-xl border-2 p-3 ${isDragging ? "z-10" : ""} transition-colors backdrop-blur-sm`}
     >
       <div className="flex items-start gap-3">
         <div
@@ -139,18 +139,18 @@ export function OutlineBlock({
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onResetLabel();
-                }}
-                className="h-6 px-2 sm:px-3 text-xs hover:bg-muted"
-              >
-                <span className="hidden sm:inline">Reset Label</span>
-                <RefreshCw className="h-3 w-3 sm:ml-1" />
-              </Button>
+            <Button
+  variant="outline"
+  size="sm"
+  onClick={(e) => {
+    e.stopPropagation();
+    onResetLabel();
+  }}
+  className="h-7 px-2 sm:px-3 text-xs border-muted hover:bg-muted/50"
+>
+  <span className="hidden sm:inline">Reset Label</span>
+  <RefreshCw className="h-3 w-3 sm:ml-1" />
+</Button>
               {showRemoveButton && (
                 <Button
                   variant="ghost"

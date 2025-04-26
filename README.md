@@ -1,47 +1,57 @@
-# Drag and Preach
+# 🎤 Drag and Preach
 
-A drag-and-drop application for organizing and planning sermon outlines with ease.
+**A modern drag-and-drop sermon planner**  
+Organize, structure, and export your sermons with ease.
 
-## Features
+🚀 [Netlify Live Demo](https://drag-and-preach.netlify.app/)
 
-- **Drag-and-Drop Sections**: Reorder sections and blocks intuitively.
-- **Customizable Content**: Edit titles, labels, and content for each block.
-- **Export Options**: Save outlines as Markdown or JSON.
-- **Dark/Light Mode**: Toggle between themes for comfortable use.
-- **Local Storage**: Automatically saves your progress.
+## ✨ Features
+
+- **Drag-and-Drop** – Reorder sections and blocks effortlessly
+- **Prebuilt Templates** – Structured intro, body, and conclusion
+- **Multi-Format Export** – PDF, DOCX, TXT, Markdown
+- **Dark/Light Mode** – Comfortable for any setting
+- **Local Saves & Backup** – Persistent storage + downloadable JSON
 
 ## 💡 Acknowledgments
+
 This project was developed with the help of AI tools (e.g., GitHub Copilot, Cursor, v0) for code suggestions, debugging, and optimizations.
 
-## Installation
+## 🚀 Getting Started
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/sermon-outline-planner.git
-   ```
-2. Install dependencies:
-   ```bash
-   cd sermon-outline-planner
-   npm install
-   ```
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
+```bash
+git clone https://github.com/allemandi/drag-and-preach.git
+cd sermon-outline-planner
+yarn install
+yarn dev
+```
 
-## Usage
+## 🛠 Usage
 
-- **Add Sections**: Click "Add Body Section" to insert new sections.
-- **Edit Content**: Click on any block to modify its content or label.
-- **Export**: Use the toolbar to save or export your outline.
+- **Add Sections** – Click "Add Body Section"
+- **Edit Text** – Click any title or textbox
+- **Reorder** – Drag by the grip icons (⋮⋮)
+- **Export** – Save or export via the toolbar
 
-## Technologies
+## ⚙️ Built With
 
-- **Frontend**: Next.js, React, TypeScript
-- **Styling**: Tailwind CSS
-- **Drag-and-Drop**: Dnd Kit
-- **State Management**: React Hooks
+- **Next.js** + **React** + **TypeScript**
+- **Tailwind CSS** for styling
+- **Dnd Kit** for drag-and-drop
+- **React Hooks** for state management
 
-## License
+## 🤝 Contributions Welcome
+If you have ideas, improvements, or new features:
+
+1. Fork the project
+2. Create your feature branch (git checkout -b feature/amazing-feature)
+3. Commit your changes (git commit -m 'Add some amazing feature')
+4. Push to the branch (git push origin feature/amazing-feature)
+5. Open a Pull Request
+
+## ☕ Support
+If this project has helped you or saved you time, consider [buying me a coffee](https://www.buymeacoffee.com/allemandi) to help fuel more ideas and improvements!
+
+## 📄 License
 
 MIT

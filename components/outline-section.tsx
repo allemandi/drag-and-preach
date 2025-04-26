@@ -7,7 +7,6 @@ import { X, Plus, RefreshCw } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import type { Section } from "@/lib/types"
-
 interface OutlineSectionProps {
   section: Section
   sectionIndex: number
@@ -36,7 +35,6 @@ export function OutlineSection({
 }: OutlineSectionProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [titleValue, setTitleValue] = useState(section.title)
-
 
   const getSectionColor = (type: string) => {
     switch (type) {
@@ -68,11 +66,6 @@ export function OutlineSection({
     if (e.key === "Enter") {
       handleTitleBlur()
     }
-  }
-
-  const handleResetTitleClick = () => {
-    onResetTitle(sectionIndex);
-    setIsEditingTitle(false);
   }
 
   return (
@@ -114,13 +107,13 @@ export function OutlineSection({
             <RefreshCw className="h-3.5 w-3.5 sm:ml-1" />
           </Button>
           <Button
-    variant="outline"
-    size="sm"
-    onClick={onAddBlock}
-    className="h-8 px-2 sm:px-3 text-xs hover:bg-muted/50"
-  >
-    <span className="hidden sm:inline">Add Block</span>
-    <Plus className="h-3.5 w-3.5 sm:ml-1" />
+            variant="outline"
+            size="sm"
+            onClick={onAddBlock}
+            className="h-8 px-2 sm:px-3 text-xs hover:bg-muted/50"
+          >
+            <span className="hidden sm:inline">Add Block</span>
+            <Plus className="h-3.5 w-3.5 sm:ml-1" />
           </Button>
           {section.type === "body" && (
             <Button

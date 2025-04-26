@@ -11,13 +11,13 @@ interface SortableSectionProps {
 }
 
 export function SortableSection({ id, children }: SortableSectionProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
     id,
   })
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: 'opacity 100ms ease',
     opacity: isDragging ? 0.5 : 1,
     position: "relative" as const,
     zIndex: isDragging ? 1 : 0,
