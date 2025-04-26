@@ -17,7 +17,7 @@ import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifi
 import { OutlineSection } from "@/components/outline-section"
 import { SortableSection } from "@/components/sortable-section"
 import { Button } from "@/components/ui/button"
-import { Download, Save, Upload, Plus, Moon, Sun } from "lucide-react"
+import { Download, Save, Upload, Plus, Moon, Sun, RefreshCw } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useTheme } from "next-themes"
 import type { Section, OutlineBlock } from "@/lib/types"
@@ -194,7 +194,7 @@ export default function SermonOutlinePlanner() {
   useEffect(() => {
     // Set mounted first to indicate component is in the DOM
     setMounted(true)
-    
+
     // Only initialize dark mode if it's not already set
     if (typeof window !== 'undefined' && !localStorage.getItem('theme')) {
       setTheme("dark")
@@ -205,11 +205,11 @@ export default function SermonOutlinePlanner() {
   useEffect(() => {
     // Only proceed if component is mounted
     if (!mounted) return
-    
+
     try {
       // Load data from localStorage or initialize with default sections
       const savedOutline = localStorage.getItem("sermonOutline")
-      
+
       if (savedOutline) {
         setSections(JSON.parse(savedOutline))
       } else {
@@ -592,6 +592,15 @@ export default function SermonOutlinePlanner() {
     })
   }
 
+  const handleResetAll = () => {
+    setSections(getDefaultSections())
+    toast({
+      title: "Outline Reset",
+      description: "All sections and blocks have been reset to their default state. Your previous Saved state is still preserved.",
+      duration: 2000,
+    })
+  }
+
   const loadOutlineFromJson = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
@@ -690,6 +699,10 @@ export default function SermonOutlinePlanner() {
           <Button onClick={exportToMarkdown} variant="outline" className="flex items-center gap-2">
             <Download className="h-4 w-4" />
             Export as Markdown
+          </Button>
+          <Button onClick={handleResetAll} variant="outline" className="flex items-center gap-2">
+            <RefreshCw className="h-4 w-4" />
+            Reset All
           </Button>
         </div>
       </header>
