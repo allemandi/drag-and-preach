@@ -112,6 +112,7 @@ export function OutlineBlock({
           tabIndex={0}
           aria-label="Drag to reorder block"
           role="button"
+          style={{touchAction: 'none'}}
         >
           <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
@@ -166,7 +167,7 @@ export function OutlineBlock({
             </div>
           </div>
 
-          <div className="min-h-[60px] w-full" onClick={() => setIsEditing(true)}>
+          <div className="min-h-[60px] w-full" style={{whiteSpace: 'pre-line'}} onClick={() => setIsEditing(true)}>
             {isEditing ? (
               <textarea
                 ref={textareaRef}

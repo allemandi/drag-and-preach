@@ -21,7 +21,7 @@ export function SortableSection({ id, children }: SortableSectionProps) {
     opacity: isDragging ? 0.5 : 1,
     position: "relative" as const,
     zIndex: isDragging ? 1 : 0,
-    touchAction: 'none',
+    whiteSpace: 'pre-line',
   }
 
   return (
@@ -34,6 +34,7 @@ export function SortableSection({ id, children }: SortableSectionProps) {
         tabIndex={0}
         aria-label="Drag to reorder section"
         role="button"
+        style={{touchAction: "none"}}
       >
         <GripVertical className="h-5 w-5 text-muted-foreground" />
       </div>
