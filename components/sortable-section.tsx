@@ -1,9 +1,9 @@
 "use client"
 
-import React from "react"
-
+import type React from "react"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
+import { GripVertical } from "lucide-react"
 
 interface SortableSectionProps {
   id: string
@@ -23,17 +23,20 @@ export function SortableSection({ id, children }: SortableSectionProps) {
     zIndex: isDragging ? 1 : 0,
   }
 
-  // Pass the attributes and listeners to the children
-  const childrenWithProps = React.Children.map(children, (child) => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, { attributes, listeners })
-    }
-    return child
-  })
-
   return (
-    <div ref={setNodeRef} style={style}>
-      {childrenWithProps}
+    <div ref={setNodeRef} style={style} className="relative">
+      <div
+        className="absolute top-4 left-4 cursor-grab p-1 rounded hover:bg-muted z-10"
+        {...attributes}
+        {...listeners}
+        data-drag-handle
+        tabIndex={0}
+        aria-label="Drag to reorder section"
+        role="button"
+      >
+        <GripVertical className="h-5 w-5 text-muted-foreground" />
+      </div>
+      {children}
     </div>
   )
 }

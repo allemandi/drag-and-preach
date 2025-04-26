@@ -240,23 +240,9 @@ export default function SermonOutlinePlanner() {
 
     if (!activeBlockInfo || !overBlockInfo) return
 
-    // Check if we're trying to move a block from intro/conclusion to a different section type
+    // Get the section types
     const activeSection = sections[activeBlockInfo.sectionIndex]
     const overSection = sections[overBlockInfo.sectionIndex]
-
-    // Don't allow moving blocks from intro to non-intro or from conclusion to non-conclusion
-    if (
-      (activeSection.type === "intro" && overSection.type !== "intro") ||
-      (activeSection.type === "conclusion" && overSection.type !== "conclusion")
-    ) {
-      toast({
-        title: "Cannot Move Block",
-        description: "Introduction and Conclusion blocks must stay within their sections.",
-        variant: "destructive",
-        duration: 3000,
-      })
-      return
-    }
 
     // If blocks are in the same section
     if (activeBlockInfo.sectionIndex === overBlockInfo.sectionIndex) {
@@ -285,6 +271,13 @@ export default function SermonOutlinePlanner() {
       overSection.blocks.splice(overBlockInfo.blockIndex, 0, blockToMove)
 
       setSections(newSections)
+
+      // Show a toast notification about the block being moved to a different section
+      toast({
+        title: "Block Moved",
+        description: `Block moved to ${overSection.title}`,
+        duration: 2000,
+      })
     }
   }
 
@@ -653,6 +646,9 @@ export default function SermonOutlinePlanner() {
     )
   }
 
+  // Get only the body section IDs for the sortable context
+  const bodySectionIds = sections.filter((section) => section.type === "body").map((section) => section.id)
+
   // Find the index of the conclusion section to place the Add Body button
   const conclusionIndex = sections.findIndex((section) => section.type === "conclusion")
 
@@ -691,86 +687,117 @@ export default function SermonOutlinePlanner() {
         </div>
       </header>
 
-      <DndContext sensors={sectionSensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
-        <SortableContext items={sections.map((section) => section.id)} strategy={verticalListSortingStrategy}>
-          <div className="space-y-6">
-            {sections.map((section, sectionIndex) => (
-              <div key={section.id}>
-                {section.type === "body" ? (
-                  <SortableSection id={section.id}>
-                    <DndContext
-                      sensors={blockSensors}
-                      collisionDetection={closestCenter}
-                      onDragEnd={handleBlockDragEnd}
-                      modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-                    >
-                      <SortableContext
-                        items={section.blocks.map((block) => block.id)}
-                        strategy={verticalListSortingStrategy}
-                      >
-                        <OutlineSection
-                          section={section}
-                          sectionIndex={sectionIndex}
-                          onContentChange={handleContentChange}
-                          onLabelChange={handleLabelChange}
-                          onResetLabel={handleResetLabel}
-                          onTitleChange={handleTitleChange}
-                          onResetTitle={handleResetTitle}
-                          onRemoveSection={() => removeSection(sectionIndex)}
-                          onAddBlock={() => addBlockToSection(sectionIndex)}
-                          onRemoveBlock={(blockIndex) => removeBlock(sectionIndex, blockIndex)}
-                          isDraggable={true}
-                        />
-                      </SortableContext>
-                    </DndContext>
-                  </SortableSection>
-                ) : (
-                  <DndContext
-                    sensors={blockSensors}
-                    collisionDetection={closestCenter}
-                    onDragEnd={handleBlockDragEnd}
-                    modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-                  >
-                    <SortableContext
-                      items={section.blocks.map((block) => block.id)}
-                      strategy={verticalListSortingStrategy}
-                    >
-                      <OutlineSection
-                        section={section}
-                        sectionIndex={sectionIndex}
-                        onContentChange={handleContentChange}
-                        onLabelChange={handleLabelChange}
-                        onResetLabel={handleResetLabel}
-                        onTitleChange={handleTitleChange}
-                        onResetTitle={handleResetTitle}
-                        onRemoveSection={() => removeSection(sectionIndex)}
-                        onAddBlock={() => addBlockToSection(sectionIndex)}
-                        onRemoveBlock={(blockIndex) => removeBlock(sectionIndex, blockIndex)}
-                        isDraggable={false}
-                      />
-                    </SortableContext>
-                  </DndContext>
-                )}
+      <div className="space-y-6">
+        {/* Introduction Section (not draggable) */}
+        {sections.length > 0 && sections[0].type === "intro" && (
+          <DndContext
+            sensors={blockSensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleBlockDragEnd}
+            modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+          >
+            <SortableContext items={sections[0].blocks.map((block) => block.id)} strategy={verticalListSortingStrategy}>
+              <OutlineSection
+                section={sections[0]}
+                sectionIndex={0}
+                onContentChange={handleContentChange}
+                onLabelChange={handleLabelChange}
+                onResetLabel={handleResetLabel}
+                onTitleChange={handleTitleChange}
+                onResetTitle={handleResetTitle}
+                onRemoveSection={() => removeSection(0)}
+                onAddBlock={() => addBlockToSection(0)}
+                onRemoveBlock={(blockIndex) => removeBlock(0, blockIndex)}
+                isDraggable={false}
+              />
+            </SortableContext>
+          </DndContext>
+        )}
 
-                {/* Add Body Section button positioned right before the conclusion section */}
-                {sectionIndex === conclusionIndex - 1 && (
-                  <div className="flex justify-center my-6">
-                    <Button
-                      onClick={addBodySection}
-                      size="lg"
-                      variant="outline"
-                      className="border-2 border-green-500/30 bg-green-500/10 hover:bg-green-500/20 flex items-center gap-2 px-6 py-6 h-auto shadow-md"
-                    >
-                      <Plus className="h-5 w-5" />
-                      Add Body Section
-                    </Button>
+        {/* Body Sections (draggable) */}
+        <DndContext sensors={sectionSensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
+          <SortableContext items={bodySectionIds} strategy={verticalListSortingStrategy}>
+            {sections.map((section, sectionIndex) => {
+              if (section.type === "body") {
+                return (
+                  <div key={section.id}>
+                    <SortableSection id={section.id}>
+                      <DndContext
+                        sensors={blockSensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleBlockDragEnd}
+                        modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+                      >
+                        <SortableContext
+                          items={section.blocks.map((block) => block.id)}
+                          strategy={verticalListSortingStrategy}
+                        >
+                          <OutlineSection
+                            section={section}
+                            sectionIndex={sectionIndex}
+                            onContentChange={handleContentChange}
+                            onLabelChange={handleLabelChange}
+                            onResetLabel={handleResetLabel}
+                            onTitleChange={handleTitleChange}
+                            onResetTitle={handleResetTitle}
+                            onRemoveSection={() => removeSection(sectionIndex)}
+                            onAddBlock={() => addBlockToSection(sectionIndex)}
+                            onRemoveBlock={(blockIndex) => removeBlock(sectionIndex, blockIndex)}
+                            isDraggable={false}
+                          />
+                        </SortableContext>
+                      </DndContext>
+                    </SortableSection>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
+                )
+              }
+              return null
+            })}
+          </SortableContext>
+        </DndContext>
+
+        {/* Add Body Section button */}
+        <div className="flex justify-center my-6">
+          <Button
+            onClick={addBodySection}
+            size="lg"
+            variant="outline"
+            className="border-2 border-green-500/30 bg-green-500/10 hover:bg-green-500/20 flex items-center gap-2 px-6 py-6 h-auto shadow-md"
+          >
+            <Plus className="h-5 w-5" />
+            Add Body Section
+          </Button>
+        </div>
+
+        {/* Conclusion Section (not draggable) */}
+        {sections.length > 0 && sections[sections.length - 1].type === "conclusion" && (
+          <DndContext
+            sensors={blockSensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleBlockDragEnd}
+            modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+          >
+            <SortableContext
+              items={sections[sections.length - 1].blocks.map((block) => block.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <OutlineSection
+                section={sections[sections.length - 1]}
+                sectionIndex={sections.length - 1}
+                onContentChange={handleContentChange}
+                onLabelChange={handleLabelChange}
+                onResetLabel={handleResetLabel}
+                onTitleChange={handleTitleChange}
+                onResetTitle={handleResetTitle}
+                onRemoveSection={() => removeSection(sections.length - 1)}
+                onAddBlock={() => addBlockToSection(sections.length - 1)}
+                onRemoveBlock={(blockIndex) => removeBlock(sections.length - 1, blockIndex)}
+                isDraggable={false}
+              />
+            </SortableContext>
+          </DndContext>
+        )}
+      </div>
     </div>
   )
 }

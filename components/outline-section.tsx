@@ -4,7 +4,7 @@ import type React from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { X, Plus, RefreshCw, GripVertical } from "lucide-react"
+import { X, Plus, RefreshCw } from "lucide-react"
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import type { Section } from "@/lib/types"
@@ -21,8 +21,6 @@ interface OutlineSectionProps {
   onAddBlock: () => void
   onRemoveBlock: (blockIndex: number) => void
   isDraggable: boolean
-  attributes?: any
-  listeners?: any
 }
 
 export function OutlineSection({
@@ -37,8 +35,6 @@ export function OutlineSection({
   onAddBlock,
   onRemoveBlock,
   isDraggable,
-  attributes,
-  listeners,
 }: OutlineSectionProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [titleValue, setTitleValue] = useState(section.title)
@@ -73,22 +69,8 @@ export function OutlineSection({
 
   return (
     <Card className={`shadow-lg border-2 ${getSectionColor(section.type)} backdrop-blur-sm bg-card/80`}>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 pl-12">
         <div className="flex items-center gap-2">
-          {isDraggable && (
-            <div
-              className="cursor-grab p-1 rounded hover:bg-muted"
-              {...attributes}
-              {...listeners}
-              data-drag-handle
-              tabIndex={0}
-              aria-label="Drag to reorder section"
-              role="button"
-            >
-              <GripVertical className="h-5 w-5 text-muted-foreground" />
-            </div>
-          )}
-
           {isEditingTitle ? (
             <div className="flex items-center gap-2">
               <Input
