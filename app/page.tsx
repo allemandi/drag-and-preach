@@ -37,7 +37,7 @@ export default function SermonOutlinePlanner() {
       activationConstraint: {
         distance: 5,
         delay: 0,
-        tolerance: 5,
+        tolerance: 0,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -49,9 +49,9 @@ export default function SermonOutlinePlanner() {
   const blockSensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5,
-        delay: 100,
-        tolerance: 5,
+        distance: 0,
+        delay: 0,
+        tolerance: 0,
       },
     }),
     useSensor(KeyboardSensor, {
