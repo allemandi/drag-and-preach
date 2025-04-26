@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 
 import { useState, useEffect, useRef } from "react"
 import {
@@ -17,7 +18,7 @@ import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifi
 import { OutlineSection } from "@/components/outline-section"
 import { SortableSection } from "@/components/sortable-section"
 import { Button } from "@/components/ui/button"
-import { Download, Save, Upload, Plus, Moon, Sun } from "lucide-react"
+import { Download, Save, Upload, Plus, Moon, Sun, RefreshCw, AlertTriangle } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useTheme } from "next-themes"
 import type { Section, OutlineBlock } from "@/lib/types"
@@ -30,6 +31,7 @@ export default function SermonOutlinePlanner() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [showResetDialog, setShowResetDialog] = useState(false)
 
   // Configure sensors for section dragging
   const sectionSensors = useSensors(
@@ -192,7 +194,6 @@ export default function SermonOutlinePlanner() {
 
   // Set dark mode as default
   useEffect(() => {
-    setTheme("dark")
     setMounted(true)
   }, [setTheme])
 
@@ -339,6 +340,16 @@ export default function SermonOutlinePlanner() {
       title: "Label Reset",
       description: "The label has been reset to its default value.",
       duration: 2000,
+    })
+  }
+
+  const resetOutline = () => {
+    setSections(getDefaultSections())
+    localStorage.setItem("sermonOutline", JSON.stringify(getDefaultSections()))
+    toast({
+      title: "Outline Reset",
+      description: "All sections and blocks have been reset to their default values.",
+      duration: 3000,
     })
   }
 
@@ -654,19 +665,19 @@ export default function SermonOutlinePlanner() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
-      <header className="mb-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Sermon Outline Planner</h1>
+      <header className="mb-8 border-b border-border pb-4">
+        <div className="container flex h-16 items-center justify-between">
+          <h1 className="text-2xl font-bold">Sermon Outline Planner</h1>
           <Button variant="outline" size="icon" onClick={toggleTheme} className="rounded-full">
             {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </Button>
         </div>
-
         <p className="text-muted-foreground mb-6">
           Create, organize, and edit your sermon outline with drag-and-drop simplicity
         </p>
 
         <div className="flex flex-wrap gap-4 mb-6">
+
           <Button onClick={saveOutlineToLocalStorage} className="flex items-center gap-2">
             <Save className="h-4 w-4" />
             Save Outline
@@ -683,6 +694,11 @@ export default function SermonOutlinePlanner() {
           <Button onClick={exportToMarkdown} variant="outline" className="flex items-center gap-2">
             <Download className="h-4 w-4" />
             Export as Markdown
+          </Button>
+
+          <Button onClick={() => setShowResetDialog(true)} variant="outline" className="flex items-center gap-2">
+            <RefreshCw className="h-4 w-4" />
+            Reset Default
           </Button>
         </div>
       </header>
@@ -798,6 +814,33 @@ export default function SermonOutlinePlanner() {
           </DndContext>
         )}
       </div>
+
+      <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertDialogTitle>Reset all content?</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription>
+              This will erase your current saved state and permanently reset all sections and blocks to their default values. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                resetOutline()
+                setShowResetDialog(false)
+              }}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Reset
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
+
   )
 }
