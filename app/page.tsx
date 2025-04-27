@@ -44,33 +44,21 @@ export default function SermonOutlinePlanner() {
   const [mounted, setMounted] = useState(false)
   const [showResetModal, setShowResetModal] = useState(false);
 
-  const touchSensorConfig = useMemo(() => ({
-    activationConstraint: {
-      delay: 150,
-      distance: 5,
-      tolerance: 1,
-    },
-  }), []);
+  const sensors = useMemo(() => {
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: { distance: 5 },
+  });
 
-  const pointerSensorConfig = useMemo(() => ({
-    activationConstraint: {
-      delay: 100,
-      distance: 5,
-      tolerance: 1,
-    },
-  }), []);
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: { distance: 5 },
+  });
 
-  const keyboardSensorConfig = useMemo(() => ({
+  const keyboardSensor = useSensor(KeyboardSensor, {
     coordinateGetter: sortableKeyboardCoordinates,
-  }), []);
+  });
 
-  const touchSensor = useSensor(TouchSensor, touchSensorConfig);
-  const pointerSensor = useSensor(PointerSensor, pointerSensorConfig);
-  const keyboardSensor = useSensor(KeyboardSensor, keyboardSensorConfig);
-
-  const sectionSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
-  const blockSensors = useSensors(touchSensor, pointerSensor, keyboardSensor);
-
+  return useSensors(touchSensor, pointerSensor, keyboardSensor);
+}, []);
 
 
   const bodySectionIds = useMemo(() =>
@@ -714,7 +702,7 @@ export default function SermonOutlinePlanner() {
         {/* Introduction Section (not draggable) */}
         {sections.length > 0 && sections[0].type === "intro" && (
           <DndContext
-            sensors={blockSensors}
+            sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={handleBlockDragEnd}
             modifiers={[restrictToVerticalAxis, restrictToParentElement]}
@@ -738,7 +726,7 @@ export default function SermonOutlinePlanner() {
         )}
 
         {/* Body Sections (draggable) */}
-        <DndContext sensors={sectionSensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
           <SortableContext items={bodySectionIds} strategy={verticalListSortingStrategy}>
             {sections.map((section, sectionIndex) => {
               if (section.type === "body") {
@@ -795,7 +783,7 @@ export default function SermonOutlinePlanner() {
         {/* Conclusion Section (not draggable) */}
         {sections.length > 0 && sections[sections.length - 1].type === "conclusion" && (
           <DndContext
-            sensors={blockSensors}
+            sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={handleBlockDragEnd}
             modifiers={[restrictToVerticalAxis, restrictToParentElement]}
