@@ -47,14 +47,14 @@ export default function SermonOutlinePlanner() {
   const touchSensorConfig = useMemo(() => ({
     activationConstraint: {
       delay: 0,
-      distance: 5,
+      distance: 0,
     },
   }), []);
 
   const pointerSensorConfig = useMemo(() => ({
     activationConstraint: {
       delay: 0,
-      distance: 5,
+      distance: 0,
     },
   }), []);
 
