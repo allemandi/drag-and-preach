@@ -44,7 +44,6 @@ export default function SermonOutlinePlanner() {
   const [mounted, setMounted] = useState(false)
   const [showResetModal, setShowResetModal] = useState(false);
 
-  const sensors = useMemo(() => {
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: { distance: 5 },
   });
@@ -57,8 +56,11 @@ export default function SermonOutlinePlanner() {
     coordinateGetter: sortableKeyboardCoordinates,
   });
 
-  return useSensors(touchSensor, pointerSensor, keyboardSensor);
-}, []);
+  const sensors = useMemo(() => useSensors(
+    touchSensor,
+    pointerSensor,
+    keyboardSensor
+  ), [touchSensor, pointerSensor, keyboardSensor]);
 
 
   const bodySectionIds = useMemo(() =>
