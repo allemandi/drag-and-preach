@@ -13,10 +13,6 @@ Organize, structure, and export your sermons with ease.
 - **Dark/Light Mode** – Comfortable for any setting
 - **Local Saves & Backup** – Persistent storage + downloadable JSON
 
-## 💡 Acknowledgments
-
-This project was developed with the help of AI tools (e.g., GitHub Copilot, Cursor, v0) for code suggestions, debugging, and optimizations.
-
 ## 🚀 Getting Started
 
 ```bash
@@ -40,7 +36,15 @@ yarn dev
 - **Dnd Kit** for drag-and-drop
 - **React Hooks** for state management
 
-## 🤝 Contributions Welcome
+## 🔗 Related Projects
+Check out these related projects that might interest you:
+- **[Drag And Draft](https://github.com/allemandi/drag-and-draft)**  
+  A modern drag-and-drop essay planner. Organize, structure, and export your essays with ease.
+
+- **[Passage Prep](https://github.com/allemandi/passage-prep)** 🛠️  
+  Build reusable Bible studies in seconds. Organize, format, and export Bible study questions with contextual notes.
+
+## 🤝 Contributing
 If you have ideas, improvements, or new features:
 
 1. Fork the project
@@ -51,6 +55,10 @@ If you have ideas, improvements, or new features:
 
 ## ☕ Support
 If this project has helped you or saved you time, consider [buying me a coffee](https://www.buymeacoffee.com/allemandi) to help fuel more ideas and improvements!
+
+## 💡 Acknowledgments
+
+This project was developed with the help of AI tools (e.g., GitHub Copilot, Cursor, v0) for code suggestions, debugging, and optimizations.
 
 ## 📄 License
 
