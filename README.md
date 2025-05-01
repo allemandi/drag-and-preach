@@ -41,7 +41,7 @@ Check out these related projects that might interest you:
 - **[Drag And Draft](https://github.com/allemandi/drag-and-draft)**  
   A modern drag-and-drop essay planner. Organize, structure, and export your essays with ease.
 
-- **[Passage Prep](https://github.com/allemandi/passage-prep)** 🛠️  
+- **[Passage Prep](https://github.com/allemandi/passage-prep)** 
   Build reusable Bible studies in seconds. Organize, format, and export Bible study questions with contextual notes.
 
 ## 🤝 Contributing
