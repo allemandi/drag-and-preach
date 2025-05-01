@@ -21,7 +21,7 @@ This project was developed with the help of AI tools (e.g., GitHub Copilot, Curs
 
 ```bash
 git clone https://github.com/allemandi/drag-and-preach.git
-cd sermon-outline-planner
+cd drag-and-preach
 yarn install
 yarn dev
 ```
