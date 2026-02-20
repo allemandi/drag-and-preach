@@ -23,7 +23,7 @@
     "critters": "^0.0.25",
     "docx": "^9.5.1",
     "embla-carousel-react": "8.6.0",
-    "jspdf": "^4.1.0",
+    "jspdf": "^4.2.0",
     "lucide-react": "^0.454.0",
     "next": "16.1.5",
     "next-themes": "latest",
