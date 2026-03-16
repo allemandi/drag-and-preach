@@ -87,26 +87,26 @@ export function OutlineBlock({
   const getBlockStyles = (type: string) => {
     switch (type) {
       case "intro":
-        return "bg-background border-pastel-border-blue hover:border-pastel-border-blue/80 shadow-blue-900/5 dark:shadow-blue-100/5"
+        return "bg-background border-pastel-border-blue/50 hover:border-pastel-border-blue"
       case "body":
-        return "bg-background border-pastel-border-green hover:border-pastel-border-green/80 shadow-green-900/5 dark:shadow-green-100/5"
+        return "bg-background border-pastel-border-green/50 hover:border-pastel-border-green"
       case "conclusion":
-        return "bg-background border-pastel-border-amber hover:border-pastel-border-amber/80 shadow-amber-900/5 dark:shadow-amber-100/5"
+        return "bg-background border-pastel-border-amber/50 hover:border-pastel-border-amber"
       default:
-        return "bg-background border-pastel-border-purple hover:border-pastel-border-purple/80 shadow-purple-900/5 dark:shadow-purple-100/5"
+        return "bg-background border-pastel-border-purple/50 hover:border-pastel-border-purple"
     }
   }
 
   const getTextAreaStyles = (type: string) => {
     switch (type) {
       case "intro":
-        return "focus:ring-pastel-border-blue/30"
+        return "focus:ring-pastel-border-blue/20"
       case "body":
-        return "focus:ring-pastel-border-green/30"
+        return "focus:ring-pastel-border-green/20"
       case "conclusion":
-        return "focus:ring-pastel-border-amber/30"
+        return "focus:ring-pastel-border-amber/20"
       default:
-        return "focus:ring-pastel-border-purple/30"
+        return "focus:ring-pastel-border-purple/20"
     }
   }
 
@@ -115,40 +115,40 @@ export function OutlineBlock({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "rounded-2xl border-2 p-6 transition-all duration-300 shadow-sm",
-        isDragging ? "z-20 shadow-2xl scale-[1.03] ring-4 ring-primary/10" : "",
+        "rounded-xl border p-4 transition-all duration-200 shadow-sm",
+        isDragging ? "z-10 shadow-lg scale-[1.01] ring-2 ring-primary/5" : "",
         getBlockStyles(block.type)
       )}
     >
-      <div className="flex items-start gap-5">
+      <div className="flex items-start gap-3">
         <div
           {...attributes}
           {...listeners}
-          className="flex-shrink-0 cursor-grab mt-1 p-2 rounded-xl hover:bg-muted transition-colors bg-muted/30"
+          className="flex-shrink-0 cursor-grab mt-1 p-1.5 rounded-md hover:bg-muted transition-colors bg-muted/20"
           data-drag-handle
           tabIndex={0}
           aria-label="Drag to reorder block"
           role="button"
           style={{ touchAction: 'none' }}
         >
-          <GripVertical className="h-6 w-6 text-muted-foreground" />
+          <GripVertical className="h-4 w-4 text-muted-foreground" />
         </div>
 
-        <div className="flex-grow space-y-4">
+        <div className="flex-grow space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {isEditingLabel ? (
                 <Input
                   value={labelValue}
                   onChange={handleLabelChange}
                   onBlur={handleLabelBlur}
                   onKeyDown={handleLabelKeyDown}
-                  className="max-w-[220px] h-9 text-sm font-bold rounded-lg"
+                  className="max-w-[180px] h-7 text-[10px] font-bold rounded-md"
                   autoFocus
                 />
               ) : (
                 <label
-                  className="text-xs font-black text-foreground/60 uppercase tracking-widest cursor-pointer hover:text-foreground transition-colors py-1 px-2 bg-muted/50 rounded-md"
+                  className="text-[10px] font-bold text-foreground/50 uppercase tracking-widest cursor-pointer hover:text-foreground transition-colors px-1.5 py-0.5 bg-muted/30 rounded"
                   onClick={() => setIsEditingLabel(true)}
                 >
                   {block.label}
@@ -156,7 +156,7 @@ export function OutlineBlock({
               )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <Button
                 variant="ghost"
                 size="xs"
@@ -164,26 +164,26 @@ export function OutlineBlock({
                   e.stopPropagation();
                   onResetLabel();
                 }}
-                className="h-8 px-3 text-[10px] font-black uppercase tracking-tighter hover:bg-muted/50 rounded-lg"
+                className="h-6 px-1.5 text-[9px] font-bold uppercase tracking-tight hover:bg-muted/50 rounded-md"
               >
-                <span>Reset Label</span>
-                <RefreshCw className="h-3 w-3 ml-2" />
+                <span>Reset</span>
+                <RefreshCw className="h-2.5 w-2.5 ml-1" />
               </Button>
               {showRemoveButton && (
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="icon-sm"
                   onClick={onRemoveBlock}
-                  className="h-8 w-8 rounded-xl hover:bg-destructive/10 hover:text-destructive transition-colors"
+                  className="h-6 w-6 rounded-md hover:bg-destructive/10 hover:text-destructive transition-colors"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3.5 w-3.5" />
                   <span className="sr-only">Remove block</span>
                 </Button>
               )}
             </div>
           </div>
 
-          <div className="min-h-[80px] w-full" style={{ whiteSpace: 'pre-line' }} onClick={() => setIsEditing(true)}>
+          <div className="min-h-[60px] w-full" style={{ whiteSpace: 'pre-line' }} onClick={() => setIsEditing(true)}>
             {isEditing ? (
               <textarea
                 ref={textareaRef}
@@ -191,7 +191,7 @@ export function OutlineBlock({
                 onChange={handleContentChange}
                 onBlur={() => setIsEditing(false)}
                 className={cn(
-                  "w-full min-h-[100px] p-4 rounded-xl bg-muted/40 focus:outline-none focus:ring-4 transition-all text-lg font-medium",
+                  "w-full min-h-[70px] p-3 rounded-lg bg-muted/20 focus:outline-none focus:ring-2 transition-all text-sm font-medium",
                   getTextAreaStyles(block.type)
                 )}
                 placeholder={block.placeholder}
@@ -200,8 +200,8 @@ export function OutlineBlock({
             ) : (
               <div
                 className={cn(
-                  "w-full min-h-[80px] p-4 rounded-xl transition-all cursor-text text-lg font-medium border-2 border-transparent",
-                  content ? "bg-muted/10" : "bg-muted/30 text-muted-foreground/60 italic"
+                  "w-full min-h-[60px] p-3 rounded-lg transition-all cursor-text text-sm font-medium border border-transparent",
+                  content ? "bg-muted/5" : "bg-muted/20 text-muted-foreground/50 italic"
                 )}
               >
                 {content || block.placeholder}
