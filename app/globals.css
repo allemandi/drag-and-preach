@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 body {
   font-family: Arial, Helvetica, sans-serif;
@@ -12,17 +10,70 @@ body {
   }
 }
 
+@theme {
+    --color-background: hsl(0 100% 98%); /* Light peach */
+    --color-foreground: hsl(120 30% 25%); /* Dark green */
+    --color-card: hsl(0 100% 98%);
+    --color-card-foreground: hsl(120 30% 25%);
+    --color-popover: hsl(0 100% 98%);
+    --color-popover-foreground: hsl(120 30% 25%);
+    --color-primary: hsl(120 30% 25%); /* Dark green */
+    --color-primary-foreground: hsl(0 100% 98%); /* Light peach */
+    --color-secondary: hsl(60 80% 80%); /* Light yellow-green */
+    --color-secondary-foreground: hsl(120 30% 25%);
+    --color-muted: hsl(0 100% 95%);
+    --color-muted-foreground: hsl(120 30% 35%);
+    --color-accent: hsl(60 80% 80%);
+    --color-accent-foreground: hsl(120 30% 25%);
+    --color-destructive: hsl(0 84.2% 60.2%);
+    --color-destructive-foreground: hsl(0 0% 98%);
+    --color-border: hsl(0 100% 90%);
+    --color-input: hsl(0 100% 90%);
+    --color-ring: hsl(120 30% 25%);
+    --color-sidebar-background: hsl(0 100% 95%);
+    --color-sidebar-foreground: hsl(120 30% 25%);
+    --color-sidebar-primary: hsl(120 30% 25%);
+    --color-sidebar-primary-foreground: hsl(0 100% 98%);
+    --color-sidebar-accent: hsl(60 80% 85%);
+    --color-sidebar-accent-foreground: hsl(120 30% 25%);
+    --color-sidebar-border: hsl(0 100% 90%);
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --animate-accordion-down: accordion-down 0.2s ease-out;
+    --animate-accordion-up: accordion-up 0.2s ease-out;
+
+    @keyframes accordion-down {
+      from {
+        height: 0;
+      }
+      to {
+        height: var(--radix-accordion-content-height);
+      }
+    }
+    @keyframes accordion-up {
+      from {
+        height: var(--radix-accordion-content-height);
+      }
+      to {
+        height: 0;
+      }
+    }
+}
+
 @layer base {
   :root {
-    --background: 0 100% 98%; /* Light peach */
-    --foreground: 120 30% 25%; /* Dark green */
+    --background: 0 100% 98%;
+    --foreground: 120 30% 25%;
     --card: 0 100% 98%;
     --card-foreground: 120 30% 25%;
     --popover: 0 100% 98%;
     --popover-foreground: 120 30% 25%;
-    --primary: 120 30% 25%; /* Dark green */
-    --primary-foreground: 0 100% 98%; /* Light peach */
-    --secondary: 60 80% 80%; /* Light yellow-green */
+    --primary: 120 30% 25%;
+    --primary-foreground: 0 100% 98%;
+    --secondary: 60 80% 80%;
     --secondary-foreground: 120 30% 25%;
     --muted: 0 100% 95%;
     --muted-foreground: 120 30% 35%;
@@ -42,15 +93,15 @@ body {
     --sidebar-border: 0 100% 90%;
   }
   .dark {
-    --background: 0 0% 5%; /* Deep black */
-    --foreground: 270 50% 80%; /* Soft purple */
+    --background: 0 0% 5%;
+    --foreground: 270 50% 80%;
     --card: 0 0% 5%;
     --card-foreground: 270 50% 80%;
     --popover: 0 0% 5%;
     --popover-foreground: 270 50% 80%;
-    --primary: 270 50% 80%; /* Soft purple */
-    --primary-foreground: 0 0% 5%; /* Deep black */
-    --secondary: 270 30% 20%; /* Dark purple */
+    --primary: 270 50% 80%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 270 30% 20%;
     --secondary-foreground: 270 50% 80%;
     --muted: 0 0% 10%;
     --muted-foreground: 270 50% 70%;
@@ -71,23 +122,23 @@ body {
   }
 }
 
-  @layer base {
-    * {
-      @apply border-border;
-    }
-    body {
-      @apply bg-background text-foreground text-sm sm:text-base;
-    }
-    h1 {
-      @apply text-xl font-bold tracking-tight sm:text-2xl;
-    }
-    h2 {
-      @apply text-lg font-semibold sm:text-xl;
-    }
-    p {
-      @apply text-muted-foreground text-xs sm:text-sm;
-    }
-    .container {
-      @apply px-4;
-    }
+@layer base {
+  * {
+    @apply border-border;
   }
+  body {
+    @apply bg-background text-foreground text-sm sm:text-base;
+  }
+  h1 {
+    @apply text-xl font-bold tracking-tight sm:text-2xl;
+  }
+  h2 {
+    @apply text-lg font-semibold sm:text-xl;
+  }
+  p {
+    @apply text-muted-foreground text-xs sm:text-sm;
+  }
+  .container {
+    @apply px-4;
+  }
+}
