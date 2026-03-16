@@ -13,16 +13,18 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-sm",
+          "border-2 border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-sm",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        pastel: "bg-background border-2 border-pastel-border-blue hover:bg-pastel-blue transition-colors shadow-sm",
-        "pastel-green": "bg-background border-2 border-pastel-border-green hover:bg-pastel-green transition-colors shadow-sm",
-        "pastel-amber": "bg-background border-2 border-pastel-border-amber hover:bg-pastel-amber transition-colors shadow-sm",
-        "pastel-purple": "bg-background border-2 border-pastel-border-purple hover:bg-pastel-purple transition-colors shadow-sm",
-        "pastel-rose": "bg-background border-2 border-pastel-border-rose hover:bg-pastel-rose transition-colors shadow-sm",
+        // Standardized Pastel variants with clear outlines
+        pastel: "bg-background border-2 border-pastel-border-blue hover:bg-pastel-blue text-foreground transition-colors shadow-sm",
+        "pastel-blue": "bg-background border-2 border-pastel-border-blue hover:bg-pastel-blue text-foreground transition-colors shadow-sm",
+        "pastel-green": "bg-background border-2 border-pastel-border-green hover:bg-pastel-green text-foreground transition-colors shadow-sm",
+        "pastel-amber": "bg-background border-2 border-pastel-border-amber hover:bg-pastel-amber text-foreground transition-colors shadow-sm",
+        "pastel-purple": "bg-background border-2 border-pastel-border-purple hover:bg-pastel-purple text-foreground transition-colors shadow-sm",
+        "pastel-rose": "bg-background border-2 border-pastel-border-rose hover:bg-pastel-rose text-foreground transition-colors shadow-sm",
       },
       size: {
         default: "h-10 px-4 py-2",

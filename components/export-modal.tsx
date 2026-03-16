@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, FileCode2, FileArchive } from "lucide-react";
+import { FileText, FileCode2, FileArchive, FileJson } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,6 +15,13 @@ interface ExportModalProps {
 }
 
 export function ExportModal({ onExport }: ExportModalProps) {
+  const exportOptions = [
+    { format: "pdf" as const, label: "PDF", icon: FileText, variant: "pastel-rose" as const },
+    { format: "docx" as const, label: "Word (DOCX)", icon: FileCode2, variant: "pastel-blue" as const },
+    { format: "txt" as const, label: "Plain Text (TXT)", icon: FileArchive, variant: "pastel-amber" as const },
+    { format: "md" as const, label: "Markdown (MD)", icon: FileJson, variant: "pastel-green" as const },
+  ];
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -23,43 +30,22 @@ export function ExportModal({ onExport }: ExportModalProps) {
           <span>Export</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] rounded-xl border-2 border-pastel-border-purple">
+      <DialogContent className="sm:max-w-[450px] rounded-xl border-2 border-pastel-border-purple">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center mb-4">Export Outline</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-center mb-6">Export Outline</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-          <Button
-            onClick={() => onExport("pdf")}
-            variant="pastel"
-            className="w-full h-24 flex flex-col gap-2"
-          >
-            <FileText className="h-6 w-6" />
-            PDF
-          </Button>
-          <Button
-            onClick={() => onExport("docx")}
-            variant="pastel-blue"
-            className="w-full h-24 flex flex-col gap-2"
-          >
-            <FileCode2 className="h-6 w-6" />
-            Word (DOCX)
-          </Button>
-          <Button
-            onClick={() => onExport("txt")}
-            variant="pastel-amber"
-            className="w-full h-24 flex flex-col gap-2"
-          >
-            <FileArchive className="h-6 w-6" />
-            Plain Text (TXT)
-          </Button>
-          <Button
-            onClick={() => onExport("md")}
-            variant="pastel-green"
-            className="w-full h-24 flex flex-col gap-2"
-          >
-            <FileCode2 className="h-6 w-6" />
-            Markdown (MD)
-          </Button>
+        <div className="grid grid-cols-2 gap-4 mt-2">
+          {exportOptions.map((option) => (
+            <Button
+              key={option.format}
+              onClick={() => onExport(option.format)}
+              variant={option.variant}
+              className="w-full h-24 flex flex-col items-center justify-center gap-2"
+            >
+              <option.icon className="h-7 w-7" />
+              <span className="font-semibold">{option.label}</span>
+            </Button>
+          ))}
         </div>
       </DialogContent>
     </Dialog>
