@@ -14,8 +14,8 @@ body {
 
 @layer base {
   :root {
-    --background: 350 100% 98%;
-    --foreground: 240 10% 3.9%;
+    --background: 240 20% 98%;
+    --foreground: 240 10% 10%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
@@ -33,21 +33,28 @@ body {
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 5% 64.9%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 240 5.9% 90%;
+    --radius: 0.75rem;
+
+    /* Pastel colors */
+    --pastel-blue: 210 100% 96%;
+    --pastel-green: 140 100% 96%;
+    --pastel-amber: 40 100% 96%;
+    --pastel-purple: 270 100% 96%;
+    --pastel-rose: 350 100% 96%;
+
+    --border-blue: 210 50% 80%;
+    --border-green: 140 50% 80%;
+    --border-amber: 40 50% 80%;
+    --border-purple: 270 50% 80%;
+    --border-rose: 350 50% 80%;
   }
+
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 240 10% 4%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 240 10% 6%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 240 10% 6%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%;
@@ -59,16 +66,22 @@ body {
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
+    --border: 240 3.7% 20%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
-    --sidebar-background: 240 10% 3.9%;
-    --sidebar-foreground: 240 5% 64.9%;
-    --sidebar-primary: 0 0% 98%;
-    --sidebar-primary-foreground: 240 5.9% 10%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 3.7% 15.9%;
+
+    /* Pastel colors for dark mode - subtle tints */
+    --pastel-blue: 210 30% 12%;
+    --pastel-green: 140 30% 12%;
+    --pastel-amber: 40 30% 12%;
+    --pastel-purple: 270 30% 12%;
+    --pastel-rose: 350 30% 12%;
+
+    --border-blue: 210 40% 25%;
+    --border-green: 140 40% 25%;
+    --border-amber: 40 40% 25%;
+    --border-purple: 270 40% 25%;
+    --border-rose: 350 40% 25%;
   }
 }
 
@@ -77,6 +90,6 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-colors duration-300;
   }
 }
