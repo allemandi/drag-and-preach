@@ -34,10 +34,134 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+// Default sections for initialization and reset
+const getDefaultSections = (): Section[] => [
+  {
+    id: "intro-section",
+    title: "Introduction",
+    defaultTitle: "Introduction",
+    type: "intro",
+    blocks: [
+      {
+        id: "hook",
+        label: "Hook / Opening Question",
+        defaultLabel: "Hook / Opening Question",
+        placeholder: "Begin with bold question, statement, or story:\n'Today, we will be looking at how we are called to...'",
+        content: "",
+        type: "intro",
+      },
+      {
+        id: "context",
+        label: "Context or Background",
+        defaultLabel: "Context or Background",
+        placeholder: "Briefly introduce scriptural passage or real-world context:\n'Let me tell you a story from my life.'",
+        content: "",
+        type: "intro",
+      },
+      {
+        id: "thesis",
+        label: "Thesis Statement (Theme)",
+        defaultLabel: "Thesis Statement (Theme)",
+        placeholder:
+          "Summarize the main message in one sentence:\n'The Book of Job reveals man's struggle to reconcile suffering with faith in unseen sovereignty.'",
+        content: "",
+        type: "intro",
+      },
+    ],
+  },
+  {
+    id: "body-section-1",
+    title: "Body Section 1",
+    defaultTitle: "Body Section 1",
+    type: "body",
+    blocks: [
+      {
+        id: "body-1-topic",
+        label: "Main Point / Topic Sentence",
+        defaultLabel: "Main Point / Topic Sentence",
+        placeholder: "Introduce point, relate to thesis:\n'Faith is constantly challenged, and we know...'",
+        content: "",
+        type: "body",
+      },
+      {
+        id: "body-1-scripture",
+        label: "Scripture",
+        defaultLabel: "Scripture",
+        placeholder: "Job 42:1–6.",
+        content: "",
+        type: "body",
+      },
+      {
+        id: "body-1-explanation",
+        label: "Explanation",
+        defaultLabel: "Explanation",
+        placeholder: "Unpack the meaning or lesson from the Scripture:\n'Job accepts it's okay to be...'",
+        content: "",
+        type: "body",
+      },
+      {
+        id: "body-1-application",
+        label: "Application",
+        defaultLabel: "Application",
+        placeholder: "How does this apply to today?\n'We all know that...",
+        content: "",
+        type: "body",
+      },
+      {
+        id: "body-1-transition",
+        label: "Summary Sentence",
+        defaultLabel: "Summary Sentence",
+        placeholder: "Tie and transition:\n'The passage teaches us that we can only..",
+        content: "",
+        type: "body",
+      },
+    ],
+  },
+  {
+    id: "conclusion-section",
+    title: "Conclusion",
+    defaultTitle: "Conclusion",
+    type: "conclusion",
+    blocks: [
+      {
+        id: "restate-thesis",
+        label: "Theme Recap",
+        defaultLabel: "Theme Recap",
+        placeholder: "Reword central message clearly:\n'Through Job, we know our struggles are accompanied by choices to trust...",
+        content: "",
+        type: "conclusion",
+      },
+      {
+        id: "summary",
+        label: "Summary",
+        defaultLabel: "Summary",
+        placeholder: "Briefly recap body sections:\n'We are challenged to live in faith, so...",
+        content: "",
+        type: "conclusion",
+      },
+      {
+        id: "call-to-action",
+        label: "Final Word or Challenge",
+        defaultLabel: "Final Word or Challenge",
+        placeholder: "Give something to consider and practice:\n'Today, I ask you to examine...",
+        content: "",
+        type: "conclusion",
+      },
+      {
+        id: "closing",
+        label: "Closing Prayer or Scripture",
+        defaultLabel: "Closing Prayer or Scripture",
+        placeholder: "End with prayer or passage\n'Let's end with a short passage in Colossians Chapter...",
+        content: "",
+        type: "conclusion",
+      },
+    ],
+  },
+]
+
 
 export default function SermonOutlinePlanner() {
-  const [sections, setSections] = useState<Section[]>([])
-  const [loading, setLoading] = useState(true)
+  const [sections, setSections] = useState<Section[]>(getDefaultSections())
   const { toast } = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { theme, setTheme } = useTheme()
@@ -76,165 +200,24 @@ export default function SermonOutlinePlanner() {
     [sections]
   );
 
-  // Default sections for initialization and reset
-  const getDefaultSections = (): Section[] => [
-    {
-      id: "intro-section",
-      title: "Introduction",
-      defaultTitle: "Introduction",
-      type: "intro",
-      blocks: [
-        {
-          id: "hook",
-          label: "Hook / Opening Question",
-          defaultLabel: "Hook / Opening Question",
-          placeholder: "Begin with bold question, statement, or story:\n'Today, we will be looking at how we are called to...'",
-          content: "",
-          type: "intro",
-        },
-        {
-          id: "context",
-          label: "Context or Background",
-          defaultLabel: "Context or Background",
-          placeholder: "Briefly introduce scriptural passage or real-world context:\n'Let me tell you a story from my life.'",
-          content: "",
-          type: "intro",
-        },
-        {
-          id: "thesis",
-          label: "Thesis Statement (Theme)",
-          defaultLabel: "Thesis Statement (Theme)",
-          placeholder:
-            "Summarize the main message in one sentence:\n'The Book of Job reveals man's struggle to reconcile suffering with faith in unseen sovereignty.'",
-          content: "",
-          type: "intro",
-        },
-      ],
-    },
-    {
-      id: "body-section-1",
-      title: "Body Section 1",
-      defaultTitle: "Body Section 1",
-      type: "body",
-      blocks: [
-        {
-          id: "body-1-topic",
-          label: "Main Point / Topic Sentence",
-          defaultLabel: "Main Point / Topic Sentence",
-          placeholder: "Introduce point, relate to thesis:\n'Faith is constantly challenged, and we know...'",
-          content: "",
-          type: "body",
-        },
-        {
-          id: "body-1-scripture",
-          label: "Scripture",
-          defaultLabel: "Scripture",
-          placeholder: "Job 42:1–6.",
-          content: "",
-          type: "body",
-        },
-        {
-          id: "body-1-explanation",
-          label: "Explanation",
-          defaultLabel: "Explanation",
-          placeholder: "Unpack the meaning or lesson from the Scripture:\n'Job accepts it's okay to be...'",
-          content: "",
-          type: "body",
-        },
-        {
-          id: "body-1-application",
-          label: "Application",
-          defaultLabel: "Application",
-          placeholder: "How does this apply to today?\n'We all know that...",
-          content: "",
-          type: "body",
-        },
-        {
-          id: "body-1-transition",
-          label: "Summary Sentence",
-          defaultLabel: "Summary Sentence",
-          placeholder: "Tie and transition:\n'The passage teaches us that we can only..",
-          content: "",
-          type: "body",
-        },
-      ],
-    },
-    {
-      id: "conclusion-section",
-      title: "Conclusion",
-      defaultTitle: "Conclusion",
-      type: "conclusion",
-      blocks: [
-        {
-          id: "restate-thesis",
-          label: "Theme Recap",
-          defaultLabel: "Theme Recap",
-          placeholder: "Reword central message clearly:\n'Through Job, we know our struggles are accompanied by choices to trust...",
-          content: "",
-          type: "conclusion",
-        },
-        {
-          id: "summary",
-          label: "Summary",
-          defaultLabel: "Summary",
-          placeholder: "Briefly recap body sections:\n'We are challenged to live in faith, so...",
-          content: "",
-          type: "conclusion",
-        },
-        {
-          id: "call-to-action",
-          label: "Final Word or Challenge",
-          defaultLabel: "Final Word or Challenge",
-          placeholder: "Give something to consider and practice:\n'Today, I ask you to examine...",
-          content: "",
-          type: "conclusion",
-        },
-        {
-          id: "closing",
-          label: "Closing Prayer or Scripture",
-          defaultLabel: "Closing Prayer or Scripture",
-          placeholder: "End with prayer or passage\n'Let's end with a short passage in Colossians Chapter...",
-          content: "",
-          type: "conclusion",
-        },
-      ],
-    },
-  ]
-
-  // Fix for theme and mounting issues
   useEffect(() => {
-    // Set mounted first to indicate component is in the DOM
     setMounted(true)
 
-    // Only initialize dark mode if it's not already set
+    // Set default theme to dark if not set
     if (typeof window !== 'undefined' && !localStorage.getItem('theme')) {
       setTheme("dark")
     }
-  }, [setTheme])
 
-  // Separate effect for loading data to avoid race conditions
-  useEffect(() => {
-    // Only proceed if component is mounted
-    if (!mounted) return
-
+    // Load data from localStorage
     try {
-      // Load data from localStorage or initialize with default sections
       const savedOutline = localStorage.getItem("sermonOutline")
-
       if (savedOutline) {
         setSections(JSON.parse(savedOutline))
-      } else {
-        // Initialize with default sections
-        setSections(getDefaultSections())
       }
     } catch (e) {
       console.error("Error loading outline data:", e)
-      setSections(getDefaultSections())
-    } finally {
-      setLoading(false)
     }
-  }, [mounted]) // Only run this effect when mounted changes
-
+  }, [setTheme])
 
 
   const handleBlockDragEnd = (event: DragEndEvent) => {
@@ -633,18 +616,18 @@ export default function SermonOutlinePlanner() {
     setTheme(theme === "dark" ? "light" : "dark")
   }
 
-  // Show a proper loading state
-  if (!mounted || loading) {
+  // Hide UI until mounted to avoid hydration mismatch, but don't show a spinner
+  if (!mounted) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    )
+        <div className="container mx-auto px-4 py-8 max-w-5xl pb-24 opacity-0">
+          {/* Static version of the header or just empty space */}
+        </div>
+      )
   }
 
   return (
 
-    <div className="container mx-auto px-4 py-8 max-w-5xl pb-24">
+    <div className="container mx-auto px-4 py-8 max-w-5xl pb-24 transition-opacity duration-300">
       <header className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
           <div className="space-y-2">
