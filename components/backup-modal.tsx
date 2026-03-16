@@ -27,30 +27,30 @@ export function BackupModal({ onDownload, onUpload }: BackupModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="pastel-green" className="flex-1 sm:flex-none">
-          <Database className="h-4 w-4 sm:mr-2" />
+        <Button variant="pastel-green" size="sm">
+          <Database className="h-4 w-4 mr-1.5" />
           <span>Backup</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[400px] rounded-xl border-2 border-pastel-border-green">
+      <DialogContent className="sm:max-w-[380px] rounded-2xl border border-pastel-border-green p-6 shadow-xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center mb-6">Backup Options</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-center mb-6 tracking-tight">Backup Options</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-1 gap-4 mt-2">
+        <div className="grid grid-cols-1 gap-3 mt-2">
           <Button
             onClick={() => handleAction(onDownload)}
             variant="pastel-blue"
-            className="w-full h-20 text-lg flex flex-col items-center justify-center gap-1"
+            className="w-full h-16 text-sm font-bold flex flex-col items-center justify-center gap-1 rounded-xl hover:scale-[1.02] active:scale-95 transition-all"
           >
-            <Download className="h-6 w-6" />
+            <Download className="h-5 w-5" />
             <span>Download Backup</span>
           </Button>
           <Button
             onClick={() => handleAction(onUpload)}
             variant="pastel-amber"
-            className="w-full h-20 text-lg flex flex-col items-center justify-center gap-1"
+            className="w-full h-16 text-sm font-bold flex flex-col items-center justify-center gap-1 rounded-xl hover:scale-[1.02] active:scale-95 transition-all"
           >
-            <Upload className="h-6 w-6" />
+            <Upload className="h-5 w-5" />
             <span>Load Backup</span>
           </Button>
         </div>

@@ -90,43 +90,43 @@ export default function SermonOutlinePlanner() {
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-      <div className="container mx-auto px-4 py-8 max-w-5xl pb-32">
-        <header className="mb-12 space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="flex items-center gap-4 group">
-              <div className="p-3 bg-pastel-blue border-2 border-pastel-border-blue rounded-2xl shadow-sm transition-transform group-hover:rotate-6">
-                <ArrowUpDown className="h-8 w-8 text-foreground" />
+      <div className="container mx-auto px-4 py-8 max-w-6xl pb-24">
+        <header className="mb-10 space-y-6">
+          <div className="flex justify-between items-center gap-4">
+            <div className="flex items-center gap-3 group">
+              <div className="p-2 bg-pastel-blue/40 border-2 border-pastel-border-blue rounded-xl shadow-sm transition-transform group-hover:rotate-3">
+                <ArrowUpDown className="h-6 w-6 text-pastel-text-blue" />
               </div>
               <div>
-                <h1 className="text-4xl md:text-5xl font-black tracking-tight text-balance">Drag and Preach</h1>
-                <p className="text-lg text-muted-foreground font-medium">
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Drag and Preach</h1>
+                <p className="text-sm text-muted-foreground font-medium hidden sm:block">
                   Sleek, professional sermon organization.
                 </p>
               </div>
             </div>
             <Button
               variant="outline"
-              size="icon"
+              size="icon-sm"
               onClick={toggleTheme}
-              className="rounded-full h-14 w-14 border-2 shadow-sm hover:scale-110 active:scale-90 transition-all"
+              className="rounded-full shadow-sm hover:scale-105 active:scale-95 transition-all bg-background/50"
               aria-label="Toggle theme"
             >
-              {theme === "light" ? <Moon className="h-6 w-6" /> : <Sun className="h-6 w-6" />}
+              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
             </Button>
           </div>
 
-          <nav className="grid grid-cols-1 sm:flex sm:items-center justify-between gap-4 p-5 bg-card/50 backdrop-blur-md rounded-3xl border-2 border-border shadow-sm">
-            <div className="flex flex-wrap gap-3">
-              <Button onClick={saveOutlineToLocalStorage} variant="pastel" className="flex-1 sm:flex-none h-11 px-6">
-                <Save className="h-4 w-4 mr-2" />
+          <nav className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-card/40 backdrop-blur-md rounded-2xl border border-border shadow-sm">
+            <div className="flex flex-wrap items-center gap-2">
+              <Button onClick={saveOutlineToLocalStorage} variant="pastel" size="sm">
+                <Save className="h-4 w-4 mr-1.5" />
                 <span>Save</span>
               </Button>
               <BackupModal onDownload={saveOutlineAsJson} onUpload={triggerFileInput} />
               <ExportModal onExport={handleExport} />
             </div>
 
-            <Button onClick={handleResetAll} variant="pastel-rose" className="h-11 px-6">
-              <RefreshCw className="h-4 w-4 mr-2" />
+            <Button onClick={handleResetAll} variant="pastel-rose" size="sm">
+              <RefreshCw className="h-4 w-4 mr-1.5" />
               <span>Reset All</span>
             </Button>
             <input type="file" ref={fileInputRef} onChange={onFileChange} accept=".json" className="hidden" />
@@ -134,20 +134,20 @@ export default function SermonOutlinePlanner() {
         </header>
 
         <Dialog open={showResetModal} onOpenChange={setShowResetModal}>
-          <DialogContent className="rounded-2xl border-2 border-pastel-border-rose">
+          <DialogContent className="rounded-2xl border border-pastel-border-rose shadow-xl sm:max-w-md">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-center">Reset Workspace?</DialogTitle>
+              <DialogTitle className="text-xl font-bold text-center">Reset Workspace?</DialogTitle>
             </DialogHeader>
-            <div className="mt-6 space-y-8">
-              <p className="text-center text-muted-foreground text-lg">
+            <div className="mt-4 space-y-6">
+              <p className="text-center text-muted-foreground text-sm font-medium">
                 This will clear your current outline. Are you sure you want to proceed?
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-3">
-                <Button variant="outline" onClick={cancelResetAll} className="h-12 px-8 text-base order-2 sm:order-1">
+                <Button variant="outline" onClick={cancelResetAll} className="flex-1 order-2 sm:order-1">
                   Cancel
                 </Button>
-                <Button variant="destructive" onClick={confirmResetAll} className="h-12 px-8 text-base order-1 sm:order-2">
-                  Yes, Reset Everything
+                <Button variant="destructive" onClick={confirmResetAll} className="flex-1 order-1 sm:order-2">
+                  Yes, Reset
                 </Button>
               </div>
             </div>
@@ -220,15 +220,15 @@ export default function SermonOutlinePlanner() {
             </SortableContext>
           </DndContext>
 
-          <div className="flex justify-center py-8">
+          <div className="flex justify-center py-6">
             <Button
               onClick={addBodySection}
               size="xl"
               variant="pastel-green"
-              className="flex items-center gap-4 px-16 py-8 rounded-2xl transition-all hover:scale-105 hover:shadow-xl active:scale-95"
+              className="flex items-center gap-2 group shadow-md"
             >
-              <Plus className="h-8 w-8" />
-              <span className="text-xl font-bold">Add New Body Section</span>
+              <Plus className="h-5 w-5 transition-transform group-hover:rotate-90" />
+              <span className="text-lg font-bold">Add New Body Section</span>
             </Button>
           </div>
 

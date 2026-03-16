@@ -41,13 +41,13 @@ export function OutlineSection({
   const getSectionStyles = (type: string) => {
     switch (type) {
       case "intro":
-        return "border-pastel-border-blue bg-pastel-blue/30"
+        return "border-pastel-border-blue bg-pastel-blue/10 text-pastel-text-blue"
       case "body":
-        return "border-pastel-border-green bg-pastel-green/30"
+        return "border-pastel-border-green bg-pastel-green/10 text-pastel-text-green"
       case "conclusion":
-        return "border-pastel-border-amber bg-pastel-amber/30"
+        return "border-pastel-border-amber bg-pastel-amber/10 text-pastel-text-amber"
       default:
-        return "border-pastel-border-purple bg-pastel-purple/30"
+        return "border-pastel-border-purple bg-pastel-purple/10 text-pastel-text-purple"
     }
   }
 
@@ -71,23 +71,21 @@ export function OutlineSection({
   }
 
   return (
-    <Card className={cn("transition-all", getSectionStyles(section.type))}>
-      <CardHeader className="flex flex-row items-center justify-between pb-4 pl-12">
-        <div className="flex items-center gap-2">
+    <Card className={cn("transition-all border rounded-2xl shadow-sm overflow-hidden", getSectionStyles(section.type))}>
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 pt-6 px-4 sm:px-8 gap-3">
+        <div className="flex items-center gap-3 min-w-[200px]">
           {isEditingTitle ? (
-            <div className="flex items-center gap-2">
-              <Input
-                value={titleValue}
-                onChange={handleTitleChange}
-                onBlur={handleTitleBlur}
-                onKeyDown={handleTitleKeyDown}
-                className="max-w-[250px] h-9 text-xl font-bold bg-background/50"
-                autoFocus
-              />
-            </div>
+            <Input
+              value={titleValue}
+              onChange={handleTitleChange}
+              onBlur={handleTitleBlur}
+              onKeyDown={handleTitleKeyDown}
+              className="h-9 text-lg sm:text-xl font-bold bg-background/50 rounded-md border-2"
+              autoFocus
+            />
           ) : (
             <CardTitle
-              className="text-xl font-bold cursor-pointer hover:opacity-70 transition-opacity"
+              className="text-lg sm:text-xl font-bold cursor-pointer hover:opacity-70 transition-opacity tracking-tight text-inherit py-1 border-2 border-transparent"
               onClick={() => setIsEditingTitle(true)}
             >
               {section.title}
@@ -95,34 +93,34 @@ export function OutlineSection({
           )}
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost"
-            size="sm"
+            size="xs"
             onClick={(e) => {
               e.stopPropagation();
               onResetTitle(sectionIndex);
             }}
-            className="h-8 px-2 sm:px-3 text-xs hover:bg-background/50"
+            className="h-7 px-2 text-[10px] font-bold uppercase tracking-wider hover:bg-background/50 text-inherit"
           >
             <span className="hidden sm:inline">Reset Title</span>
-            <RefreshCw className="h-3.5 w-3.5 sm:ml-1" />
+            <RefreshCw className="h-3 w-3 sm:ml-1.5" />
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="xs"
             onClick={onAddBlock}
-            className="h-8 px-2 sm:px-3 text-xs bg-background/50 hover:bg-background"
+            className="h-7 px-2 text-[10px] font-bold uppercase tracking-wider bg-background/50 hover:bg-background border"
           >
-            <span className="hidden sm:inline">Add Block</span>
-            <Plus className="h-3.5 w-3.5 sm:ml-1" />
+            <span>Add Block</span>
+            <Plus className="h-3 w-3 ml-1.5" />
           </Button>
           {section.type === "body" && (
             <Button
               variant="ghost"
-              size="icon"
+              size="icon-sm"
               onClick={onRemoveSection}
-              className="h-8 w-8 rounded-full hover:bg-destructive/10 hover:text-destructive"
+              className="h-7 w-7 rounded-md hover:bg-destructive/10 hover:text-destructive"
             >
               <X className="h-4 w-4" />
               <span className="sr-only">Remove section</span>
@@ -130,7 +128,7 @@ export function OutlineSection({
           )}
         </div>
       </CardHeader>
-      <CardContent className="space-y-4 pt-0">
+      <CardContent className="space-y-4 pb-6 px-4 sm:px-8">
         {section.blocks.map((block, blockIndex) => (
           <OutlineBlock
             key={block.id}
