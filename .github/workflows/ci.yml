@@ -21,49 +21,9 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn lint
 
-  test-unit:
-    name: Unit Tests
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'yarn'
-      - run: yarn install --frozen-lockfile
-      - run: yarn test:unit
-
-  test-e2e:
-    name: E2E Tests
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'yarn'
-      - run: yarn install --frozen-lockfile
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
-
-      - run: npx playwright install --with-deps
-
-      - run: yarn build
-      - run: yarn test:e2e
-        env:
-          CI: true
-
   build:
     name: Build
-    needs: [test-unit, test-e2e]
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -76,5 +36,30 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: out
+          name: out-build
           path: out/
+
+  test:
+    name: Test
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+      - run: yarn install --frozen-lockfile
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: out-build
+          path: out/
+      - run: npx playwright install --with-deps chromium webkit
+      - run: yarn test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
