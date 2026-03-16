@@ -112,11 +112,11 @@ body {
     --pastel-purple: 265 70% 92%;
     --pastel-rose: 340 80% 92%;
 
-    --pastel-border-blue: 199 60% 75%;
-    --pastel-border-green: 142 50% 70%;
-    --pastel-border-amber: 48 70% 70%;
-    --pastel-border-purple: 265 50% 80%;
-    --pastel-border-rose: 340 60% 80%;
+    --pastel-border-blue: 199 60% 70%;
+    --pastel-border-green: 142 50% 65%;
+    --pastel-border-amber: 48 70% 65%;
+    --pastel-border-purple: 265 50% 75%;
+    --pastel-border-rose: 340 60% 75%;
 
     --pastel-text-blue: 199 70% 30%;
     --pastel-text-green: 142 60% 25%;
@@ -160,11 +160,11 @@ body {
     --pastel-purple: 265 20% 12%;
     --pastel-rose: 340 20% 12%;
 
-    --pastel-border-blue: 199 30% 25%;
-    --pastel-border-green: 142 25% 22%;
-    --pastel-border-amber: 48 25% 22%;
-    --pastel-border-purple: 265 25% 28%;
-    --pastel-border-rose: 340 25% 28%;
+    --pastel-border-blue: 199 30% 35%;
+    --pastel-border-green: 142 25% 32%;
+    --pastel-border-amber: 48 25% 32%;
+    --pastel-border-purple: 265 25% 38%;
+    --pastel-border-rose: 340 25% 38%;
 
     --pastel-text-blue: 199 40% 70%;
     --pastel-text-green: 142 35% 65%;

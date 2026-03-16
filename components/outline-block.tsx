@@ -137,23 +137,25 @@ export function OutlineBlock({
         <div className="flex-grow space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              {isEditingLabel ? (
-                <Input
-                  value={labelValue}
-                  onChange={handleLabelChange}
-                  onBlur={handleLabelBlur}
-                  onKeyDown={handleLabelKeyDown}
-                  className="max-w-[180px] h-7 text-[10px] font-bold rounded-md"
-                  autoFocus
-                />
-              ) : (
-                <label
-                  className="text-[10px] font-bold text-inherit opacity-70 uppercase tracking-widest cursor-pointer hover:opacity-100 transition-opacity px-1.5 py-0.5 bg-muted/30 rounded"
-                  onClick={() => setIsEditingLabel(true)}
-                >
-                  {block.label}
-                </label>
-              )}
+              <div className="relative min-w-[120px] flex items-center">
+                {isEditingLabel ? (
+                  <Input
+                    value={labelValue}
+                    onChange={handleLabelChange}
+                    onBlur={handleLabelBlur}
+                    onKeyDown={handleLabelKeyDown}
+                    className="h-7 text-[10px] font-bold rounded-md bg-background border-2 w-full"
+                    autoFocus
+                  />
+                ) : (
+                  <label
+                    className="text-[10px] font-bold text-inherit opacity-70 uppercase tracking-widest cursor-pointer hover:opacity-100 transition-opacity px-1.5 py-0.5 bg-muted/30 rounded w-full border-2 border-transparent"
+                    onClick={() => setIsEditingLabel(true)}
+                  >
+                    {block.label}
+                  </label>
+                )}
+              </div>
             </div>
 
             <div className="flex items-center gap-1.5">
@@ -201,7 +203,7 @@ export function OutlineBlock({
               <div
                 className={cn(
                   "w-full min-h-[60px] p-3 rounded-lg transition-all cursor-text text-sm font-medium border border-transparent",
-                  content ? "bg-muted/5 text-foreground" : "bg-muted/20 text-muted-foreground/40 italic"
+                  content ? "bg-muted/5 text-foreground" : "bg-muted/20 text-muted-foreground/50 dark:text-muted-foreground/60 italic"
                 )}
               >
                 {content || block.placeholder}

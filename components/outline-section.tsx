@@ -73,21 +73,19 @@ export function OutlineSection({
   return (
     <Card className={cn("transition-all border rounded-2xl shadow-sm overflow-hidden", getSectionStyles(section.type))}>
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 pt-6 px-4 sm:px-8 gap-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-[200px]">
           {isEditingTitle ? (
-            <div className="flex items-center gap-2">
-              <Input
-                value={titleValue}
-                onChange={handleTitleChange}
-                onBlur={handleTitleBlur}
-                onKeyDown={handleTitleKeyDown}
-                className="max-w-[240px] h-8 text-lg font-bold bg-background/50 rounded-md"
-                autoFocus
-              />
-            </div>
+            <Input
+              value={titleValue}
+              onChange={handleTitleChange}
+              onBlur={handleTitleBlur}
+              onKeyDown={handleTitleKeyDown}
+              className="h-9 text-lg sm:text-xl font-bold bg-background/50 rounded-md border-2"
+              autoFocus
+            />
           ) : (
             <CardTitle
-              className="text-lg sm:text-xl font-bold cursor-pointer hover:opacity-70 transition-opacity tracking-tight text-inherit"
+              className="text-lg sm:text-xl font-bold cursor-pointer hover:opacity-70 transition-opacity tracking-tight text-inherit py-1 border-2 border-transparent"
               onClick={() => setIsEditingTitle(true)}
             >
               {section.title}
