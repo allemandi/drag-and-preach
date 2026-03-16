@@ -9,6 +9,7 @@ import { GripVertical, X, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import type { OutlineBlock as OutlineBlockType } from "@/lib/types"
+import { cn } from "@/lib/utils"
 
 interface OutlineBlockProps {
   block: OutlineBlockType
@@ -83,16 +84,29 @@ export function OutlineBlock({
     }
   }
 
-  const getBlockColor = (type: string) => {
+  const getBlockStyles = (type: string) => {
     switch (type) {
       case "intro":
-        return "bg-blue-500/10 hover:bg-blue-500/20"
+        return "bg-background border-pastel-border-blue/50 hover:border-pastel-border-blue"
       case "body":
-        return "bg-green-500/10 hover:bg-green-500/20"
+        return "bg-background border-pastel-border-green/50 hover:border-pastel-border-green"
       case "conclusion":
-        return "bg-amber-500/10 hover:bg-amber-500/20"
+        return "bg-background border-pastel-border-amber/50 hover:border-pastel-border-amber"
       default:
-        return "bg-slate-500/10 hover:bg-slate-500/20"
+        return "bg-background border-pastel-border-purple/50 hover:border-pastel-border-purple"
+    }
+  }
+
+  const getTextAreaStyles = (type: string) => {
+    switch (type) {
+      case "intro":
+        return "focus:ring-pastel-border-blue"
+      case "body":
+        return "focus:ring-pastel-border-green"
+      case "conclusion":
+        return "focus:ring-pastel-border-amber"
+      default:
+        return "focus:ring-pastel-border-purple"
     }
   }
 
@@ -100,13 +114,17 @@ export function OutlineBlock({
     <div
       ref={setNodeRef}
       style={style}
-      className={`rounded-xl border-2 p-3 ${isDragging ? "z-10" : ""} transition-colors backdrop-blur-sm`}
+      className={cn(
+        "rounded-xl border-2 p-4 transition-all duration-200 shadow-sm",
+        isDragging ? "z-10 shadow-xl scale-[1.02]" : "",
+        getBlockStyles(block.type)
+      )}
     >
       <div className="flex items-start gap-3">
         <div
           {...attributes}
           {...listeners}
-          className="flex-shrink-0 cursor-grab mt-1 p-1 rounded hover:bg-muted"
+          className="flex-shrink-0 cursor-grab mt-1 p-1 rounded-md hover:bg-muted transition-colors"
           data-drag-handle
           tabIndex={0}
           aria-label="Drag to reorder block"
@@ -116,7 +134,7 @@ export function OutlineBlock({
           <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
 
-        <div className="flex-grow space-y-1">
+        <div className="flex-grow space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {isEditingLabel ? (
@@ -125,12 +143,12 @@ export function OutlineBlock({
                   onChange={handleLabelChange}
                   onBlur={handleLabelBlur}
                   onKeyDown={handleLabelKeyDown}
-                  className="max-w-[200px] h-7 text-sm font-medium"
+                  className="max-w-[200px] h-8 text-sm font-semibold"
                   autoFocus
                 />
               ) : (
                 <label
-                  className="text-sm font-medium text-foreground cursor-pointer"
+                  className="text-sm font-semibold text-foreground/80 cursor-pointer hover:text-foreground transition-colors uppercase tracking-wider"
                   onClick={() => setIsEditingLabel(true)}
                 >
                   {block.label}
@@ -139,18 +157,18 @@ export function OutlineBlock({
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
-            <Button
-  variant="outline"
-  size="sm"
-  onClick={(e) => {
-    e.stopPropagation();
-    onResetLabel();
-  }}
-  className="h-7 px-2 sm:px-3 text-xs border-muted hover:bg-muted/50"
->
-  <span className="hidden sm:inline">Reset Label</span>
-  <RefreshCw className="h-3 w-3 sm:ml-1" />
-</Button>
+              <Button
+                variant="ghost"
+                size="xs"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onResetLabel();
+                }}
+                className="h-7 px-2 text-xs hover:bg-muted/50"
+              >
+                <span className="hidden sm:inline">Reset Label</span>
+                <RefreshCw className="h-3 w-3 sm:ml-1" />
+              </Button>
               {showRemoveButton && (
                 <Button
                   variant="ghost"
@@ -172,15 +190,21 @@ export function OutlineBlock({
                 value={content}
                 onChange={handleContentChange}
                 onBlur={() => setIsEditing(false)}
-                className={`w-full min-h-[60px] p-2 rounded-lg ${getBlockColor(block.type)} focus:outline-none focus:ring-2 focus:ring-primary`}
+                className={cn(
+                  "w-full min-h-[80px] p-3 rounded-lg bg-muted/30 focus:outline-none focus:ring-2 transition-all",
+                  getTextAreaStyles(block.type)
+                )}
                 placeholder={block.placeholder}
                 rows={1}
               />
             ) : (
               <div
-                className={`w-full min-h-[60px] p-2 rounded-lg ${content ? getBlockColor(block.type) : "bg-muted/50 hover:bg-muted"}`}
+                className={cn(
+                  "w-full min-h-[60px] p-3 rounded-lg transition-colors cursor-text",
+                  content ? "bg-muted/20" : "bg-muted/50 text-muted-foreground italic"
+                )}
               >
-                {content || <span className="text-muted-foreground italic">{block.placeholder}</span>}
+                {content || block.placeholder}
               </div>
             )}
           </div>

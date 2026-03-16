@@ -44,6 +44,20 @@ const config: Config = {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
+        pastel: {
+          blue: 'hsl(var(--pastel-blue))',
+          green: 'hsl(var(--pastel-green))',
+          amber: 'hsl(var(--pastel-amber))',
+          purple: 'hsl(var(--pastel-purple))',
+          rose: 'hsl(var(--pastel-rose))',
+        },
+        'pastel-border': {
+          blue: 'hsl(var(--border-blue))',
+          green: 'hsl(var(--border-green))',
+          amber: 'hsl(var(--border-amber))',
+          purple: 'hsl(var(--border-purple))',
+          rose: 'hsl(var(--border-rose))',
+        },
   			chart: {
   				'1': 'hsl(var(--chart-1))',
   				'2': 'hsl(var(--chart-2))',
