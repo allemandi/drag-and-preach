@@ -43,6 +43,12 @@ body {
     --color-pastel-border-purple: hsl(var(--pastel-border-purple));
     --color-pastel-border-rose: hsl(var(--pastel-border-rose));
 
+    --color-pastel-text-blue: hsl(var(--pastel-text-blue));
+    --color-pastel-text-green: hsl(var(--pastel-text-green));
+    --color-pastel-text-amber: hsl(var(--pastel-text-amber));
+    --color-pastel-text-purple: hsl(var(--pastel-text-purple));
+    --color-pastel-text-rose: hsl(var(--pastel-text-rose));
+
     --color-sidebar-background: hsl(var(--sidebar-background));
     --color-sidebar-foreground: hsl(var(--sidebar-foreground));
     --color-sidebar-primary: hsl(var(--sidebar-primary));
@@ -78,83 +84,95 @@ body {
 
 @layer base {
   :root {
-    --background: 40 40% 98%; /* Warm creamy white */
-    --foreground: 270 20% 15%; /* Dark lavender-charcoal */
+    --background: 240 15% 98%; /* Slightly off-white */
+    --foreground: 240 10% 10%; /* Soft black */
     --card: 0 0% 100%;
-    --card-foreground: 270 20% 15%;
+    --card-foreground: 240 10% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 270 20% 15%;
-    --primary: 270 30% 25%; /* Deep Lavender */
-    --primary-foreground: 40 40% 98%;
-    --secondary: 40 20% 92%;
-    --secondary-foreground: 270 20% 15%;
-    --muted: 40 20% 95%;
-    --muted-foreground: 270 10% 45%;
-    --accent: 40 20% 92%;
-    --accent-foreground: 270 20% 15%;
+    --popover-foreground: 240 10% 10%;
+    --primary: 240 10% 15%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 94%;
+    --secondary-foreground: 240 10% 15%;
+    --muted: 240 5% 94%;
+    --muted-foreground: 240 5% 45%;
+    --accent: 240 5% 94%;
+    --accent-foreground: 240 10% 15%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 270 20% 90%;
-    --input: 270 20% 90%;
-    --ring: 270 30% 25%;
-    --radius: 0.5rem;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 240 10% 15%;
+    --radius: 0.75rem;
 
-    /* Easter Pastel Palette - Cheerful & Soft */
-    --pastel-blue: 195 85% 94%; /* Sky Blue */
-    --pastel-green: 145 70% 94%; /* Mint Green */
-    --pastel-amber: 55 100% 94%; /* Butter Yellow */
-    --pastel-purple: 275 80% 96%; /* Lavender */
-    --pastel-rose: 345 90% 96%; /* Pale Pink */
+    /* Vibrant but soft Easter Pastel Palette */
+    --pastel-blue: 199 80% 90%;
+    --pastel-green: 142 60% 88%;
+    --pastel-amber: 48 90% 88%;
+    --pastel-purple: 265 70% 92%;
+    --pastel-rose: 340 80% 92%;
 
-    --pastel-border-blue: 195 50% 88%;
-    --pastel-border-green: 145 40% 88%;
-    --pastel-border-amber: 55 60% 88%;
-    --pastel-border-purple: 275 40% 90%;
-    --pastel-border-rose: 345 50% 90%;
+    --pastel-border-blue: 199 60% 75%;
+    --pastel-border-green: 142 50% 70%;
+    --pastel-border-amber: 48 70% 70%;
+    --pastel-border-purple: 265 50% 80%;
+    --pastel-border-rose: 340 60% 80%;
 
-    --sidebar-background: 40 40% 97%;
-    --sidebar-foreground: 270 20% 25%;
-    --sidebar-primary: 270 30% 25%;
-    --sidebar-primary-foreground: 40 40% 98%;
-    --sidebar-accent: 40 20% 92%;
-    --sidebar-accent-foreground: 270 20% 25%;
-    --sidebar-border: 40 20% 90%;
+    --pastel-text-blue: 199 70% 30%;
+    --pastel-text-green: 142 60% 25%;
+    --pastel-text-amber: 48 70% 25%;
+    --pastel-text-purple: 265 60% 35%;
+    --pastel-text-rose: 340 70% 35%;
+
+    --sidebar-background: 240 5% 97%;
+    --sidebar-foreground: 240 10% 25%;
+    --sidebar-primary: 240 10% 15%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 5% 94%;
+    --sidebar-accent-foreground: 240 10% 25%;
+    --sidebar-border: 240 6% 91%;
   }
   .dark {
-    --background: 270 25% 8%; /* Deep warm lavender-black */
-    --foreground: 270 10% 95%;
-    --card: 270 20% 11%;
-    --card-foreground: 270 10% 95%;
-    --popover: 270 20% 11%;
-    --popover-foreground: 270 10% 95%;
-    --primary: 270 10% 95%;
-    --primary-foreground: 270 25% 8%;
-    --secondary: 270 15% 16%;
-    --secondary-foreground: 270 10% 95%;
-    --muted: 270 15% 13%;
-    --muted-foreground: 270 10% 65%;
-    --accent: 270 15% 16%;
-    --accent-foreground: 270 10% 95%;
+    --background: 240 10% 3.9%; /* Industry Standard Dark (Zinc 950) */
+    --foreground: 240 5% 96%;
+    --card: 240 10% 6%;
+    --card-foreground: 240 5% 96%;
+    --popover: 240 10% 6%;
+    --popover-foreground: 240 5% 96%;
+    --primary: 240 5% 96%;
+    --primary-foreground: 240 10% 3.9%;
+    --secondary: 240 5% 12%;
+    --secondary-foreground: 240 5% 96%;
+    --muted: 240 5% 12%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 240 5% 12%;
+    --accent-foreground: 240 5% 96%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 270 15% 20%;
-    --input: 270 15% 20%;
-    --ring: 270 10% 95%;
+    --border: 240 5% 15%;
+    --input: 240 5% 15%;
+    --ring: 240 5% 85%;
 
-    /* Dark Easter Pastel Palette - Glowing & Subdued */
-    --pastel-blue: 195 50% 18%;
-    --pastel-green: 145 40% 16%;
-    --pastel-amber: 55 60% 16%;
-    --pastel-purple: 275 40% 20%;
-    --pastel-rose: 345 50% 20%;
+    /* Dark Mode Pastels - Desaturated pairing */
+    --pastel-blue: 199 20% 12%;
+    --pastel-green: 142 20% 10%;
+    --pastel-amber: 48 20% 10%;
+    --pastel-purple: 265 20% 12%;
+    --pastel-rose: 340 20% 12%;
 
-    --pastel-border-blue: 195 60% 30%;
-    --pastel-border-green: 145 40% 28%;
-    --pastel-border-amber: 55 70% 28%;
-    --pastel-border-purple: 275 50% 35%;
-    --pastel-border-rose: 345 60% 35%;
+    --pastel-border-blue: 199 30% 25%;
+    --pastel-border-green: 142 25% 22%;
+    --pastel-border-amber: 48 25% 22%;
+    --pastel-border-purple: 265 25% 28%;
+    --pastel-border-rose: 340 25% 28%;
 
-    --sidebar-background: 270 25% 9%;
+    --pastel-text-blue: 199 40% 70%;
+    --pastel-text-green: 142 35% 65%;
+    --pastel-text-amber: 48 35% 65%;
+    --pastel-text-purple: 265 35% 75%;
+    --pastel-text-rose: 340 35% 75%;
+
+    --sidebar-background: 240 10% 5%;
     --sidebar-foreground: 270 10% 88%;
     --sidebar-primary: 270 10% 95%;
     --sidebar-primary-foreground: 270 25% 8%;

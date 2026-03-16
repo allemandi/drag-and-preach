@@ -41,13 +41,13 @@ export function OutlineSection({
   const getSectionStyles = (type: string) => {
     switch (type) {
       case "intro":
-        return "border-pastel-border-blue bg-pastel-blue/10"
+        return "border-pastel-border-blue bg-pastel-blue/10 text-pastel-text-blue"
       case "body":
-        return "border-pastel-border-green bg-pastel-green/10"
+        return "border-pastel-border-green bg-pastel-green/10 text-pastel-text-green"
       case "conclusion":
-        return "border-pastel-border-amber bg-pastel-amber/10"
+        return "border-pastel-border-amber bg-pastel-amber/10 text-pastel-text-amber"
       default:
-        return "border-pastel-border-purple bg-pastel-purple/10"
+        return "border-pastel-border-purple bg-pastel-purple/10 text-pastel-text-purple"
     }
   }
 
@@ -87,7 +87,7 @@ export function OutlineSection({
             </div>
           ) : (
             <CardTitle
-              className="text-lg sm:text-xl font-bold cursor-pointer hover:opacity-70 transition-opacity tracking-tight"
+              className="text-lg sm:text-xl font-bold cursor-pointer hover:opacity-70 transition-opacity tracking-tight text-inherit"
               onClick={() => setIsEditingTitle(true)}
             >
               {section.title}
@@ -103,7 +103,7 @@ export function OutlineSection({
               e.stopPropagation();
               onResetTitle(sectionIndex);
             }}
-            className="h-7 px-2 text-[10px] font-bold uppercase tracking-wider hover:bg-background/50"
+            className="h-7 px-2 text-[10px] font-bold uppercase tracking-wider hover:bg-background/50 text-inherit"
           >
             <span className="hidden sm:inline">Reset Title</span>
             <RefreshCw className="h-3 w-3 sm:ml-1.5" />

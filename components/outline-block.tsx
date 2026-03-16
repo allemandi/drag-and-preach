@@ -87,26 +87,26 @@ export function OutlineBlock({
   const getBlockStyles = (type: string) => {
     switch (type) {
       case "intro":
-        return "bg-background border-pastel-border-blue/50 hover:border-pastel-border-blue"
+        return "bg-background border-pastel-border-blue/50 hover:border-pastel-border-blue text-pastel-text-blue"
       case "body":
-        return "bg-background border-pastel-border-green/50 hover:border-pastel-border-green"
+        return "bg-background border-pastel-border-green/50 hover:border-pastel-border-green text-pastel-text-green"
       case "conclusion":
-        return "bg-background border-pastel-border-amber/50 hover:border-pastel-border-amber"
+        return "bg-background border-pastel-border-amber/50 hover:border-pastel-border-amber text-pastel-text-amber"
       default:
-        return "bg-background border-pastel-border-purple/50 hover:border-pastel-border-purple"
+        return "bg-background border-pastel-border-purple/50 hover:border-pastel-border-purple text-pastel-text-purple"
     }
   }
 
   const getTextAreaStyles = (type: string) => {
     switch (type) {
       case "intro":
-        return "focus:ring-pastel-border-blue/20"
+        return "focus:ring-pastel-border-blue/40 border-pastel-border-blue/20"
       case "body":
-        return "focus:ring-pastel-border-green/20"
+        return "focus:ring-pastel-border-green/40 border-pastel-border-green/20"
       case "conclusion":
-        return "focus:ring-pastel-border-amber/20"
+        return "focus:ring-pastel-border-amber/40 border-pastel-border-amber/20"
       default:
-        return "focus:ring-pastel-border-purple/20"
+        return "focus:ring-pastel-border-purple/40 border-pastel-border-purple/20"
     }
   }
 
@@ -148,7 +148,7 @@ export function OutlineBlock({
                 />
               ) : (
                 <label
-                  className="text-[10px] font-bold text-foreground/50 uppercase tracking-widest cursor-pointer hover:text-foreground transition-colors px-1.5 py-0.5 bg-muted/30 rounded"
+                  className="text-[10px] font-bold text-inherit opacity-70 uppercase tracking-widest cursor-pointer hover:opacity-100 transition-opacity px-1.5 py-0.5 bg-muted/30 rounded"
                   onClick={() => setIsEditingLabel(true)}
                 >
                   {block.label}
@@ -164,7 +164,7 @@ export function OutlineBlock({
                   e.stopPropagation();
                   onResetLabel();
                 }}
-                className="h-6 px-1.5 text-[9px] font-bold uppercase tracking-tight hover:bg-muted/50 rounded-md"
+                className="h-6 px-1.5 text-[9px] font-bold uppercase tracking-tight hover:bg-muted/50 rounded-md text-inherit"
               >
                 <span>Reset</span>
                 <RefreshCw className="h-2.5 w-2.5 ml-1" />
@@ -201,7 +201,7 @@ export function OutlineBlock({
               <div
                 className={cn(
                   "w-full min-h-[60px] p-3 rounded-lg transition-all cursor-text text-sm font-medium border border-transparent",
-                  content ? "bg-muted/5" : "bg-muted/20 text-muted-foreground/50 italic"
+                  content ? "bg-muted/5 text-foreground" : "bg-muted/20 text-muted-foreground/40 italic"
                 )}
               >
                 {content || block.placeholder}

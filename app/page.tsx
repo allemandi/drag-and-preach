@@ -94,8 +94,8 @@ export default function SermonOutlinePlanner() {
         <header className="mb-10 space-y-6">
           <div className="flex justify-between items-center gap-4">
             <div className="flex items-center gap-3 group">
-              <div className="p-2 bg-pastel-blue/50 border border-pastel-border-blue rounded-xl shadow-sm transition-transform group-hover:rotate-3">
-                <ArrowUpDown className="h-6 w-6 text-foreground" />
+              <div className="p-2 bg-pastel-blue/40 border-2 border-pastel-border-blue rounded-xl shadow-sm transition-transform group-hover:rotate-3">
+                <ArrowUpDown className="h-6 w-6 text-pastel-text-blue" />
               </div>
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Drag and Preach</h1>
