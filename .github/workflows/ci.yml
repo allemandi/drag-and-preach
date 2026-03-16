@@ -18,10 +18,8 @@ jobs:
         with:
           node-version: 20
           cache: 'yarn'
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Run lint
-        run: yarn lint
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
 
   test-unit:
     name: Unit Tests
@@ -33,10 +31,8 @@ jobs:
         with:
           node-version: 20
           cache: 'yarn'
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Run unit tests
-        run: yarn test:unit
+      - run: yarn install --frozen-lockfile
+      - run: yarn test:unit
 
   test-e2e:
     name: E2E Tests
@@ -48,14 +44,20 @@ jobs:
         with:
           node-version: 20
           cache: 'yarn'
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-      - name: Build application
-        run: yarn build
-      - name: Run E2E tests
-        run: yarn test:e2e
+      - run: yarn install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - run: npx playwright install --with-deps
+
+      - run: yarn build
+      - run: yarn test:e2e
         env:
           CI: true
 
@@ -69,12 +71,10 @@ jobs:
         with:
           node-version: 20
           cache: 'yarn'
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Build
-        run: yarn build
-      - name: Upload build artifacts
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: out
-          path: out
+          path: out/
