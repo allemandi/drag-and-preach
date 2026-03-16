@@ -19,36 +19,39 @@ interface BackupModalProps {
 export function BackupModal({ onDownload, onUpload }: BackupModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleDownload = () => {
-    onDownload();
-    setIsOpen(false);
-  };
-
-  const handleUpload = () => {
-    onUpload();
+  const handleAction = (action: () => void) => {
+    action();
     setIsOpen(false);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="flex-1 sm:flex-none bg-green-500 hover:bg-green-600 text-white">
+        <Button variant="pastel-green" className="flex-1 sm:flex-none">
           <Database className="h-4 w-4 sm:mr-2" />
           <span>Backup</span>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[400px] rounded-xl border-2 border-pastel-border-green">
         <DialogHeader>
-          <DialogTitle>Backup Options</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-center mb-6">Backup Options</DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col gap-4 mt-4">
-          <Button onClick={handleDownload} variant="outline" className="w-full">
-            <Download className="h-4 w-4 mr-2" />
-            Download Backup
+        <div className="grid grid-cols-1 gap-4 mt-2">
+          <Button
+            onClick={() => handleAction(onDownload)}
+            variant="pastel-blue"
+            className="w-full h-20 text-lg flex flex-col items-center justify-center gap-1"
+          >
+            <Download className="h-6 w-6" />
+            <span>Download Backup</span>
           </Button>
-          <Button onClick={handleUpload} variant="outline" className="w-full">
-            <Upload className="h-4 w-4 mr-2" />
-            Load Backup
+          <Button
+            onClick={() => handleAction(onUpload)}
+            variant="pastel-amber"
+            className="w-full h-20 text-lg flex flex-col items-center justify-center gap-1"
+          >
+            <Upload className="h-6 w-6" />
+            <span>Load Backup</span>
           </Button>
         </div>
       </DialogContent>
