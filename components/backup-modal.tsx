@@ -27,30 +27,30 @@ export function BackupModal({ onDownload, onUpload }: BackupModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="pastel-green" className="flex-1 sm:flex-none">
-          <Database className="h-4 w-4 sm:mr-2" />
-          <span>Backup</span>
+        <Button variant="pastel-green" className="flex-1 sm:flex-none h-12 px-8">
+          <Database className="h-5 w-5 sm:mr-2" />
+          <span className="font-semibold">Backup</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[400px] rounded-xl border-2 border-pastel-border-green">
+      <DialogContent className="sm:max-w-[450px] rounded-[2rem] border-2 border-pastel-border-green p-8 shadow-2xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center mb-6">Backup Options</DialogTitle>
+          <DialogTitle className="text-3xl font-black text-center mb-8 tracking-tight">Backup Options</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-1 gap-4 mt-2">
+        <div className="grid grid-cols-1 gap-5 mt-2">
           <Button
             onClick={() => handleAction(onDownload)}
             variant="pastel-blue"
-            className="w-full h-20 text-lg flex flex-col items-center justify-center gap-1"
+            className="w-full h-24 text-xl font-bold flex flex-col items-center justify-center gap-2 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all"
           >
-            <Download className="h-6 w-6" />
+            <Download className="h-8 w-8" />
             <span>Download Backup</span>
           </Button>
           <Button
             onClick={() => handleAction(onUpload)}
             variant="pastel-amber"
-            className="w-full h-20 text-lg flex flex-col items-center justify-center gap-1"
+            className="w-full h-24 text-xl font-bold flex flex-col items-center justify-center gap-2 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all"
           >
-            <Upload className="h-6 w-6" />
+            <Upload className="h-8 w-8" />
             <span>Load Backup</span>
           </Button>
         </div>

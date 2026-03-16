@@ -89,17 +89,17 @@ export default function SermonOutlinePlanner() {
   if (!mounted) return <div className="min-h-screen bg-background" />
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-      <div className="container mx-auto px-4 py-8 max-w-5xl pb-32">
-        <header className="mb-12 space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="flex items-center gap-4 group">
-              <div className="p-3 bg-pastel-blue border-2 border-pastel-border-blue rounded-2xl shadow-sm transition-transform group-hover:rotate-6">
-                <ArrowUpDown className="h-8 w-8 text-foreground" />
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 selection:bg-primary/20">
+      <div className="container mx-auto px-4 py-12 max-w-7xl pb-32">
+        <header className="mb-16 space-y-10">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+            <div className="flex items-center gap-5 group">
+              <div className="p-4 bg-pastel-blue border-2 border-pastel-border-blue rounded-3xl shadow-sm transition-transform group-hover:rotate-6">
+                <ArrowUpDown className="h-10 w-10 text-foreground" />
               </div>
               <div>
-                <h1 className="text-4xl md:text-5xl font-black tracking-tight text-balance">Drag and Preach</h1>
-                <p className="text-lg text-muted-foreground font-medium">
+                <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-balance">Drag and Preach</h1>
+                <p className="text-xl text-muted-foreground font-semibold tracking-tight">
                   Sleek, professional sermon organization.
                 </p>
               </div>
@@ -108,25 +108,25 @@ export default function SermonOutlinePlanner() {
               variant="outline"
               size="icon"
               onClick={toggleTheme}
-              className="rounded-full h-14 w-14 border-2 shadow-sm hover:scale-110 active:scale-90 transition-all"
+              className="rounded-full h-16 w-16 border-2 shadow-sm hover:scale-110 active:scale-90 transition-all bg-background/50 backdrop-blur-sm"
               aria-label="Toggle theme"
             >
-              {theme === "light" ? <Moon className="h-6 w-6" /> : <Sun className="h-6 w-6" />}
+              {theme === "light" ? <Moon className="h-7 w-7" /> : <Sun className="h-7 w-7" />}
             </Button>
           </div>
 
-          <nav className="grid grid-cols-1 sm:flex sm:items-center justify-between gap-4 p-5 bg-card/50 backdrop-blur-md rounded-3xl border-2 border-border shadow-sm">
-            <div className="flex flex-wrap gap-3">
-              <Button onClick={saveOutlineToLocalStorage} variant="pastel" className="flex-1 sm:flex-none h-11 px-6">
-                <Save className="h-4 w-4 mr-2" />
+          <nav className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 p-6 bg-card/60 backdrop-blur-xl rounded-[2rem] border-2 border-border shadow-md">
+            <div className="flex flex-wrap items-center gap-4">
+              <Button onClick={saveOutlineToLocalStorage} variant="pastel" className="h-12 px-8">
+                <Save className="h-5 w-5 mr-2" />
                 <span>Save</span>
               </Button>
               <BackupModal onDownload={saveOutlineAsJson} onUpload={triggerFileInput} />
               <ExportModal onExport={handleExport} />
             </div>
 
-            <Button onClick={handleResetAll} variant="pastel-rose" className="h-11 px-6">
-              <RefreshCw className="h-4 w-4 mr-2" />
+            <Button onClick={handleResetAll} variant="pastel-rose" className="h-12 px-8">
+              <RefreshCw className="h-5 w-5 mr-2" />
               <span>Reset All</span>
             </Button>
             <input type="file" ref={fileInputRef} onChange={onFileChange} accept=".json" className="hidden" />
@@ -134,19 +134,19 @@ export default function SermonOutlinePlanner() {
         </header>
 
         <Dialog open={showResetModal} onOpenChange={setShowResetModal}>
-          <DialogContent className="rounded-2xl border-2 border-pastel-border-rose">
+          <DialogContent className="rounded-3xl border-2 border-pastel-border-rose shadow-2xl">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-center">Reset Workspace?</DialogTitle>
+              <DialogTitle className="text-3xl font-black text-center tracking-tight">Reset Workspace?</DialogTitle>
             </DialogHeader>
-            <div className="mt-6 space-y-8">
-              <p className="text-center text-muted-foreground text-lg">
+            <div className="mt-8 space-y-10">
+              <p className="text-center text-muted-foreground text-xl font-medium">
                 This will clear your current outline. Are you sure you want to proceed?
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-3">
-                <Button variant="outline" onClick={cancelResetAll} className="h-12 px-8 text-base order-2 sm:order-1">
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <Button variant="outline" onClick={cancelResetAll} className="h-14 px-10 text-lg font-bold order-2 sm:order-1 rounded-2xl">
                   Cancel
                 </Button>
-                <Button variant="destructive" onClick={confirmResetAll} className="h-12 px-8 text-base order-1 sm:order-2">
+                <Button variant="destructive" onClick={confirmResetAll} className="h-14 px-10 text-lg font-bold order-1 sm:order-2 rounded-2xl">
                   Yes, Reset Everything
                 </Button>
               </div>
@@ -154,7 +154,7 @@ export default function SermonOutlinePlanner() {
           </DialogContent>
         </Dialog>
 
-        <main className="space-y-12">
+        <main className="space-y-16">
           {/* Introduction Section (Not draggable) */}
           {sections.length > 0 && sections[0].type === "intro" && (
             <DndContext
@@ -184,7 +184,7 @@ export default function SermonOutlinePlanner() {
           {/* Draggable Body Sections */}
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
             <SortableContext items={bodySectionIds} strategy={verticalListSortingStrategy}>
-              <div className="space-y-8">
+              <div className="space-y-10">
                 {sections.map((section, index) => {
                   if (section.type !== "body") return null;
                   return (
@@ -220,15 +220,15 @@ export default function SermonOutlinePlanner() {
             </SortableContext>
           </DndContext>
 
-          <div className="flex justify-center py-8">
+          <div className="flex justify-center py-12">
             <Button
               onClick={addBodySection}
               size="xl"
               variant="pastel-green"
-              className="flex items-center gap-4 px-16 py-8 rounded-2xl transition-all hover:scale-105 hover:shadow-xl active:scale-95"
+              className="flex items-center gap-5 px-20 py-10 rounded-[2rem] transition-all hover:scale-105 hover:shadow-2xl active:scale-95 group"
             >
-              <Plus className="h-8 w-8" />
-              <span className="text-xl font-bold">Add New Body Section</span>
+              <Plus className="h-10 w-10 transition-transform group-hover:rotate-90" />
+              <span className="text-2xl font-black tracking-tight">Add New Body Section</span>
             </Button>
           </div>
 

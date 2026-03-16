@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-95",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-95",
   {
     variants: {
       variant: {
@@ -18,22 +18,22 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // Standardized Pastel variants with clear outlines
-        pastel: "bg-background border-2 border-pastel-border-blue hover:bg-pastel-blue text-foreground transition-colors shadow-sm",
-        "pastel-blue": "bg-background border-2 border-pastel-border-blue hover:bg-pastel-blue text-foreground transition-colors shadow-sm",
-        "pastel-green": "bg-background border-2 border-pastel-border-green hover:bg-pastel-green text-foreground transition-colors shadow-sm",
-        "pastel-amber": "bg-background border-2 border-pastel-border-amber hover:bg-pastel-amber text-foreground transition-colors shadow-sm",
-        "pastel-purple": "bg-background border-2 border-pastel-border-purple hover:bg-pastel-purple text-foreground transition-colors shadow-sm",
-        "pastel-rose": "bg-background border-2 border-pastel-border-rose hover:bg-pastel-rose text-foreground transition-colors shadow-sm",
+        // Standardized Pastel variants with clear outlines and rounded-xl
+        pastel: "bg-pastel-blue/40 border-2 border-pastel-border-blue hover:bg-pastel-blue text-foreground transition-colors shadow-sm",
+        "pastel-blue": "bg-pastel-blue/40 border-2 border-pastel-border-blue hover:bg-pastel-blue text-foreground transition-colors shadow-sm",
+        "pastel-green": "bg-pastel-green/40 border-2 border-pastel-border-green hover:bg-pastel-green text-foreground transition-colors shadow-sm",
+        "pastel-amber": "bg-pastel-amber/40 border-2 border-pastel-border-amber hover:bg-pastel-amber text-foreground transition-colors shadow-sm",
+        "pastel-purple": "bg-pastel-purple/40 border-2 border-pastel-border-purple hover:bg-pastel-purple text-foreground transition-colors shadow-sm",
+        "pastel-rose": "bg-pastel-rose/40 border-2 border-pastel-border-rose hover:bg-pastel-rose text-foreground transition-colors shadow-sm",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        xs: "h-7 px-2 text-xs rounded-md",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8 text-base",
-        xl: "h-14 rounded-xl px-10 text-lg",
-        icon: "h-10 w-10",
-        "icon-sm": "h-8 w-8",
+        default: "h-11 px-6 py-2",
+        xs: "h-8 px-3 text-xs rounded-lg",
+        sm: "h-10 rounded-xl px-4",
+        lg: "h-12 rounded-xl px-8 text-base",
+        xl: "h-16 rounded-2xl px-12 text-xl font-bold",
+        icon: "h-11 w-11",
+        "icon-sm": "h-9 w-9",
       },
     },
     defaultVariants: {

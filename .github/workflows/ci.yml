@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  lint:
-    name: Lint
+  lint-and-build:
+    name: Lint and Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,21 +18,12 @@ jobs:
         with:
           node-version: 20
           cache: 'yarn'
-      - run: yarn install --frozen-lockfile
-      - run: yarn lint
-
-  build:
-    name: Build
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'yarn'
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Lint
+        run: yarn lint
+      - name: Build
+        run: yarn build
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -41,7 +32,7 @@ jobs:
 
   test:
     name: Test
-    needs: build
+    needs: lint-and-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -49,15 +40,27 @@ jobs:
         with:
           node-version: 20
           cache: 'yarn'
-      - run: yarn install --frozen-lockfile
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: out-build
           path: out/
-      - run: npx playwright install --with-deps chromium webkit
-      - run: yarn test
-      - uses: actions/upload-artifact@v4
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(npm list @playwright/test | grep @playwright/test | sed 's/.*@//')" >> $GITHUB_OUTPUT
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ steps.playwright-version.outputs.version }}
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium webkit
+      - name: Run tests
+        run: yarn test
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report

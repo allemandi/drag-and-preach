@@ -25,25 +25,25 @@ export function ExportModal({ onExport }: ExportModalProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="pastel-purple" className="flex-1 sm:flex-none">
-          <FileText className="h-4 w-4 sm:mr-2" />
-          <span>Export</span>
+        <Button variant="pastel-purple" className="flex-1 sm:flex-none h-12 px-8">
+          <FileText className="h-5 w-5 sm:mr-2" />
+          <span className="font-semibold">Export</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[450px] rounded-xl border-2 border-pastel-border-purple">
+      <DialogContent className="sm:max-w-[500px] rounded-[2rem] border-2 border-pastel-border-purple p-8 shadow-2xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center mb-6">Export Outline</DialogTitle>
+          <DialogTitle className="text-3xl font-black text-center mb-8 tracking-tight">Export Outline</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-2 gap-4 mt-2">
+        <div className="grid grid-cols-2 gap-5 mt-2">
           {exportOptions.map((option) => (
             <Button
               key={option.format}
               onClick={() => onExport(option.format)}
               variant={option.variant}
-              className="w-full h-24 flex flex-col items-center justify-center gap-2"
+              className="w-full h-32 flex flex-col items-center justify-center gap-3 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all"
             >
-              <option.icon className="h-7 w-7" />
-              <span className="font-semibold">{option.label}</span>
+              <option.icon className="h-10 w-10" />
+              <span className="text-lg font-bold">{option.label}</span>
             </Button>
           ))}
         </div>
