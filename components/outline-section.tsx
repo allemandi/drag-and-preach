@@ -3,7 +3,7 @@ import { OutlineBlock } from "./outline-block"
 import type React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { X, Plus, RefreshCw } from "lucide-react"
+import { X, Plus, RefreshCw, Pencil } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import type { Section } from "@/lib/types"
@@ -20,7 +20,6 @@ interface OutlineSectionProps {
   onRemoveSection: () => void
   onAddBlock: () => void
   onRemoveBlock: (blockIndex: number) => void
-  isDraggable: boolean
 }
 
 export function OutlineSection({
@@ -70,25 +69,37 @@ export function OutlineSection({
     }
   }
 
+  const handleTitleDisplayKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault()
+      setIsEditingTitle(true)
+    }
+  }
+
   return (
     <Card className={cn("transition-all border rounded-2xl shadow-sm overflow-hidden", getSectionStyles(section.type))}>
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 pt-6 px-4 sm:px-8 gap-3">
-        <div className="flex items-center gap-3 min-w-[200px]">
+        <div className="flex items-center gap-3 min-w-[200px] group/title">
           {isEditingTitle ? (
             <Input
               value={titleValue}
               onChange={handleTitleChange}
               onBlur={handleTitleBlur}
               onKeyDown={handleTitleKeyDown}
-              className="h-9 text-lg sm:text-xl font-bold bg-background/50 rounded-md border-2"
+              className="h-9 text-lg sm:text-xl font-bold bg-background/50 rounded-md border-2 focus-visible:ring-2 focus-visible:ring-primary/50"
               autoFocus
             />
           ) : (
             <CardTitle
-              className="text-lg sm:text-xl font-bold cursor-pointer hover:opacity-70 transition-opacity tracking-tight text-inherit py-1 border-2 border-transparent"
+              className="text-lg sm:text-xl font-bold cursor-pointer hover:opacity-70 transition-all tracking-tight text-inherit py-1 border-2 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:rounded-md flex items-center gap-2"
               onClick={() => setIsEditingTitle(true)}
+              onKeyDown={handleTitleDisplayKeyDown}
+              tabIndex={0}
+              role="button"
+              aria-label={`Edit section title: ${section.title}`}
             >
-              {section.title}
+              <span>{section.title}</span>
+              <Pencil className="h-4 w-4 opacity-0 group-hover/title:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
             </CardTitle>
           )}
         </div>

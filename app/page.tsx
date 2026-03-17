@@ -175,7 +175,6 @@ export default function SermonOutlinePlanner() {
                   onRemoveSection={() => removeSection(0)}
                   onAddBlock={() => addBlockToSection(0)}
                   onRemoveBlock={bi => removeBlock(0, bi)}
-                  isDraggable={false}
                 />
               </SortableContext>
             </DndContext>
@@ -208,7 +207,6 @@ export default function SermonOutlinePlanner() {
                               onRemoveSection={() => removeSection(index)}
                               onAddBlock={() => addBlockToSection(index)}
                               onRemoveBlock={bi => removeBlock(index, bi)}
-                              isDraggable={false}
                             />
                           </SortableContext>
                         </DndContext>
@@ -252,7 +250,6 @@ export default function SermonOutlinePlanner() {
                   onRemoveSection={() => removeSection(sections.length - 1)}
                   onAddBlock={() => addBlockToSection(sections.length - 1)}
                   onRemoveBlock={bi => removeBlock(sections.length - 1, bi)}
-                  isDraggable={false}
                 />
               </SortableContext>
             </DndContext>
