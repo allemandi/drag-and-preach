@@ -24,7 +24,7 @@
     "clsx": "^2.1.1",
     "critters": "^0.0.25",
     "docx": "^9.6.1",
-    "jspdf": "^4.2.0",
+    "jspdf": "^4.2.1",
     "lucide-react": "^0.577.0",
     "next": "16.1.6",
     "next-themes": "latest",
