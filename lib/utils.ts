@@ -14,7 +14,7 @@ export function generateId(): string {
 }
 
 
-export function formatOutline(sections: Section[], format: "md" | "txt" | "pdf" | "docx"): string {
+export function formatOutline(sections: Section[], format: "md" | "txt" | "pdf" | "docx"): string | Promise<string> {
   switch (format) {
     case "md":
       return formatMarkdown(sections);

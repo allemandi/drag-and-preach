@@ -170,29 +170,41 @@ export function useSermonOutline() {
     if (!activeBlockInfo || !overBlockInfo) return
 
     if (activeBlockInfo.sectionIndex === overBlockInfo.sectionIndex) {
-      const newSections = [...sections]
       const sectionIndex = activeBlockInfo.sectionIndex
-
-      newSections[sectionIndex] = {
-        ...newSections[sectionIndex],
-        blocks: arrayMove(newSections[sectionIndex].blocks, activeBlockInfo.blockIndex, overBlockInfo.blockIndex),
-      }
+      const newSections = sections.map((section, idx) =>
+        idx === sectionIndex
+          ? {
+              ...section,
+              blocks: arrayMove(section.blocks, activeBlockInfo.blockIndex, overBlockInfo.blockIndex),
+            }
+          : section
+      )
 
       setSections(newSections)
     } else {
-      const newSections = [...sections]
-      const activeSection = newSections[activeBlockInfo.sectionIndex]
-      const overSection = newSections[overBlockInfo.sectionIndex]
+      const { sectionIndex: activeSectionIndex, blockIndex: activeBlockIndex } = activeBlockInfo
+      const { sectionIndex: overSectionIndex, blockIndex: overBlockIndex } = overBlockInfo
 
-      const [blockToMove] = activeSection.blocks.splice(activeBlockInfo.blockIndex, 1)
-      blockToMove.type = overSection.type
-      overSection.blocks.splice(overBlockInfo.blockIndex, 0, blockToMove)
+      const newSections = sections.map((section, idx) => {
+        if (idx === activeSectionIndex) {
+          const newBlocks = [...section.blocks]
+          newBlocks.splice(activeBlockIndex, 1)
+          return { ...section, blocks: newBlocks }
+        }
+        if (idx === overSectionIndex) {
+          const blockToMove = { ...sections[activeSectionIndex].blocks[activeBlockIndex], type: section.type }
+          const newBlocks = [...section.blocks]
+          newBlocks.splice(overBlockIndex, 0, blockToMove)
+          return { ...section, blocks: newBlocks }
+        }
+        return section
+      })
 
       setSections(newSections)
 
       toast({
         title: "Block Moved",
-        description: `Block moved to ${overSection.title}`,
+        description: `Block moved to ${sections[overSectionIndex].title}`,
         duration: 2000,
       })
     }
@@ -353,9 +365,11 @@ export function useSermonOutline() {
       ],
     }
 
-    const newSections = [...sections]
-    newSections.splice(conclusionIndex, 0, newBodySection)
-    setSections(newSections)
+    setSections(prev => {
+      const newSections = [...prev]
+      newSections.splice(conclusionIndex, 0, newBodySection)
+      return newSections
+    })
 
     toast({
       title: "Section Added",
@@ -375,9 +389,9 @@ export function useSermonOutline() {
       type: section.type,
     }
 
-    const newSections = [...sections]
-    newSections[sectionIndex].blocks.push(newBlock)
-    setSections(newSections)
+    setSections(prev => prev.map((s, i) =>
+      i === sectionIndex ? { ...s, blocks: [...s.blocks, newBlock] } : s
+    ))
 
     toast({
       title: "Block Added",
@@ -397,9 +411,12 @@ export function useSermonOutline() {
       return
     }
 
-    const newSections = [...sections]
-    newSections[sectionIndex].blocks.splice(blockIndex, 1)
-    setSections(newSections)
+    setSections(prev => prev.map((s, i) =>
+      i === sectionIndex ? {
+        ...s,
+        blocks: s.blocks.filter((_, j) => j !== blockIndex)
+      } : s
+    ))
 
     toast({
       title: "Block Removed",
@@ -420,9 +437,7 @@ export function useSermonOutline() {
       return
     }
 
-    const newSections = [...sections]
-    newSections.splice(sectionIndex, 1)
-    setSections(newSections)
+    setSections(prev => prev.filter((_, i) => i !== sectionIndex))
 
     toast({
       title: "Section Removed",
@@ -431,14 +446,29 @@ export function useSermonOutline() {
     })
   }, [sections, toast])
 
-  const handleExport = useCallback((format: "pdf" | "docx" | "txt" | "md") => {
-    const formatted = formatOutline(sections, format)
-    downloadFile(formatted, format)
-    toast({
-      title: `Exported as ${format.toUpperCase()}`,
-      description: `Outline downloaded successfully.`,
-      duration: 3000,
-    })
+  const [isExporting, setIsExporting] = useState(false)
+
+  const handleExport = useCallback(async (format: "pdf" | "docx" | "txt" | "md") => {
+    setIsExporting(true)
+    try {
+      const formatted = formatOutline(sections, format)
+      await downloadFile(formatted, format)
+      toast({
+        title: `Exported as ${format.toUpperCase()}`,
+        description: `Outline downloaded successfully.`,
+        duration: 3000,
+      })
+    } catch (error) {
+      console.error("Export error:", error)
+      toast({
+        title: "Export Failed",
+        description: "An error occurred while exporting your outline.",
+        variant: "destructive",
+        duration: 3000,
+      })
+    } finally {
+      setIsExporting(false)
+    }
   }, [sections, toast])
 
   const [isSaving, setIsSaving] = useState(false)
@@ -544,6 +574,7 @@ export function useSermonOutline() {
     removeBlock,
     removeSection,
     handleExport,
+    isExporting,
     isSaving,
     saveOutlineToLocalStorage,
     saveOutlineAsJson,
