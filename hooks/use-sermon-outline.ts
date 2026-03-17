@@ -441,13 +441,19 @@ export function useSermonOutline() {
     })
   }, [sections, toast])
 
+  const [isSaving, setIsSaving] = useState(false)
+
   const saveOutlineToLocalStorage = useCallback(() => {
+    setIsSaving(true)
     localStorage.setItem("sermonOutline", JSON.stringify(sections))
-    toast({
-      title: "Outline Saved",
-      description: "Your sermon outline has been saved to local storage.",
-      duration: 3000,
-    })
+    setTimeout(() => {
+      setIsSaving(false)
+      toast({
+        title: "Outline Saved",
+        description: "Your sermon outline has been saved to local storage.",
+        duration: 3000,
+      })
+    }, 500)
   }, [sections, toast])
 
   const saveOutlineAsJson = useCallback(() => {
@@ -538,6 +544,7 @@ export function useSermonOutline() {
     removeBlock,
     removeSection,
     handleExport,
+    isSaving,
     saveOutlineToLocalStorage,
     saveOutlineAsJson,
     handleResetAll,

@@ -48,6 +48,7 @@ export default function SermonOutlinePlanner() {
     removeBlock,
     removeSection,
     handleExport,
+    isSaving,
     saveOutlineToLocalStorage,
     saveOutlineAsJson,
     handleResetAll,
@@ -117,9 +118,19 @@ export default function SermonOutlinePlanner() {
 
           <nav className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-card/40 backdrop-blur-md rounded-2xl border border-border shadow-sm">
             <div className="flex flex-wrap items-center gap-2">
-              <Button onClick={saveOutlineToLocalStorage} variant="pastel" size="sm">
-                <Save className="h-4 w-4 mr-1.5" />
-                <span>Save</span>
+              <Button
+                onClick={saveOutlineToLocalStorage}
+                variant="pastel"
+                size="sm"
+                disabled={isSaving}
+                aria-busy={isSaving}
+              >
+                {isSaving ? (
+                  <RefreshCw className="h-4 w-4 mr-1.5 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4 mr-1.5" />
+                )}
+                <span>{isSaving ? "Saving..." : "Save"}</span>
               </Button>
               <BackupModal onDownload={saveOutlineAsJson} onUpload={triggerFileInput} />
               <ExportModal onExport={handleExport} />

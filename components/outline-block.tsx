@@ -158,8 +158,9 @@ export function OutlineBlock({
                     onChange={handleLabelChange}
                     onBlur={handleLabelBlur}
                     onKeyDown={handleLabelKeyDown}
-                    className="h-7 text-[10px] font-bold rounded-md bg-background border-2 w-full focus-visible:ring-1 focus-visible:ring-primary/50"
+                    className="h-7 text-[10px] font-bold rounded-md bg-background border-2 w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
                     autoFocus
+                    aria-label="Edit label"
                   />
                 ) : (
                   <label
@@ -212,12 +213,13 @@ export function OutlineBlock({
                 onChange={handleContentChange}
                 onBlur={() => setIsEditing(false)}
                 className={cn(
-                  "w-full min-h-[70px] p-3 rounded-lg bg-muted/20 focus:outline-none focus:ring-2 transition-all text-sm font-medium",
+                  "w-full min-h-[70px] p-3 rounded-lg bg-muted/20 focus:outline-none focus:ring-2 transition-all text-sm font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary",
                   getTextAreaStyles(block.type)
                 )}
                 placeholder={block.placeholder}
                 rows={1}
                 autoFocus
+                aria-label="Edit block content"
               />
             ) : (
               <div

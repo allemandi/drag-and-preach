@@ -86,8 +86,9 @@ export function OutlineSection({
               onChange={handleTitleChange}
               onBlur={handleTitleBlur}
               onKeyDown={handleTitleKeyDown}
-              className="h-9 text-lg sm:text-xl font-bold bg-background/50 rounded-md border-2 focus-visible:ring-2 focus-visible:ring-primary/50"
+              className="h-9 text-lg sm:text-xl font-bold bg-background/50 rounded-md border-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
               autoFocus
+              aria-label="Edit section title"
             />
           ) : (
             <CardTitle
