@@ -92,7 +92,7 @@ export function OutlineSection({
             />
           ) : (
             <CardTitle
-              className="text-lg sm:text-xl font-bold cursor-pointer hover:opacity-70 transition-all tracking-tight text-inherit py-1 border-2 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:rounded-md flex items-center gap-2"
+              className="text-lg sm:text-xl font-bold cursor-pointer hover:opacity-70 transition-all tracking-tight text-inherit py-1 border-2 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-md flex items-center gap-2"
               onClick={() => setIsEditingTitle(true)}
               onKeyDown={handleTitleDisplayKeyDown}
               tabIndex={0}

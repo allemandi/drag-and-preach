@@ -138,10 +138,11 @@ export function OutlineBlock({
         <div
           {...attributes}
           {...listeners}
-          className="flex-shrink-0 cursor-grab mt-1 p-1.5 rounded-md hover:bg-muted transition-colors bg-muted/20"
+          className="flex-shrink-0 cursor-grab mt-1 p-1.5 rounded-md hover:bg-muted transition-colors bg-muted/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           data-drag-handle
           tabIndex={0}
-          aria-label="Drag to reorder block"
+          aria-label={`Drag to reorder block: ${block.label}`}
+          aria-roledescription="drag handle"
           role="button"
           style={{ touchAction: 'none' }}
         >
@@ -164,7 +165,7 @@ export function OutlineBlock({
                   />
                 ) : (
                   <label
-                    className="text-[10px] font-bold text-inherit opacity-70 uppercase tracking-widest cursor-pointer hover:opacity-100 transition-all px-1.5 py-0.5 bg-muted/30 rounded w-full border-2 border-transparent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:bg-muted/50 flex items-center justify-between"
+                    className="text-[10px] font-bold text-inherit opacity-70 uppercase tracking-widest cursor-pointer hover:opacity-100 transition-all px-1.5 py-0.5 bg-muted/30 rounded w-full border-2 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:bg-muted/50 flex items-center justify-between"
                     onClick={() => setIsEditingLabel(true)}
                     onKeyDown={handleLabelDisplayKeyDown}
                     tabIndex={0}
@@ -224,7 +225,7 @@ export function OutlineBlock({
             ) : (
               <div
                 className={cn(
-                  "w-full min-h-[60px] p-3 rounded-lg transition-all cursor-text text-sm font-medium border-2 border-transparent group-hover/block:border-muted-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 flex flex-col",
+                  "w-full min-h-[60px] p-3 rounded-lg transition-all cursor-text text-sm font-medium border-2 border-transparent group-hover/block:border-muted-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary flex flex-col",
                   content ? "bg-muted/5 text-foreground" : "bg-muted/20 text-muted-foreground/50 dark:text-muted-foreground/60 italic"
                 )}
                 onClick={() => setIsEditing(true)}

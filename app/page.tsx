@@ -48,6 +48,7 @@ export default function SermonOutlinePlanner() {
     removeBlock,
     removeSection,
     handleExport,
+    isExporting,
     isSaving,
     saveOutlineToLocalStorage,
     saveOutlineAsJson,
@@ -133,7 +134,7 @@ export default function SermonOutlinePlanner() {
                 <span>{isSaving ? "Saving..." : "Save"}</span>
               </Button>
               <BackupModal onDownload={saveOutlineAsJson} onUpload={triggerFileInput} />
-              <ExportModal onExport={handleExport} />
+              <ExportModal onExport={handleExport} isExporting={isExporting} />
             </div>
 
             <Button onClick={handleResetAll} variant="pastel-rose" size="sm">
