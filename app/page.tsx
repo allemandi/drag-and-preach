@@ -63,8 +63,8 @@ export default function SermonOutlinePlanner() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const sensors = useSensors(
-    useSensor(TouchSensor, { activationConstraint: { delay: 0, distance: 0 } }),
-    useSensor(PointerSensor, { activationConstraint: { delay: 0, distance: 0 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 

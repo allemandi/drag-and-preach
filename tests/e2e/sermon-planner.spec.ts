@@ -51,8 +51,8 @@ test('reordering components exists and functional', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByText('Drag and Preach')).toBeVisible({ timeout: 15000 });
 
-  // Check if drag handles exist (using div with role=button and aria-label)
-  const dragHandles = page.locator('div[role="button"][aria-label*="Drag"]');
+  // Check if drag handles exist (using button and aria-label)
+  const dragHandles = page.locator('button[aria-label*="Drag"]');
   await expect(dragHandles.first()).toBeVisible();
 
   // Try a simple drag interaction to ensure they are interactive

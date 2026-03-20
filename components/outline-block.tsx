@@ -9,7 +9,7 @@ import { GripVertical, X, RefreshCw, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import type { OutlineBlock as OutlineBlockType } from "@/lib/types"
-import { cn } from "@/lib/utils"
+import { cn, getBlockStyles, getTextAreaStyles } from "@/lib/utils"
 
 interface OutlineBlockProps {
   block: OutlineBlockType
@@ -84,46 +84,6 @@ export function OutlineBlock({
     }
   }
 
-  const handleLabelDisplayKeyDown = (e: React.KeyboardEvent<HTMLLabelElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault()
-      setIsEditingLabel(true)
-    }
-  }
-
-  const handleContentDisplayKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault()
-      setIsEditing(true)
-    }
-  }
-
-  const getBlockStyles = (type: string) => {
-    switch (type) {
-      case "intro":
-        return "bg-background border-pastel-border-blue/50 hover:border-pastel-border-blue text-pastel-text-blue"
-      case "body":
-        return "bg-background border-pastel-border-green/50 hover:border-pastel-border-green text-pastel-text-green"
-      case "conclusion":
-        return "bg-background border-pastel-border-amber/50 hover:border-pastel-border-amber text-pastel-text-amber"
-      default:
-        return "bg-background border-pastel-border-purple/50 hover:border-pastel-border-purple text-pastel-text-purple"
-    }
-  }
-
-  const getTextAreaStyles = (type: string) => {
-    switch (type) {
-      case "intro":
-        return "focus:ring-pastel-border-blue/40 border-pastel-border-blue/20"
-      case "body":
-        return "focus:ring-pastel-border-green/40 border-pastel-border-green/20"
-      case "conclusion":
-        return "focus:ring-pastel-border-amber/40 border-pastel-border-amber/20"
-      default:
-        return "focus:ring-pastel-border-purple/40 border-pastel-border-purple/20"
-    }
-  }
-
   return (
     <div
       ref={setNodeRef}
@@ -135,19 +95,17 @@ export function OutlineBlock({
       )}
     >
       <div className="flex items-start gap-3">
-        <div
+        <button
           {...attributes}
           {...listeners}
           className="flex-shrink-0 cursor-grab mt-1 p-1.5 rounded-md hover:bg-muted transition-colors bg-muted/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           data-drag-handle
-          tabIndex={0}
           aria-label={`Drag to reorder block: ${block.label}`}
           aria-roledescription="drag handle"
-          role="button"
           style={{ touchAction: 'none' }}
         >
           <GripVertical className="h-4 w-4 text-muted-foreground" />
-        </div>
+        </button>
 
         <div className="flex-grow space-y-3 group/block">
           <div className="flex items-center justify-between">
@@ -164,17 +122,14 @@ export function OutlineBlock({
                     aria-label="Edit label"
                   />
                 ) : (
-                  <label
+                  <button
                     className="text-[10px] font-bold text-inherit opacity-70 uppercase tracking-widest cursor-pointer hover:opacity-100 transition-all px-1.5 py-0.5 bg-muted/30 rounded w-full border-2 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:bg-muted/50 flex items-center justify-between"
                     onClick={() => setIsEditingLabel(true)}
-                    onKeyDown={handleLabelDisplayKeyDown}
-                    tabIndex={0}
-                    role="button"
                     aria-label={`Edit label: ${block.label}`}
                   >
                     <span>{block.label}</span>
                     <Pencil className="h-2.5 w-2.5 opacity-0 group-hover/label:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
-                  </label>
+                  </button>
                 )}
               </div>
             </div>
@@ -223,22 +178,19 @@ export function OutlineBlock({
                 aria-label="Edit block content"
               />
             ) : (
-              <div
+              <button
                 className={cn(
-                  "w-full min-h-[60px] p-3 rounded-lg transition-all cursor-text text-sm font-medium border-2 border-transparent group-hover/block:border-muted-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary flex flex-col",
+                  "w-full min-h-[60px] p-3 rounded-lg transition-all cursor-text text-sm font-medium border-2 border-transparent group-hover/block:border-muted-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary flex flex-col text-left",
                   content ? "bg-muted/5 text-foreground" : "bg-muted/20 text-muted-foreground/50 dark:text-muted-foreground/60 italic"
                 )}
                 onClick={() => setIsEditing(true)}
-                onKeyDown={handleContentDisplayKeyDown}
-                tabIndex={0}
-                role="button"
                 aria-label={content ? "Edit content" : "Add content"}
               >
                 <div className="flex-grow">{content || block.placeholder}</div>
                 <div className="self-end mt-1 opacity-0 group-hover/block:opacity-100 transition-opacity">
                   <Pencil className="h-3.5 w-3.5 text-muted-foreground/50" aria-hidden="true" />
                 </div>
-              </div>
+              </button>
             )}
           </div>
         </div>
