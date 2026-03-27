@@ -119,7 +119,7 @@ export function OutlineBlock({
                     onKeyDown={handleLabelKeyDown}
                     className="h-7 text-[10px] font-bold rounded-md bg-background border-2 w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
                     autoFocus
-                    aria-label="Edit label"
+                    aria-label={`Edit label for ${block.label}`}
                   />
                 ) : (
                   <button
@@ -128,7 +128,7 @@ export function OutlineBlock({
                     aria-label={`Edit label: ${block.label}`}
                   >
                     <span>{block.label}</span>
-                    <Pencil className="h-2.5 w-2.5 opacity-0 group-hover/label:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
+                    <Pencil className="h-2.5 w-2.5 opacity-40 group-hover/label:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
                   </button>
                 )}
               </div>
@@ -143,6 +143,7 @@ export function OutlineBlock({
                   onResetLabel();
                 }}
                 className="h-6 px-1.5 text-[9px] font-bold uppercase tracking-tight hover:bg-muted/50 rounded-md text-inherit"
+                aria-label={`Reset label for block ${block.label} to default`}
               >
                 <span>Reset</span>
                 <RefreshCw className="h-2.5 w-2.5 ml-1" />
@@ -154,8 +155,8 @@ export function OutlineBlock({
                   onClick={onRemoveBlock}
                   className="h-6 w-6 rounded-md hover:bg-destructive/10 hover:text-destructive transition-colors"
                 >
-                  <X className="h-3.5 w-3.5" />
-                  <span className="sr-only">Remove block</span>
+                  <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span className="sr-only">Remove block: {block.label}</span>
                 </Button>
               )}
             </div>
@@ -175,7 +176,7 @@ export function OutlineBlock({
                 placeholder={block.placeholder}
                 rows={1}
                 autoFocus
-                aria-label="Edit block content"
+                aria-label={`Edit content for ${block.label}`}
               />
             ) : (
               <button
@@ -184,10 +185,10 @@ export function OutlineBlock({
                   content ? "bg-muted/5 text-foreground" : "bg-muted/20 text-muted-foreground/50 dark:text-muted-foreground/60 italic"
                 )}
                 onClick={() => setIsEditing(true)}
-                aria-label={content ? "Edit content" : "Add content"}
+                aria-label={content ? `Edit content for ${block.label}` : `Add content to ${block.label}`}
               >
                 <div className="flex-grow">{content || block.placeholder}</div>
-                <div className="self-end mt-1 opacity-0 group-hover/block:opacity-100 transition-opacity">
+                <div className="self-end mt-1 opacity-20 group-hover/block:opacity-100 transition-opacity">
                   <Pencil className="h-3.5 w-3.5 text-muted-foreground/50" aria-hidden="true" />
                 </div>
               </button>
