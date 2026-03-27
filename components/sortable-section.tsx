@@ -26,19 +26,18 @@ export function SortableSection({ id, children }: SortableSectionProps) {
 
   return (
     <div ref={setNodeRef} style={style} className="relative">
-      <div
+      <button
+        type="button"
         className="absolute top-4 left-4 cursor-grab p-1 rounded hover:bg-muted z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
         {...attributes}
         {...listeners}
         data-drag-handle
-        tabIndex={0}
-        aria-label="Drag to reorder section"
+        aria-label={`Drag to reorder section: ${id}`}
         aria-roledescription="drag handle"
-        role="button"
         style={{ touchAction: "none" }}
       >
         <GripVertical className="h-5 w-5 text-muted-foreground" />
-      </div>
+      </button>
       {children}
     </div>
   )

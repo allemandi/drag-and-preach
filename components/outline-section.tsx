@@ -68,7 +68,7 @@ export function OutlineSection({
               onKeyDown={handleTitleKeyDown}
               className="h-9 text-lg sm:text-xl font-bold bg-background/50 rounded-md border-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
               autoFocus
-              aria-label="Edit section title"
+              aria-label={`Edit section title for ${section.title}`}
             />
           ) : (
             <button
@@ -79,7 +79,7 @@ export function OutlineSection({
               <CardTitle className="text-inherit font-bold">
                 {section.title}
               </CardTitle>
-              <Pencil className="h-4 w-4 opacity-0 group-hover/title:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
+              <Pencil className="h-4 w-4 opacity-20 group-hover/title:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
             </button>
           )}
         </div>
@@ -93,6 +93,7 @@ export function OutlineSection({
               onResetTitle(sectionIndex);
             }}
             className="h-7 px-2 text-[10px] font-bold uppercase tracking-wider hover:bg-background/50 text-inherit"
+            aria-label={`Reset title for section ${section.title} to default`}
           >
             <span className="hidden sm:inline">Reset Title</span>
             <RefreshCw className="h-3 w-3 sm:ml-1.5" />
@@ -102,6 +103,7 @@ export function OutlineSection({
             size="xs"
             onClick={onAddBlock}
             className="h-7 px-2 text-[10px] font-bold uppercase tracking-wider bg-background/50 hover:bg-background border"
+            aria-label={`Add a new block to section ${section.title}`}
           >
             <span>Add Block</span>
             <Plus className="h-3 w-3 ml-1.5" />
@@ -113,8 +115,8 @@ export function OutlineSection({
               onClick={onRemoveSection}
               className="h-7 w-7 rounded-md hover:bg-destructive/10 hover:text-destructive"
             >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Remove section</span>
+              <X className="h-4 w-4" aria-hidden="true" />
+              <span className="sr-only">Remove section: {section.title}</span>
             </Button>
           )}
         </div>
