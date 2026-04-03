@@ -4,7 +4,7 @@ import type React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { X, Plus, RefreshCw, Pencil } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import type { Section } from "@/lib/types"
 import { cn, getSectionStyles } from "@/lib/utils"
@@ -20,6 +20,8 @@ interface OutlineSectionProps {
   onRemoveSection: () => void
   onAddBlock: () => void
   onRemoveBlock: (blockIndex: number) => void
+  onClearBlockContent: (blockIndex: number) => void
+  isNew?: boolean
 }
 
 export function OutlineSection({
@@ -33,13 +35,22 @@ export function OutlineSection({
   onRemoveSection,
   onAddBlock,
   onRemoveBlock,
+  onClearBlockContent,
+  isNew = false,
 }: OutlineSectionProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [titleValue, setTitleValue] = useState(section.title)
+  const cardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setTitleValue(section.title)
   }, [section.title])
+
+  useEffect(() => {
+    if (isNew && cardRef.current) {
+      cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [isNew])
 
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +68,11 @@ export function OutlineSection({
   }
 
   return (
-    <Card className={cn("transition-all border rounded-2xl shadow-sm overflow-hidden", getSectionStyles(section.type))}>
+    <Card
+      ref={cardRef}
+      className={cn("transition-all border rounded-2xl shadow-sm overflow-hidden outline-none", getSectionStyles(section.type))}
+      tabIndex={-1}
+    >
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 pt-6 px-4 sm:px-8 gap-3">
         <div className="flex items-center gap-3 min-w-[200px] group/title">
           {isEditingTitle ? (
@@ -130,6 +145,7 @@ export function OutlineSection({
             onLabelChange={(newLabel) => onLabelChange(sectionIndex, blockIndex, newLabel)}
             onResetLabel={() => onResetLabel(sectionIndex, blockIndex)}
             onRemoveBlock={() => onRemoveBlock(blockIndex)}
+            onClearContent={() => onClearBlockContent(blockIndex)}
             showRemoveButton={section.blocks.length > 1}
           />
         ))}

@@ -134,6 +134,7 @@ export const getDefaultSections = (): Section[] => [
 
 export function useSermonOutline() {
   const [sections, setSections] = useState<Section[]>(getDefaultSections())
+  const [newSectionId, setNewSectionId] = useState<string | null>(null)
   const { toast } = useToast()
   const [showResetModal, setShowResetModal] = useState(false)
 
@@ -370,6 +371,7 @@ export function useSermonOutline() {
       newSections.splice(conclusionIndex, 0, newBodySection)
       return newSections
     })
+    setNewSectionId(newBodySection.id)
 
     toast({
       title: "Section Added",
@@ -424,6 +426,23 @@ export function useSermonOutline() {
       duration: 2000,
     })
   }, [sections, toast])
+
+  const clearBlockContent = useCallback((sectionIndex: number, blockIndex: number) => {
+    setSections(prev => prev.map((s, i) =>
+      i === sectionIndex ? {
+        ...s,
+        blocks: s.blocks.map((b, j) =>
+          j === blockIndex ? { ...b, content: "" } : b
+        )
+      } : s
+    ))
+
+    toast({
+      title: "Content Cleared",
+      description: "The block content has been cleared.",
+      duration: 2000,
+    })
+  }, [toast])
 
   const removeSection = useCallback((sectionIndex: number) => {
     const sectionType = sections[sectionIndex].type
@@ -572,6 +591,7 @@ export function useSermonOutline() {
     addBodySection,
     addBlockToSection,
     removeBlock,
+    clearBlockContent,
     removeSection,
     handleExport,
     isExporting,
@@ -582,5 +602,6 @@ export function useSermonOutline() {
     confirmResetAll,
     cancelResetAll,
     loadOutlineFromJson,
+    newSectionId,
   }
 }

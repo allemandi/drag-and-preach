@@ -17,6 +17,7 @@ interface OutlineBlockProps {
   onLabelChange: (newLabel: string) => void
   onResetLabel: () => void
   onRemoveBlock: () => void
+  onClearContent: () => void
   showRemoveButton: boolean
 }
 
@@ -26,6 +27,7 @@ export function OutlineBlock({
   onLabelChange,
   onResetLabel,
   onRemoveBlock,
+  onClearContent,
   showRemoveButton,
 }: OutlineBlockProps) {
   const [isEditing, setIsEditing] = useState(false)
@@ -89,7 +91,7 @@ export function OutlineBlock({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "rounded-xl border p-4 transition-all duration-200 shadow-sm",
+        "rounded-xl border p-4 transition-all duration-200 shadow-sm outline-none",
         isDragging ? "z-10 shadow-lg scale-[1.01] ring-2 ring-primary/5" : "",
         getBlockStyles(block.type)
       )}
@@ -147,6 +149,19 @@ export function OutlineBlock({
               >
                 <span>Reset</span>
                 <RefreshCw className="h-2.5 w-2.5 ml-1" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="xs"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClearContent();
+                }}
+                className="h-6 px-1.5 text-[9px] font-bold uppercase tracking-tight hover:bg-muted/50 rounded-md text-inherit"
+                aria-label={`Clear content for block ${block.label}`}
+              >
+                <span>Clear</span>
+                <X className="h-2.5 w-2.5 ml-1" />
               </Button>
               {showRemoveButton && (
                 <Button
