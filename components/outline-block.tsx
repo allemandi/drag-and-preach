@@ -89,7 +89,7 @@ export function OutlineBlock({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "rounded-xl border p-4 transition-all duration-200 shadow-sm",
+        "rounded-xl border p-4 transition-all duration-200 shadow-sm outline-none",
         isDragging ? "z-10 shadow-lg scale-[1.01] ring-2 ring-primary/5" : "",
         getBlockStyles(block.type)
       )}

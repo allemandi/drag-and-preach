@@ -134,6 +134,7 @@ export const getDefaultSections = (): Section[] => [
 
 export function useSermonOutline() {
   const [sections, setSections] = useState<Section[]>(getDefaultSections())
+  const [newSectionId, setNewSectionId] = useState<string | null>(null)
   const { toast } = useToast()
   const [showResetModal, setShowResetModal] = useState(false)
 
@@ -370,6 +371,7 @@ export function useSermonOutline() {
       newSections.splice(conclusionIndex, 0, newBodySection)
       return newSections
     })
+    setNewSectionId(newBodySection.id)
 
     toast({
       title: "Section Added",
@@ -582,5 +584,6 @@ export function useSermonOutline() {
     confirmResetAll,
     cancelResetAll,
     loadOutlineFromJson,
+    newSectionId,
   }
 }

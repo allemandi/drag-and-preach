@@ -56,6 +56,7 @@ export default function SermonOutlinePlanner() {
     confirmResetAll,
     cancelResetAll,
     loadOutlineFromJson,
+    newSectionId,
   } = useSermonOutline()
 
   const { theme, setTheme } = useTheme()
@@ -85,6 +86,29 @@ export default function SermonOutlinePlanner() {
     reader.readAsText(file)
     if (fileInputRef.current) fileInputRef.current.value = ""
   }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl+S to save
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault()
+        saveOutlineToLocalStorage()
+      }
+      // Ctrl+Alt+N to add new body section
+      if ((e.ctrlKey || e.metaKey) && e.altKey && e.key === "n") {
+        e.preventDefault()
+        addBodySection()
+      }
+      // Ctrl+Alt+R to reset
+      if ((e.ctrlKey || e.metaKey) && e.altKey && e.key === "r") {
+        e.preventDefault()
+        handleResetAll()
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [saveOutlineToLocalStorage, addBodySection, handleResetAll])
 
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark")
 
@@ -219,6 +243,7 @@ export default function SermonOutlinePlanner() {
                               onRemoveSection={() => removeSection(index)}
                               onAddBlock={() => addBlockToSection(index)}
                               onRemoveBlock={bi => removeBlock(index, bi)}
+                              isNew={section.id === newSectionId}
                             />
                           </SortableContext>
                         </DndContext>
