@@ -46,7 +46,6 @@ export default function SermonOutlinePlanner() {
     addBodySection,
     addBlockToSection,
     removeBlock,
-    clearBlockContent,
     removeSection,
     handleExport,
     isExporting,
@@ -212,7 +211,6 @@ export default function SermonOutlinePlanner() {
                   onRemoveSection={() => removeSection(0)}
                   onAddBlock={() => addBlockToSection(0)}
                   onRemoveBlock={bi => removeBlock(0, bi)}
-                  onClearBlockContent={bi => clearBlockContent(0, bi)}
                 />
               </SortableContext>
             </DndContext>
@@ -245,7 +243,6 @@ export default function SermonOutlinePlanner() {
                               onRemoveSection={() => removeSection(index)}
                               onAddBlock={() => addBlockToSection(index)}
                               onRemoveBlock={bi => removeBlock(index, bi)}
-                              onClearBlockContent={bi => clearBlockContent(index, bi)}
                               isNew={section.id === newSectionId}
                             />
                           </SortableContext>
@@ -290,7 +287,6 @@ export default function SermonOutlinePlanner() {
                   onRemoveSection={() => removeSection(sections.length - 1)}
                   onAddBlock={() => addBlockToSection(sections.length - 1)}
                   onRemoveBlock={bi => removeBlock(sections.length - 1, bi)}
-                  onClearBlockContent={bi => clearBlockContent(sections.length - 1, bi)}
                 />
               </SortableContext>
             </DndContext>

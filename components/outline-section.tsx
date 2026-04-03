@@ -20,7 +20,6 @@ interface OutlineSectionProps {
   onRemoveSection: () => void
   onAddBlock: () => void
   onRemoveBlock: (blockIndex: number) => void
-  onClearBlockContent: (blockIndex: number) => void
   isNew?: boolean
 }
 
@@ -35,7 +34,6 @@ export function OutlineSection({
   onRemoveSection,
   onAddBlock,
   onRemoveBlock,
-  onClearBlockContent,
   isNew = false,
 }: OutlineSectionProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
@@ -145,7 +143,6 @@ export function OutlineSection({
             onLabelChange={(newLabel) => onLabelChange(sectionIndex, blockIndex, newLabel)}
             onResetLabel={() => onResetLabel(sectionIndex, blockIndex)}
             onRemoveBlock={() => onRemoveBlock(blockIndex)}
-            onClearContent={() => onClearBlockContent(blockIndex)}
             showRemoveButton={section.blocks.length > 1}
           />
         ))}

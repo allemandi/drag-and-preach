@@ -427,23 +427,6 @@ export function useSermonOutline() {
     })
   }, [sections, toast])
 
-  const clearBlockContent = useCallback((sectionIndex: number, blockIndex: number) => {
-    setSections(prev => prev.map((s, i) =>
-      i === sectionIndex ? {
-        ...s,
-        blocks: s.blocks.map((b, j) =>
-          j === blockIndex ? { ...b, content: "" } : b
-        )
-      } : s
-    ))
-
-    toast({
-      title: "Content Cleared",
-      description: "The block content has been cleared.",
-      duration: 2000,
-    })
-  }, [toast])
-
   const removeSection = useCallback((sectionIndex: number) => {
     const sectionType = sections[sectionIndex].type
     if (sectionType === "intro" || sectionType === "conclusion") {
@@ -591,7 +574,6 @@ export function useSermonOutline() {
     addBodySection,
     addBlockToSection,
     removeBlock,
-    clearBlockContent,
     removeSection,
     handleExport,
     isExporting,
