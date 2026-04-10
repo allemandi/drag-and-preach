@@ -135,6 +135,7 @@ export const getDefaultSections = (): Section[] => [
 export function useSermonOutline() {
   const [sections, setSections] = useState<Section[]>(getDefaultSections())
   const [newSectionId, setNewSectionId] = useState<string | null>(null)
+  const [newBlockId, setNewBlockId] = useState<string | null>(null)
   const { toast } = useToast()
   const [showResetModal, setShowResetModal] = useState(false)
 
@@ -382,8 +383,9 @@ export function useSermonOutline() {
 
   const addBlockToSection = useCallback((sectionIndex: number, label = "New Block") => {
     const section = sections[sectionIndex]
+    const id = generateId()
     const newBlock: OutlineBlock = {
-      id: generateId(),
+      id: id,
       label: label,
       defaultLabel: label,
       placeholder: "Add your content here...",
@@ -394,6 +396,7 @@ export function useSermonOutline() {
     setSections(prev => prev.map((s, i) =>
       i === sectionIndex ? { ...s, blocks: [...s.blocks, newBlock] } : s
     ))
+    setNewBlockId(id)
 
     toast({
       title: "Block Added",
@@ -585,5 +588,6 @@ export function useSermonOutline() {
     cancelResetAll,
     loadOutlineFromJson,
     newSectionId,
+    newBlockId,
   }
 }

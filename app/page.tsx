@@ -57,6 +57,7 @@ export default function SermonOutlinePlanner() {
     cancelResetAll,
     loadOutlineFromJson,
     newSectionId,
+    newBlockId,
   } = useSermonOutline()
 
   const { theme, setTheme } = useTheme()
@@ -113,6 +114,17 @@ export default function SermonOutlinePlanner() {
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark")
 
   if (!mounted) return <div className="min-h-screen bg-background" />
+
+  const handleDragEnd = (event: any) => {
+    const { active } = event
+    const type = active.data.current?.type
+
+    if (type === "section") {
+      handleSectionDragEnd(event)
+    } else if (type === "block") {
+      handleBlockDragEnd(event)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -191,106 +203,87 @@ export default function SermonOutlinePlanner() {
         </Dialog>
 
         <main className="space-y-12">
-          {/* Introduction Section (Not draggable) */}
-          {sections.length > 0 && sections[0].type === "intro" && (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleBlockDragEnd}
-              modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-            >
-              <SortableContext items={sections[0].blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                <OutlineSection
-                  section={sections[0]}
-                  sectionIndex={0}
-                  onContentChange={handleContentChange}
-                  onLabelChange={handleLabelChange}
-                  onResetLabel={(bi) => handleResetLabel(0, bi)}
-                  onTitleChange={handleTitleChange}
-                  onResetTitle={handleResetTitle}
-                  onRemoveSection={() => removeSection(0)}
-                  onAddBlock={() => addBlockToSection(0)}
-                  onRemoveBlock={bi => removeBlock(0, bi)}
-                />
-              </SortableContext>
-            </DndContext>
-          )}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            modifiers={[restrictToVerticalAxis]}
+          >
+            {/* Introduction Section (Not draggable) */}
+            {sections.length > 0 && sections[0].type === "intro" && (
+              <OutlineSection
+                section={sections[0]}
+                sectionIndex={0}
+                onContentChange={handleContentChange}
+                onLabelChange={handleLabelChange}
+                onResetLabel={(bi) => handleResetLabel(0, bi)}
+                onTitleChange={handleTitleChange}
+                onResetTitle={handleResetTitle}
+                onRemoveSection={() => removeSection(0)}
+                onAddBlock={() => addBlockToSection(0)}
+                onRemoveBlock={bi => removeBlock(0, bi)}
+                newBlockId={newBlockId}
+              />
+            )}
 
-          {/* Draggable Body Sections */}
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
+            {/* Draggable Body Sections */}
             <SortableContext items={bodySectionIds} strategy={verticalListSortingStrategy}>
               <div className="space-y-8">
                 {sections.map((section, index) => {
                   if (section.type !== "body") return null;
                   return (
                     <div key={section.id}>
-                      <SortableSection id={section.id}>
-                        <DndContext
-                          sensors={sensors}
-                          collisionDetection={closestCenter}
-                          onDragEnd={handleBlockDragEnd}
-                          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-                        >
-                          <SortableContext items={section.blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                            <OutlineSection
-                              section={section}
-                              sectionIndex={index}
-                              onContentChange={handleContentChange}
-                              onLabelChange={handleLabelChange}
-                              onResetLabel={(bi) => handleResetLabel(index, bi)}
-                              onTitleChange={handleTitleChange}
-                              onResetTitle={handleResetTitle}
-                              onRemoveSection={() => removeSection(index)}
-                              onAddBlock={() => addBlockToSection(index)}
-                              onRemoveBlock={bi => removeBlock(index, bi)}
-                              isNew={section.id === newSectionId}
-                            />
-                          </SortableContext>
-                        </DndContext>
+                      <SortableSection id={section.id} title={section.title}>
+                        <OutlineSection
+                          section={section}
+                          sectionIndex={index}
+                          onContentChange={handleContentChange}
+                          onLabelChange={handleLabelChange}
+                          onResetLabel={(bi) => handleResetLabel(index, bi)}
+                          onTitleChange={handleTitleChange}
+                          onResetTitle={handleResetTitle}
+                          onRemoveSection={() => removeSection(index)}
+                          onAddBlock={() => addBlockToSection(index)}
+                          onRemoveBlock={bi => removeBlock(index, bi)}
+                          isNew={section.id === newSectionId}
+                          newBlockId={newBlockId}
+                        />
                       </SortableSection>
                     </div>
                   );
                 })}
               </div>
             </SortableContext>
+
+            <div className="flex justify-center py-6">
+              <Button
+                onClick={addBodySection}
+                size="xl"
+                variant="pastel-green"
+                className="flex items-center gap-2 group shadow-md"
+              >
+                <Plus className="h-5 w-5 transition-transform group-hover:rotate-90" />
+                <span className="text-lg font-bold">Add New Body Section</span>
+              </Button>
+            </div>
+
+            {/* Conclusion Section (Not draggable) */}
+            {sections.length > 0 && sections[sections.length - 1].type === "conclusion" && (
+              <OutlineSection
+                section={sections[sections.length - 1]}
+                sectionIndex={sections.length - 1}
+                onContentChange={handleContentChange}
+                onLabelChange={handleLabelChange}
+                onResetLabel={(bi) => handleResetLabel(sections.length - 1, bi)}
+                onTitleChange={handleTitleChange}
+                onResetTitle={handleResetTitle}
+                onRemoveSection={() => removeSection(sections.length - 1)}
+                onAddBlock={() => addBlockToSection(sections.length - 1)}
+                onRemoveBlock={bi => removeBlock(sections.length - 1, bi)}
+                newBlockId={newBlockId}
+              />
+            )}
           </DndContext>
-
-          <div className="flex justify-center py-6">
-            <Button
-              onClick={addBodySection}
-              size="xl"
-              variant="pastel-green"
-              className="flex items-center gap-2 group shadow-md"
-            >
-              <Plus className="h-5 w-5 transition-transform group-hover:rotate-90" />
-              <span className="text-lg font-bold">Add New Body Section</span>
-            </Button>
-          </div>
-
-          {/* Conclusion Section (Not draggable) */}
-          {sections.length > 0 && sections[sections.length - 1].type === "conclusion" && (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleBlockDragEnd}
-              modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-            >
-              <SortableContext items={sections[sections.length - 1].blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                <OutlineSection
-                  section={sections[sections.length - 1]}
-                  sectionIndex={sections.length - 1}
-                  onContentChange={handleContentChange}
-                  onLabelChange={handleLabelChange}
-                  onResetLabel={(bi) => handleResetLabel(sections.length - 1, bi)}
-                  onTitleChange={handleTitleChange}
-                  onResetTitle={handleResetTitle}
-                  onRemoveSection={() => removeSection(sections.length - 1)}
-                  onAddBlock={() => addBlockToSection(sections.length - 1)}
-                  onRemoveBlock={bi => removeBlock(sections.length - 1, bi)}
-                />
-              </SortableContext>
-            </DndContext>
-          )}
         </main>
 
         <Footer />
