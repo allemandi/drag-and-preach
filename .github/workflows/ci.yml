@@ -24,6 +24,8 @@ jobs:
         run: yarn lint
       - name: Build
         run: yarn build
+      - name: Run unit tests
+        run: yarn test:unit
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -49,16 +51,19 @@ jobs:
           path: out/
       - name: Get Playwright version
         id: playwright-version
-        run: echo "version=$(yarn list --pattern @playwright/test | grep @playwright/test | grep -oP '@\K[0-9.]+')" >> $GITHUB_OUTPUT
+        run: echo "version=$(node -p 'require("@playwright/test/package.json").version')" >> $GITHUB_OUTPUT
       - name: Cache Playwright browsers
+        id: playwright-cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-browsers-${{ steps.playwright-version.outputs.version }}
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
       - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium webkit
-      - name: Run unit tests
-        run: yarn test:unit
+      - name: Install Playwright dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium webkit
       - name: Run E2E tests
         run: yarn test:e2e
       - name: Upload Playwright report

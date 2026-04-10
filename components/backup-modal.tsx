@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -35,6 +36,9 @@ export function BackupModal({ onDownload, onUpload }: BackupModalProps) {
       <DialogContent className="sm:max-w-[380px] rounded-2xl border border-pastel-border-green p-6 shadow-xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-center mb-6 tracking-tight">Backup Options</DialogTitle>
+          <DialogDescription className="sr-only">
+            Download your current work as a backup file or load a previous backup.
+          </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-1 gap-3 mt-2">
           <Button
