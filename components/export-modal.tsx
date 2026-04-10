@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -42,6 +43,9 @@ export function ExportModal({ onExport, isExporting }: ExportModalProps) {
       <DialogContent className="sm:max-w-[400px] rounded-2xl border border-pastel-border-purple p-6 shadow-xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-center mb-6 tracking-tight">Export Outline</DialogTitle>
+          <DialogDescription className="sr-only">
+            Choose a format to export your sermon outline.
+          </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-3 mt-2">
           {exportOptions.map((option) => (
