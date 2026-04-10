@@ -155,62 +155,25 @@ export function useSermonOutline() {
     }
   }, [])
 
-  const handleBlockDragEnd = useCallback((event: DragEndEvent) => {
+  const handleBlockDragEnd = useCallback((event: DragEndEvent, sectionIndex: number) => {
     const { active, over } = event
     if (!over || active.id === over.id) return
 
-    const blockMap = new Map<string, { sectionIndex: number, blockIndex: number }>()
-    sections.forEach((section, sectionIndex) => {
-      section.blocks.forEach((block, blockIndex) => {
-        blockMap.set(block.id, { sectionIndex, blockIndex })
-      })
-    })
+    const oldIndex = sections[sectionIndex].blocks.findIndex((block) => block.id === active.id)
+    const newIndex = sections[sectionIndex].blocks.findIndex((block) => block.id === over.id)
 
-    const activeBlockInfo = blockMap.get(active.id as string)
-    const overBlockInfo = blockMap.get(over.id as string)
-
-    if (!activeBlockInfo || !overBlockInfo) return
-
-    if (activeBlockInfo.sectionIndex === overBlockInfo.sectionIndex) {
-      const sectionIndex = activeBlockInfo.sectionIndex
+    if (oldIndex !== -1 && newIndex !== -1) {
       const newSections = sections.map((section, idx) =>
         idx === sectionIndex
           ? {
               ...section,
-              blocks: arrayMove(section.blocks, activeBlockInfo.blockIndex, overBlockInfo.blockIndex),
+              blocks: arrayMove(section.blocks, oldIndex, newIndex),
             }
           : section
       )
-
       setSections(newSections)
-    } else {
-      const { sectionIndex: activeSectionIndex, blockIndex: activeBlockIndex } = activeBlockInfo
-      const { sectionIndex: overSectionIndex, blockIndex: overBlockIndex } = overBlockInfo
-
-      const newSections = sections.map((section, idx) => {
-        if (idx === activeSectionIndex) {
-          const newBlocks = [...section.blocks]
-          newBlocks.splice(activeBlockIndex, 1)
-          return { ...section, blocks: newBlocks }
-        }
-        if (idx === overSectionIndex) {
-          const blockToMove = { ...sections[activeSectionIndex].blocks[activeBlockIndex], type: section.type }
-          const newBlocks = [...section.blocks]
-          newBlocks.splice(overBlockIndex, 0, blockToMove)
-          return { ...section, blocks: newBlocks }
-        }
-        return section
-      })
-
-      setSections(newSections)
-
-      toast({
-        title: "Block Moved",
-        description: `Block moved to ${sections[overSectionIndex].title}`,
-        duration: 2000,
-      })
     }
-  }, [sections, toast])
+  }, [sections])
 
   const handleSectionDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event

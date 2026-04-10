@@ -115,17 +115,6 @@ export default function SermonOutlinePlanner() {
 
   if (!mounted) return <div className="min-h-screen bg-background" />
 
-  const handleDragEnd = (event: any) => {
-    const { active } = event
-    const type = active.data.current?.type
-
-    if (type === "section") {
-      handleSectionDragEnd(event)
-    } else if (type === "block") {
-      handleBlockDragEnd(event)
-    }
-  }
-
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="container mx-auto px-4 py-8 max-w-6xl pb-24">
@@ -203,30 +192,31 @@ export default function SermonOutlinePlanner() {
         </Dialog>
 
         <main className="space-y-12">
+          {/* Introduction Section (Not draggable) */}
+          {sections.length > 0 && sections[0].type === "intro" && (
+            <OutlineSection
+              section={sections[0]}
+              sectionIndex={0}
+              onContentChange={handleContentChange}
+              onLabelChange={handleLabelChange}
+              onResetLabel={(bi) => handleResetLabel(0, bi)}
+              onTitleChange={handleTitleChange}
+              onResetTitle={handleResetTitle}
+              onRemoveSection={() => removeSection(0)}
+              onAddBlock={() => addBlockToSection(0)}
+              onRemoveBlock={bi => removeBlock(0, bi)}
+              onBlockDragEnd={(e) => handleBlockDragEnd(e, 0)}
+              newBlockId={newBlockId}
+            />
+          )}
+
+          {/* Draggable Body Sections */}
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-            modifiers={[restrictToVerticalAxis]}
+            onDragEnd={handleSectionDragEnd}
+            modifiers={[restrictToVerticalAxis, restrictToParentElement]}
           >
-            {/* Introduction Section (Not draggable) */}
-            {sections.length > 0 && sections[0].type === "intro" && (
-              <OutlineSection
-                section={sections[0]}
-                sectionIndex={0}
-                onContentChange={handleContentChange}
-                onLabelChange={handleLabelChange}
-                onResetLabel={(bi) => handleResetLabel(0, bi)}
-                onTitleChange={handleTitleChange}
-                onResetTitle={handleResetTitle}
-                onRemoveSection={() => removeSection(0)}
-                onAddBlock={() => addBlockToSection(0)}
-                onRemoveBlock={bi => removeBlock(0, bi)}
-                newBlockId={newBlockId}
-              />
-            )}
-
-            {/* Draggable Body Sections */}
             <SortableContext items={bodySectionIds} strategy={verticalListSortingStrategy}>
               <div className="space-y-8">
                 {sections.map((section, index) => {
@@ -245,6 +235,7 @@ export default function SermonOutlinePlanner() {
                           onRemoveSection={() => removeSection(index)}
                           onAddBlock={() => addBlockToSection(index)}
                           onRemoveBlock={bi => removeBlock(index, bi)}
+                          onBlockDragEnd={(e) => handleBlockDragEnd(e, index)}
                           isNew={section.id === newSectionId}
                           newBlockId={newBlockId}
                         />
@@ -254,36 +245,37 @@ export default function SermonOutlinePlanner() {
                 })}
               </div>
             </SortableContext>
-
-            <div className="flex justify-center py-6">
-              <Button
-                onClick={addBodySection}
-                size="xl"
-                variant="pastel-green"
-                className="flex items-center gap-2 group shadow-md"
-              >
-                <Plus className="h-5 w-5 transition-transform group-hover:rotate-90" />
-                <span className="text-lg font-bold">Add New Body Section</span>
-              </Button>
-            </div>
-
-            {/* Conclusion Section (Not draggable) */}
-            {sections.length > 0 && sections[sections.length - 1].type === "conclusion" && (
-              <OutlineSection
-                section={sections[sections.length - 1]}
-                sectionIndex={sections.length - 1}
-                onContentChange={handleContentChange}
-                onLabelChange={handleLabelChange}
-                onResetLabel={(bi) => handleResetLabel(sections.length - 1, bi)}
-                onTitleChange={handleTitleChange}
-                onResetTitle={handleResetTitle}
-                onRemoveSection={() => removeSection(sections.length - 1)}
-                onAddBlock={() => addBlockToSection(sections.length - 1)}
-                onRemoveBlock={bi => removeBlock(sections.length - 1, bi)}
-                newBlockId={newBlockId}
-              />
-            )}
           </DndContext>
+
+          <div className="flex justify-center py-6">
+            <Button
+              onClick={addBodySection}
+              size="xl"
+              variant="pastel-green"
+              className="flex items-center gap-2 group shadow-md"
+            >
+              <Plus className="h-5 w-5 transition-transform group-hover:rotate-90" />
+              <span className="text-lg font-bold">Add New Body Section</span>
+            </Button>
+          </div>
+
+          {/* Conclusion Section (Not draggable) */}
+          {sections.length > 0 && sections[sections.length - 1].type === "conclusion" && (
+            <OutlineSection
+              section={sections[sections.length - 1]}
+              sectionIndex={sections.length - 1}
+              onContentChange={handleContentChange}
+              onLabelChange={handleLabelChange}
+              onResetLabel={(bi) => handleResetLabel(sections.length - 1, bi)}
+              onTitleChange={handleTitleChange}
+              onResetTitle={handleResetTitle}
+              onRemoveSection={() => removeSection(sections.length - 1)}
+              onAddBlock={() => addBlockToSection(sections.length - 1)}
+              onRemoveBlock={bi => removeBlock(sections.length - 1, bi)}
+              onBlockDragEnd={(e) => handleBlockDragEnd(e, sections.length - 1)}
+              newBlockId={newBlockId}
+            />
+          )}
         </main>
 
         <Footer />

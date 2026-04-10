@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input"
 import type { Section } from "@/lib/types"
 import { cn, getSectionStyles } from "@/lib/utils"
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
+import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers"
 
 interface OutlineSectionProps {
   section: Section
@@ -21,6 +23,7 @@ interface OutlineSectionProps {
   onRemoveSection: () => void
   onAddBlock: () => void
   onRemoveBlock: (blockIndex: number) => void
+  onBlockDragEnd: (event: any) => void
   isNew?: boolean
   newBlockId?: string | null
 }
@@ -36,6 +39,7 @@ export function OutlineSection({
   onRemoveSection,
   onAddBlock,
   onRemoveBlock,
+  onBlockDragEnd,
   isNew = false,
   newBlockId = null,
 }: OutlineSectionProps) {
@@ -67,6 +71,14 @@ export function OutlineSection({
       handleTitleBlur()
     }
   }
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  )
 
   return (
     <Card
@@ -138,20 +150,27 @@ export function OutlineSection({
         </div>
       </CardHeader>
       <CardContent className="space-y-4 pb-6 px-4 sm:px-8">
-        <SortableContext items={section.blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-          {section.blocks.map((block, blockIndex) => (
-            <OutlineBlock
-              key={block.id}
-              block={block}
-              onChange={(newContent) => onContentChange(sectionIndex, blockIndex, newContent)}
-              onLabelChange={(newLabel) => onLabelChange(sectionIndex, blockIndex, newLabel)}
-              onResetLabel={() => onResetLabel(sectionIndex, blockIndex)}
-              onRemoveBlock={() => onRemoveBlock(blockIndex)}
-              showRemoveButton={section.blocks.length > 1}
-              isNew={block.id === newBlockId}
-            />
-          ))}
-        </SortableContext>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={onBlockDragEnd}
+          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+        >
+          <SortableContext items={section.blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
+            {section.blocks.map((block, blockIndex) => (
+              <OutlineBlock
+                key={block.id}
+                block={block}
+                onChange={(newContent) => onContentChange(sectionIndex, blockIndex, newContent)}
+                onLabelChange={(newLabel) => onLabelChange(sectionIndex, blockIndex, newLabel)}
+                onResetLabel={() => onResetLabel(sectionIndex, blockIndex)}
+                onRemoveBlock={() => onRemoveBlock(blockIndex)}
+                showRemoveButton={section.blocks.length > 1}
+                isNew={block.id === newBlockId}
+              />
+            ))}
+          </SortableContext>
+        </DndContext>
       </CardContent>
     </Card>
   )
