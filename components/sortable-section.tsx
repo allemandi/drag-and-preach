@@ -10,9 +10,12 @@ interface SortableSectionProps {
   children: React.ReactNode
 }
 
-export function SortableSection({ id, children }: SortableSectionProps) {
+export function SortableSection({ id, children, title }: SortableSectionProps & { title: string }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
     id,
+    data: {
+      type: "section",
+    },
   })
 
   const style = {
@@ -32,7 +35,7 @@ export function SortableSection({ id, children }: SortableSectionProps) {
         {...attributes}
         {...listeners}
         data-drag-handle
-        aria-label={`Drag to reorder section: ${id}`}
+        aria-label={`Drag to reorder section: ${title}`}
         aria-roledescription="drag handle"
         style={{ touchAction: "none" }}
       >

@@ -8,6 +8,9 @@ import { useState, useEffect, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import type { Section } from "@/lib/types"
 import { cn, getSectionStyles } from "@/lib/utils"
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
+import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers"
 
 interface OutlineSectionProps {
   section: Section
@@ -20,7 +23,9 @@ interface OutlineSectionProps {
   onRemoveSection: () => void
   onAddBlock: () => void
   onRemoveBlock: (blockIndex: number) => void
+  onBlockDragEnd: (event: any) => void
   isNew?: boolean
+  newBlockId?: string | null
 }
 
 export function OutlineSection({
@@ -34,7 +39,9 @@ export function OutlineSection({
   onRemoveSection,
   onAddBlock,
   onRemoveBlock,
+  onBlockDragEnd,
   isNew = false,
+  newBlockId = null,
 }: OutlineSectionProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [titleValue, setTitleValue] = useState(section.title)
@@ -65,11 +72,19 @@ export function OutlineSection({
     }
   }
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  )
+
   return (
     <Card
       ref={cardRef}
       className={cn("transition-all border rounded-2xl shadow-sm overflow-hidden outline-none", getSectionStyles(section.type))}
-      tabIndex={-1}
+      tabIndex={0}
     >
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 pt-6 px-4 sm:px-8 gap-3">
         <div className="flex items-center gap-3 min-w-[200px] group/title">
@@ -135,17 +150,27 @@ export function OutlineSection({
         </div>
       </CardHeader>
       <CardContent className="space-y-4 pb-6 px-4 sm:px-8">
-        {section.blocks.map((block, blockIndex) => (
-          <OutlineBlock
-            key={block.id}
-            block={block}
-            onChange={(newContent) => onContentChange(sectionIndex, blockIndex, newContent)}
-            onLabelChange={(newLabel) => onLabelChange(sectionIndex, blockIndex, newLabel)}
-            onResetLabel={() => onResetLabel(sectionIndex, blockIndex)}
-            onRemoveBlock={() => onRemoveBlock(blockIndex)}
-            showRemoveButton={section.blocks.length > 1}
-          />
-        ))}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={onBlockDragEnd}
+          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+        >
+          <SortableContext items={section.blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
+            {section.blocks.map((block, blockIndex) => (
+              <OutlineBlock
+                key={block.id}
+                block={block}
+                onChange={(newContent) => onContentChange(sectionIndex, blockIndex, newContent)}
+                onLabelChange={(newLabel) => onLabelChange(sectionIndex, blockIndex, newLabel)}
+                onResetLabel={() => onResetLabel(sectionIndex, blockIndex)}
+                onRemoveBlock={() => onRemoveBlock(blockIndex)}
+                showRemoveButton={section.blocks.length > 1}
+                isNew={block.id === newBlockId}
+              />
+            ))}
+          </SortableContext>
+        </DndContext>
       </CardContent>
     </Card>
   )

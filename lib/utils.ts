@@ -15,43 +15,48 @@ export function generateId(): string {
   return Math.random().toString(36).substring(2, 9)
 }
 
+const THEME_CONFIG: Record<string, { border: string; bg: string; text: string; ring: string }> = {
+  intro: {
+    border: "pastel-border-blue",
+    bg: "pastel-blue",
+    text: "pastel-text-blue",
+    ring: "pastel-border-blue/40",
+  },
+  body: {
+    border: "pastel-border-green",
+    bg: "pastel-green",
+    text: "pastel-text-green",
+    ring: "pastel-border-green/40",
+  },
+  conclusion: {
+    border: "pastel-border-amber",
+    bg: "pastel-amber",
+    text: "pastel-text-amber",
+    ring: "pastel-border-amber/40",
+  },
+  default: {
+    border: "pastel-border-purple",
+    bg: "pastel-purple",
+    text: "pastel-text-purple",
+    ring: "pastel-border-purple/40",
+  },
+}
+
+const getTheme = (type: string) => THEME_CONFIG[type] || THEME_CONFIG.default
+
 export const getSectionStyles = (type: string) => {
-  switch (type) {
-    case "intro":
-      return "border-pastel-border-blue bg-pastel-blue/10 text-pastel-text-blue"
-    case "body":
-      return "border-pastel-border-green bg-pastel-green/10 text-pastel-text-green"
-    case "conclusion":
-      return "border-pastel-border-amber bg-pastel-amber/10 text-pastel-text-amber"
-    default:
-      return "border-pastel-border-purple bg-pastel-purple/10 text-pastel-text-purple"
-  }
+  const theme = getTheme(type)
+  return `border-${theme.border} bg-${theme.bg}/10 text-${theme.text}`
 }
 
 export const getBlockStyles = (type: string) => {
-  switch (type) {
-    case "intro":
-      return "bg-background border-pastel-border-blue/50 hover:border-pastel-border-blue text-pastel-text-blue"
-    case "body":
-      return "bg-background border-pastel-border-green/50 hover:border-pastel-border-green text-pastel-text-green"
-    case "conclusion":
-      return "bg-background border-pastel-border-amber/50 hover:border-pastel-border-amber text-pastel-text-amber"
-    default:
-      return "bg-background border-pastel-border-purple/50 hover:border-pastel-border-purple text-pastel-text-purple"
-  }
+  const theme = getTheme(type)
+  return `bg-background border-${theme.border}/50 hover:border-${theme.border} text-${theme.text}`
 }
 
 export const getTextAreaStyles = (type: string) => {
-  switch (type) {
-    case "intro":
-      return "focus:ring-pastel-border-blue/40 border-pastel-border-blue/20"
-    case "body":
-      return "focus:ring-pastel-border-green/40 border-pastel-border-green/20"
-    case "conclusion":
-      return "focus:ring-pastel-border-amber/40 border-pastel-border-amber/20"
-    default:
-      return "focus:ring-pastel-border-purple/40 border-pastel-border-purple/20"
-  }
+  const theme = getTheme(type)
+  return `focus:ring-${theme.ring} border-${theme.border}/20`
 }
 
 export function formatOutline(sections: Section[], format: "md" | "txt" | "pdf" | "docx"): string | Promise<string> {

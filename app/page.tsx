@@ -57,6 +57,7 @@ export default function SermonOutlinePlanner() {
     cancelResetAll,
     loadOutlineFromJson,
     newSectionId,
+    newBlockId,
   } = useSermonOutline()
 
   const { theme, setTheme } = useTheme()
@@ -193,60 +194,51 @@ export default function SermonOutlinePlanner() {
         <main className="space-y-12">
           {/* Introduction Section (Not draggable) */}
           {sections.length > 0 && sections[0].type === "intro" && (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleBlockDragEnd}
-              modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-            >
-              <SortableContext items={sections[0].blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                <OutlineSection
-                  section={sections[0]}
-                  sectionIndex={0}
-                  onContentChange={handleContentChange}
-                  onLabelChange={handleLabelChange}
-                  onResetLabel={(bi) => handleResetLabel(0, bi)}
-                  onTitleChange={handleTitleChange}
-                  onResetTitle={handleResetTitle}
-                  onRemoveSection={() => removeSection(0)}
-                  onAddBlock={() => addBlockToSection(0)}
-                  onRemoveBlock={bi => removeBlock(0, bi)}
-                />
-              </SortableContext>
-            </DndContext>
+            <OutlineSection
+              section={sections[0]}
+              sectionIndex={0}
+              onContentChange={handleContentChange}
+              onLabelChange={handleLabelChange}
+              onResetLabel={(bi) => handleResetLabel(0, bi)}
+              onTitleChange={handleTitleChange}
+              onResetTitle={handleResetTitle}
+              onRemoveSection={() => removeSection(0)}
+              onAddBlock={() => addBlockToSection(0)}
+              onRemoveBlock={bi => removeBlock(0, bi)}
+              onBlockDragEnd={(e) => handleBlockDragEnd(e, 0)}
+              newBlockId={newBlockId}
+            />
           )}
 
           {/* Draggable Body Sections */}
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleSectionDragEnd}
+            modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+          >
             <SortableContext items={bodySectionIds} strategy={verticalListSortingStrategy}>
               <div className="space-y-8">
                 {sections.map((section, index) => {
                   if (section.type !== "body") return null;
                   return (
                     <div key={section.id}>
-                      <SortableSection id={section.id}>
-                        <DndContext
-                          sensors={sensors}
-                          collisionDetection={closestCenter}
-                          onDragEnd={handleBlockDragEnd}
-                          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-                        >
-                          <SortableContext items={section.blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                            <OutlineSection
-                              section={section}
-                              sectionIndex={index}
-                              onContentChange={handleContentChange}
-                              onLabelChange={handleLabelChange}
-                              onResetLabel={(bi) => handleResetLabel(index, bi)}
-                              onTitleChange={handleTitleChange}
-                              onResetTitle={handleResetTitle}
-                              onRemoveSection={() => removeSection(index)}
-                              onAddBlock={() => addBlockToSection(index)}
-                              onRemoveBlock={bi => removeBlock(index, bi)}
-                              isNew={section.id === newSectionId}
-                            />
-                          </SortableContext>
-                        </DndContext>
+                      <SortableSection id={section.id} title={section.title}>
+                        <OutlineSection
+                          section={section}
+                          sectionIndex={index}
+                          onContentChange={handleContentChange}
+                          onLabelChange={handleLabelChange}
+                          onResetLabel={(bi) => handleResetLabel(index, bi)}
+                          onTitleChange={handleTitleChange}
+                          onResetTitle={handleResetTitle}
+                          onRemoveSection={() => removeSection(index)}
+                          onAddBlock={() => addBlockToSection(index)}
+                          onRemoveBlock={bi => removeBlock(index, bi)}
+                          onBlockDragEnd={(e) => handleBlockDragEnd(e, index)}
+                          isNew={section.id === newSectionId}
+                          newBlockId={newBlockId}
+                        />
                       </SortableSection>
                     </div>
                   );
@@ -269,27 +261,20 @@ export default function SermonOutlinePlanner() {
 
           {/* Conclusion Section (Not draggable) */}
           {sections.length > 0 && sections[sections.length - 1].type === "conclusion" && (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleBlockDragEnd}
-              modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-            >
-              <SortableContext items={sections[sections.length - 1].blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                <OutlineSection
-                  section={sections[sections.length - 1]}
-                  sectionIndex={sections.length - 1}
-                  onContentChange={handleContentChange}
-                  onLabelChange={handleLabelChange}
-                  onResetLabel={(bi) => handleResetLabel(sections.length - 1, bi)}
-                  onTitleChange={handleTitleChange}
-                  onResetTitle={handleResetTitle}
-                  onRemoveSection={() => removeSection(sections.length - 1)}
-                  onAddBlock={() => addBlockToSection(sections.length - 1)}
-                  onRemoveBlock={bi => removeBlock(sections.length - 1, bi)}
-                />
-              </SortableContext>
-            </DndContext>
+            <OutlineSection
+              section={sections[sections.length - 1]}
+              sectionIndex={sections.length - 1}
+              onContentChange={handleContentChange}
+              onLabelChange={handleLabelChange}
+              onResetLabel={(bi) => handleResetLabel(sections.length - 1, bi)}
+              onTitleChange={handleTitleChange}
+              onResetTitle={handleResetTitle}
+              onRemoveSection={() => removeSection(sections.length - 1)}
+              onAddBlock={() => addBlockToSection(sections.length - 1)}
+              onRemoveBlock={bi => removeBlock(sections.length - 1, bi)}
+              onBlockDragEnd={(e) => handleBlockDragEnd(e, sections.length - 1)}
+              newBlockId={newBlockId}
+            />
           )}
         </main>
 

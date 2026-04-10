@@ -18,6 +18,7 @@ interface OutlineBlockProps {
   onResetLabel: () => void
   onRemoveBlock: () => void
   showRemoveButton: boolean
+  isNew?: boolean
 }
 
 export function OutlineBlock({
@@ -27,14 +28,20 @@ export function OutlineBlock({
   onResetLabel,
   onRemoveBlock,
   showRemoveButton,
+  isNew = false,
 }: OutlineBlockProps) {
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(isNew)
   const [isEditingLabel, setIsEditingLabel] = useState(false)
   const [content, setContent] = useState(block.content)
   const [labelValue, setLabelValue] = useState(block.label)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: block.id })
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: block.id,
+    data: {
+      type: "block",
+    },
+  })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -65,8 +72,11 @@ export function OutlineBlock({
     // Auto-resize textarea
     e.target.style.height = "auto"
     e.target.style.height = `${e.target.scrollHeight}px`
+  }
 
-    onChange(newContent)
+  const handleContentBlur = () => {
+    onChange(content)
+    setIsEditing(false)
   }
 
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,7 +178,7 @@ export function OutlineBlock({
                 ref={textareaRef}
                 value={content}
                 onChange={handleContentChange}
-                onBlur={() => setIsEditing(false)}
+                onBlur={handleContentBlur}
                 className={cn(
                   "w-full min-h-[70px] p-3 rounded-lg bg-muted/20 focus:outline-none focus:ring-2 transition-all text-sm font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary",
                   getTextAreaStyles(block.type)
