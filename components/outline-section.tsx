@@ -8,8 +8,8 @@ import { useState, useEffect, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import type { Section } from "@/lib/types"
 import { cn, getSectionStyles } from "@/lib/utils"
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
+import { SortableContext, verticalListSortingStrategy, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, KeyboardSensor, TouchSensor, type DragStartEvent, type DragOverEvent, type DragEndEvent, defaultAnnouncements } from "@dnd-kit/core"
 import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers"
 
 interface OutlineSectionProps {
@@ -69,24 +69,51 @@ export function OutlineSection({
   const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleTitleBlur()
+    } else if (e.key === "Escape") {
+      setTitleValue(section.title)
+      setIsEditingTitle(false)
     }
   }
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 5,
-      },
-    })
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
+
+  const announcements = {
+    ...defaultAnnouncements,
+    onDragStart({ active }: DragStartEvent) {
+      const activeBlock = section.blocks.find((b) => b.id === active.id)
+      return `Picked up block ${activeBlock?.label || active.id}.`
+    },
+    onDragOver({ active, over }: DragOverEvent) {
+      if (over) {
+        const activeBlock = section.blocks.find((b) => b.id === active.id)
+        const overBlock = section.blocks.find((b) => b.id === over.id)
+        return `Block ${activeBlock?.label || active.id} was moved over block ${overBlock?.label || over.id}.`
+      }
+      return `Block ${active.id} is no longer over a droppable area.`
+    },
+    onDragEnd({ active, over }: DragEndEvent) {
+      if (over) {
+        const activeBlock = section.blocks.find((b) => b.id === active.id)
+        const overBlock = section.blocks.find((b) => b.id === over.id)
+        return `Block ${activeBlock?.label || active.id} was dropped over block ${overBlock?.label || over.id}.`
+      }
+      return `Block ${active.id} was dropped.`
+    },
+    onDragCancel({ active }: DragEndEvent) {
+      return `Dragging was cancelled. Block ${active.id} was dropped.`
+    },
+  }
 
   return (
     <Card
       ref={cardRef}
       className={cn("transition-all border rounded-2xl shadow-sm overflow-hidden outline-none", getSectionStyles(section.type))}
-      tabIndex={0}
     >
-      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 pt-6 px-4 sm:px-8 gap-3">
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 pt-6 pl-10 pr-4 sm:px-8 gap-3">
         <div className="flex items-center gap-3 min-w-[200px] group/title">
           {isEditingTitle ? (
             <Input
@@ -155,6 +182,7 @@ export function OutlineSection({
           collisionDetection={closestCenter}
           onDragEnd={onBlockDragEnd}
           modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+          accessibility={{ announcements }}
         >
           <SortableContext items={section.blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
             {section.blocks.map((block, blockIndex) => (

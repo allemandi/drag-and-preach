@@ -79,6 +79,13 @@ export function OutlineBlock({
     setIsEditing(false)
   }
 
+  const handleContentKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Escape") {
+      setContent(block.content)
+      setIsEditing(false)
+    }
+  }
+
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLabelValue(e.target.value)
   }
@@ -91,6 +98,9 @@ export function OutlineBlock({
   const handleLabelKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleLabelBlur()
+    } else if (e.key === "Escape") {
+      setLabelValue(block.label)
+      setIsEditingLabel(false)
     }
   }
 
@@ -112,6 +122,7 @@ export function OutlineBlock({
           data-drag-handle
           aria-label={`Drag to reorder block: ${block.label}`}
           aria-roledescription="drag handle"
+          aria-describedby="dnd-instructions"
           style={{ touchAction: 'none' }}
         >
           <GripVertical className="h-4 w-4 text-muted-foreground" />
@@ -179,6 +190,7 @@ export function OutlineBlock({
                 value={content}
                 onChange={handleContentChange}
                 onBlur={handleContentBlur}
+                onKeyDown={handleContentKeyDown}
                 className={cn(
                   "w-full min-h-[70px] p-3 rounded-lg bg-muted/20 focus:outline-none focus:ring-2 transition-all text-sm font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary",
                   getTextAreaStyles(block.type)

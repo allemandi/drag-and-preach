@@ -12,7 +12,7 @@ export function cn(...inputs: ClassValue[]) {
 import { type Section } from "./types"
 
 export function generateId(): string {
-  return Math.random().toString(36).substring(2, 9)
+  return crypto.randomUUID()
 }
 
 const THEME_CONFIG: Record<string, { border: string; bg: string; text: string; ring: string }> = {
