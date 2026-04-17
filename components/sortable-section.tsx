@@ -31,16 +31,18 @@ export function SortableSection({ id, children, title }: SortableSectionProps & 
     <div ref={setNodeRef} style={style} className="relative">
       <button
         type="button"
-        className="absolute top-4 left-4 cursor-grab p-1 rounded hover:bg-muted z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
+        className="absolute top-6 left-2 sm:left-4 cursor-grab p-1 rounded hover:bg-muted z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
         {...attributes}
         {...listeners}
         data-drag-handle
         aria-label={`Drag to reorder section: ${title}`}
         aria-roledescription="drag handle"
+        aria-describedby="dnd-instructions"
         style={{ touchAction: "none" }}
       >
         <GripVertical className="h-5 w-5 text-muted-foreground" />
       </button>
+
       {children}
     </div>
   )

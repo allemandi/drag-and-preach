@@ -10,6 +10,10 @@ import {
   useSensor,
   useSensors,
   TouchSensor,
+  type DragStartEvent,
+  type DragOverEvent,
+  type DragEndEvent,
+  defaultAnnouncements,
 } from "@dnd-kit/core"
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers"
@@ -115,8 +119,38 @@ export default function SermonOutlinePlanner() {
 
   if (!mounted) return <div className="min-h-screen bg-background" />
 
+  const announcements = {
+    ...defaultAnnouncements,
+    onDragStart({ active }: DragStartEvent) {
+      const activeSection = sections.find((s) => s.id === active.id)
+      return `Picked up section ${activeSection?.title || active.id}.`
+    },
+    onDragOver({ active, over }: DragOverEvent) {
+      if (over) {
+        const activeSection = sections.find((s) => s.id === active.id)
+        const overSection = sections.find((s) => s.id === over.id)
+        return `Section ${activeSection?.title || active.id} was moved over section ${overSection?.title || over.id}.`
+      }
+      return `Section ${active.id} is no longer over a droppable area.`
+    },
+    onDragEnd({ active, over }: DragEndEvent) {
+      if (over) {
+        const activeSection = sections.find((s) => s.id === active.id)
+        const overSection = sections.find((s) => s.id === over.id)
+        return `Section ${activeSection?.title || active.id} was dropped over section ${overSection?.title || over.id}.`
+      }
+      return `Section ${active.id} was dropped.`
+    },
+    onDragCancel({ active }: DragEndEvent) {
+      return `Dragging was cancelled. Section ${active.id} was dropped.`
+    },
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <span id="dnd-instructions" className="sr-only">
+        To pick up a draggable item, press the space bar. While dragging, use the arrow keys to move the item. Press space again to drop the item in its new position, or press escape to cancel.
+      </span>
       <div className="container mx-auto px-4 py-8 max-w-6xl pb-24">
         <header className="mb-10 space-y-6">
           <div className="flex justify-between items-center gap-4">
@@ -216,31 +250,30 @@ export default function SermonOutlinePlanner() {
             collisionDetection={closestCenter}
             onDragEnd={handleSectionDragEnd}
             modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+            accessibility={{ announcements }}
           >
             <SortableContext items={bodySectionIds} strategy={verticalListSortingStrategy}>
               <div className="space-y-8">
                 {sections.map((section, index) => {
                   if (section.type !== "body") return null;
                   return (
-                    <div key={section.id}>
-                      <SortableSection id={section.id} title={section.title}>
-                        <OutlineSection
-                          section={section}
-                          sectionIndex={index}
-                          onContentChange={handleContentChange}
-                          onLabelChange={handleLabelChange}
-                          onResetLabel={(bi) => handleResetLabel(index, bi)}
-                          onTitleChange={handleTitleChange}
-                          onResetTitle={handleResetTitle}
-                          onRemoveSection={() => removeSection(index)}
-                          onAddBlock={() => addBlockToSection(index)}
-                          onRemoveBlock={bi => removeBlock(index, bi)}
-                          onBlockDragEnd={(e) => handleBlockDragEnd(e, index)}
-                          isNew={section.id === newSectionId}
-                          newBlockId={newBlockId}
-                        />
-                      </SortableSection>
-                    </div>
+                    <SortableSection key={section.id} id={section.id} title={section.title}>
+                      <OutlineSection
+                        section={section}
+                        sectionIndex={index}
+                        onContentChange={handleContentChange}
+                        onLabelChange={handleLabelChange}
+                        onResetLabel={(bi) => handleResetLabel(index, bi)}
+                        onTitleChange={handleTitleChange}
+                        onResetTitle={handleResetTitle}
+                        onRemoveSection={() => removeSection(index)}
+                        onAddBlock={() => addBlockToSection(index)}
+                        onRemoveBlock={bi => removeBlock(index, bi)}
+                        onBlockDragEnd={(e) => handleBlockDragEnd(e, index)}
+                        isNew={section.id === newSectionId}
+                        newBlockId={newBlockId}
+                      />
+                    </SortableSection>
                   );
                 })}
               </div>
