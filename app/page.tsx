@@ -257,25 +257,23 @@ export default function SermonOutlinePlanner() {
                 {sections.map((section, index) => {
                   if (section.type !== "body") return null;
                   return (
-                    <div key={section.id}>
-                      <SortableSection id={section.id} title={section.title}>
-                        <OutlineSection
-                          section={section}
-                          sectionIndex={index}
-                          onContentChange={handleContentChange}
-                          onLabelChange={handleLabelChange}
-                          onResetLabel={(bi) => handleResetLabel(index, bi)}
-                          onTitleChange={handleTitleChange}
-                          onResetTitle={handleResetTitle}
-                          onRemoveSection={() => removeSection(index)}
-                          onAddBlock={() => addBlockToSection(index)}
-                          onRemoveBlock={bi => removeBlock(index, bi)}
-                          onBlockDragEnd={(e) => handleBlockDragEnd(e, index)}
-                          isNew={section.id === newSectionId}
-                          newBlockId={newBlockId}
-                        />
-                      </SortableSection>
-                    </div>
+                    <SortableSection key={section.id} id={section.id} title={section.title}>
+                      <OutlineSection
+                        section={section}
+                        sectionIndex={index}
+                        onContentChange={handleContentChange}
+                        onLabelChange={handleLabelChange}
+                        onResetLabel={(bi) => handleResetLabel(index, bi)}
+                        onTitleChange={handleTitleChange}
+                        onResetTitle={handleResetTitle}
+                        onRemoveSection={() => removeSection(index)}
+                        onAddBlock={() => addBlockToSection(index)}
+                        onRemoveBlock={bi => removeBlock(index, bi)}
+                        onBlockDragEnd={(e) => handleBlockDragEnd(e, index)}
+                        isNew={section.id === newSectionId}
+                        newBlockId={newBlockId}
+                      />
+                    </SortableSection>
                   );
                 })}
               </div>
