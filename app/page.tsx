@@ -20,7 +20,7 @@ import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifi
 import { OutlineSection } from "@/components/outline-section"
 import { SortableSection } from "@/components/sortable-section"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, Save, Plus, Moon, Sun, RefreshCw } from "lucide-react"
+import { ArrowUpDown, Save, Plus, Moon, Sun, RefreshCw, Copy } from "lucide-react"
 import { useTheme } from "next-themes"
 import Footer from "@/components/footer"
 import { ExportModal } from "@/components/export-modal"
@@ -60,6 +60,7 @@ export default function SermonOutlinePlanner() {
     confirmResetAll,
     cancelResetAll,
     loadOutlineFromJson,
+    copyToClipboard,
     newSectionId,
     newBlockId,
   } = useSermonOutline()
@@ -193,10 +194,19 @@ export default function SermonOutlinePlanner() {
                 <span>{isSaving ? "Saving..." : "Save"}</span>
               </Button>
               <BackupModal onDownload={saveOutlineAsJson} onUpload={triggerFileInput} />
+              <Button onClick={copyToClipboard} variant="pastel-amber" size="sm">
+                <Copy className="h-4 w-4 mr-1.5" />
+                <span>Copy</span>
+              </Button>
               <ExportModal onExport={handleExport} isExporting={isExporting} />
             </div>
 
-            <Button onClick={handleResetAll} variant="pastel-rose" size="sm">
+            <Button
+              onClick={handleResetAll}
+              variant="pastel-rose"
+              size="sm"
+              aria-label="Reset the entire sermon outline"
+            >
               <RefreshCw className="h-4 w-4 mr-1.5" />
               <span>Reset All</span>
             </Button>

@@ -159,53 +159,60 @@ export function useSermonOutline() {
     const { active, over } = event
     if (!over || active.id === over.id) return
 
-    const oldIndex = sections[sectionIndex].blocks.findIndex((block) => block.id === active.id)
-    const newIndex = sections[sectionIndex].blocks.findIndex((block) => block.id === over.id)
+    setSections((prev) => {
+      const section = prev[sectionIndex]
+      if (!section) return prev
 
-    if (oldIndex !== -1 && newIndex !== -1) {
-      const newSections = sections.map((section, idx) =>
-        idx === sectionIndex
-          ? {
-              ...section,
-              blocks: arrayMove(section.blocks, oldIndex, newIndex),
-            }
-          : section
-      )
-      setSections(newSections)
-    }
-  }, [sections])
+      const oldIndex = section.blocks.findIndex((block) => block.id === active.id)
+      const newIndex = section.blocks.findIndex((block) => block.id === over.id)
 
-  const handleSectionDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event
-    if (!over || active.id === over.id) return
+      if (oldIndex !== -1 && newIndex !== -1) {
+        return prev.map((s, idx) =>
+          idx === sectionIndex
+            ? {
+                ...s,
+                blocks: arrayMove(s.blocks, oldIndex, newIndex),
+              }
+            : s
+        )
+      }
+      return prev
+    })
+  }, [])
 
-    const oldIndex = sections.findIndex((section) => section.id === active.id)
-    const newIndex = sections.findIndex((section) => section.id === over.id)
+  const handleSectionDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event
+      if (!over || active.id === over.id) return
 
-    const sectionType = sections[oldIndex].type
-    if (sectionType === "intro" || sectionType === "conclusion") {
-      toast({
-        title: "Cannot Move Section",
-        description: "Introduction and Conclusion sections cannot be moved.",
-        variant: "destructive",
-        duration: 3000,
-      })
-      return
-    }
+      const oldIndex = sections.findIndex((section) => section.id === active.id)
+      const newIndex = sections.findIndex((section) => section.id === over.id)
 
-    if (newIndex === 0 || newIndex === sections.length - 1) {
-      toast({
-        title: "Cannot Move Section",
-        description: "Body sections must remain between Introduction and Conclusion.",
-        variant: "destructive",
-        duration: 3000,
-      })
-      return
-    }
+      const sectionType = sections[oldIndex].type
+      if (sectionType === "intro" || sectionType === "conclusion") {
+        toast({
+          title: "Cannot Move Section",
+          description: "Introduction and Conclusion sections cannot be moved.",
+          variant: "destructive",
+          duration: 3000,
+        })
+        return
+      }
 
-    const newSections = arrayMove(sections, oldIndex, newIndex)
-    setSections(newSections)
-  }, [sections, toast])
+      if (newIndex === 0 || newIndex === sections.length - 1) {
+        toast({
+          title: "Cannot Move Section",
+          description: "Body sections must remain between Introduction and Conclusion.",
+          variant: "destructive",
+          duration: 3000,
+        })
+        return
+      }
+
+      setSections((prev) => arrayMove(prev, oldIndex, newIndex))
+    },
+    [sections, toast]
+  )
 
   const handleContentChange = useCallback((sectionIndex: number, blockIndex: number, content: string) => {
     setSections(prev => prev.map((section, i) =>
@@ -330,7 +337,7 @@ export function useSermonOutline() {
       ],
     }
 
-    setSections(prev => {
+    setSections((prev) => {
       const newSections = [...prev]
       newSections.splice(conclusionIndex, 0, newBodySection)
       return newSections
@@ -344,75 +351,86 @@ export function useSermonOutline() {
     })
   }, [sections, toast])
 
-  const addBlockToSection = useCallback((sectionIndex: number, label = "New Block") => {
-    const section = sections[sectionIndex]
-    const id = generateId()
-    const newBlock: OutlineBlock = {
-      id: id,
-      label: label,
-      defaultLabel: label,
-      placeholder: "Add your content here...",
-      content: "",
-      type: section.type,
-    }
+  const addBlockToSection = useCallback(
+    (sectionIndex: number, label = "New Block") => {
+      const section = sections[sectionIndex]
+      const id = generateId()
+      const newBlock: OutlineBlock = {
+        id: id,
+        label: label,
+        defaultLabel: label,
+        placeholder: "Add your content here...",
+        content: "",
+        type: section.type,
+      }
 
-    setSections(prev => prev.map((s, i) =>
-      i === sectionIndex ? { ...s, blocks: [...s.blocks, newBlock] } : s
-    ))
-    setNewBlockId(id)
+      setSections((prev) => prev.map((s, i) => (i === sectionIndex ? { ...s, blocks: [...s.blocks, newBlock] } : s)))
+      setNewBlockId(id)
 
-    toast({
-      title: "Block Added",
-      description: `A new block has been added to ${section.title}.`,
-      duration: 2000,
-    })
-  }, [sections, toast])
-
-  const removeBlock = useCallback((sectionIndex: number, blockIndex: number) => {
-    if (sections[sectionIndex].blocks.length <= 1) {
       toast({
-        title: "Cannot Remove Block",
-        description: "A section must have at least one block.",
-        variant: "destructive",
+        title: "Block Added",
+        description: `A new block has been added to ${section.title}.`,
+        duration: 2000,
+      })
+    },
+    [sections, toast]
+  )
+
+  const removeBlock = useCallback(
+    (sectionIndex: number, blockIndex: number) => {
+      if (sections[sectionIndex].blocks.length <= 1) {
+        toast({
+          title: "Cannot Remove Block",
+          description: "A section must have at least one block.",
+          variant: "destructive",
+          duration: 3000,
+        })
+        return
+      }
+
+      setSections((prev) =>
+        prev.map((s, i) =>
+          i === sectionIndex
+            ? {
+                ...s,
+                blocks: s.blocks.filter((_, j) => j !== blockIndex),
+              }
+            : s
+        )
+      )
+
+      toast({
+        title: "Block Removed",
+        description: "The block has been removed from your outline.",
+        duration: 2000,
+      })
+    },
+    [sections, toast]
+  )
+
+  const removeSection = useCallback(
+    (sectionIndex: number) => {
+      const sectionType = sections[sectionIndex].type
+      if (sectionType === "intro" || sectionType === "conclusion") {
+        toast({
+          title: "Cannot Remove Section",
+          description: "Introduction and Conclusion sections cannot be removed.",
+          variant: "destructive",
+          duration: 3000,
+        })
+        return
+      }
+
+      setSections((prev) => prev.filter((_, i) => i !== sectionIndex))
+
+      toast({
+        title: "Section Removed",
+        description: "The section has been removed from your outline.",
         duration: 3000,
       })
-      return
-    }
-
-    setSections(prev => prev.map((s, i) =>
-      i === sectionIndex ? {
-        ...s,
-        blocks: s.blocks.filter((_, j) => j !== blockIndex)
-      } : s
-    ))
-
-    toast({
-      title: "Block Removed",
-      description: "The block has been removed from your outline.",
-      duration: 2000,
-    })
-  }, [sections, toast])
-
-  const removeSection = useCallback((sectionIndex: number) => {
-    const sectionType = sections[sectionIndex].type
-    if (sectionType === "intro" || sectionType === "conclusion") {
-      toast({
-        title: "Cannot Remove Section",
-        description: "Introduction and Conclusion sections cannot be removed.",
-        variant: "destructive",
-        duration: 3000,
-      })
-      return
-    }
-
-    setSections(prev => prev.filter((_, i) => i !== sectionIndex))
-
-    toast({
-      title: "Section Removed",
-      description: "The section has been removed from your outline.",
-      duration: 3000,
-    })
-  }, [sections, toast])
+    },
+    [sections, toast]
+  )
 
   const [isExporting, setIsExporting] = useState(false)
 
@@ -525,6 +543,26 @@ export function useSermonOutline() {
     }
   }, [toast])
 
+  const copyToClipboard = useCallback(async () => {
+    try {
+      const formatted = formatOutline(sections, "txt")
+      await navigator.clipboard.writeText(formatted as string)
+      toast({
+        title: "Copied to Clipboard",
+        description: "Your sermon outline has been copied as plain text.",
+        duration: 3000,
+      })
+    } catch (error) {
+      console.error("Copy failed:", error)
+      toast({
+        title: "Copy Failed",
+        description: "Could not copy outline to clipboard.",
+        variant: "destructive",
+        duration: 3000,
+      })
+    }
+  }, [sections, toast])
+
   return {
     sections,
     bodySectionIds,
@@ -550,6 +588,7 @@ export function useSermonOutline() {
     confirmResetAll,
     cancelResetAll,
     loadOutlineFromJson,
+    copyToClipboard,
     newSectionId,
     newBlockId,
   }
