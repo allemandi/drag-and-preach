@@ -138,6 +138,7 @@ export function useSermonOutline() {
   const [newBlockId, setNewBlockId] = useState<string | null>(null)
   const { toast } = useToast()
   const [showResetModal, setShowResetModal] = useState(false)
+  const [sectionToDelete, setSectionToDelete] = useState<number | null>(null)
 
   const bodySectionIds = useMemo(() =>
     sections.filter((section) => section.type === "body").map((section) => section.id),
@@ -421,16 +422,27 @@ export function useSermonOutline() {
         return
       }
 
-      setSections((prev) => prev.filter((_, i) => i !== sectionIndex))
-
-      toast({
-        title: "Section Removed",
-        description: "The section has been removed from your outline.",
-        duration: 3000,
-      })
+      setSectionToDelete(sectionIndex)
     },
     [sections, toast]
   )
+
+  const confirmRemoveSection = useCallback(() => {
+    if (sectionToDelete === null) return
+
+    setSections((prev) => prev.filter((_, i) => i !== sectionToDelete))
+    setSectionToDelete(null)
+
+    toast({
+      title: "Section Removed",
+      description: "The section has been removed from your outline.",
+      duration: 3000,
+    })
+  }, [sectionToDelete, toast])
+
+  const cancelRemoveSection = useCallback(() => {
+    setSectionToDelete(null)
+  }, [])
 
   const [isExporting, setIsExporting] = useState(false)
 
@@ -579,6 +591,9 @@ export function useSermonOutline() {
     addBlockToSection,
     removeBlock,
     removeSection,
+    confirmRemoveSection,
+    cancelRemoveSection,
+    sectionToDelete,
     handleExport,
     isExporting,
     isSaving,

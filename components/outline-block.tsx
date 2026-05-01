@@ -46,7 +46,8 @@ export function OutlineBlock({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
+    opacity: isDragging ? 0.6 : 1,
+    zIndex: isDragging ? 50 : 0,
   }
 
   useEffect(() => {
@@ -110,7 +111,7 @@ export function OutlineBlock({
       style={style}
       className={cn(
         "rounded-xl border p-4 transition-all duration-200 shadow-sm outline-none",
-        isDragging ? "z-10 shadow-lg scale-[1.01] ring-2 ring-primary/5" : "",
+        isDragging ? "shadow-xl scale-[1.02] ring-2 ring-primary/20 bg-card" : "",
         getBlockStyles(block.type)
       )}
     >
@@ -144,12 +145,12 @@ export function OutlineBlock({
                   />
                 ) : (
                   <button
-                    className="text-[10px] font-bold text-inherit opacity-70 uppercase tracking-widest cursor-pointer hover:opacity-100 transition-all px-1.5 py-0.5 bg-muted/30 rounded w-full border-2 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:bg-muted/50 flex items-center justify-between"
+                    className="text-xs font-bold text-inherit opacity-70 uppercase tracking-widest cursor-pointer hover:opacity-100 transition-all px-1.5 py-0.5 bg-muted/30 rounded w-full border-2 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:bg-muted/50 flex items-center justify-between"
                     onClick={() => setIsEditingLabel(true)}
                     aria-label={`Edit label: ${block.label}`}
                   >
                     <span>{block.label}</span>
-                    <Pencil className="h-2.5 w-2.5 opacity-40 group-hover/label:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
+                    <Pencil className="h-3 w-3 text-muted-foreground opacity-40 group-hover/label:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
                   </button>
                 )}
               </div>
@@ -163,11 +164,11 @@ export function OutlineBlock({
                   e.stopPropagation();
                   onResetLabel();
                 }}
-                className="h-6 px-1.5 text-[9px] font-bold uppercase tracking-tight hover:bg-muted/50 rounded-md text-inherit"
+                className="h-6 px-1.5 text-xs font-bold uppercase tracking-tight hover:bg-muted/50 rounded-md text-inherit"
                 aria-label={`Reset label for block ${block.label} to default`}
               >
                 <span>Reset</span>
-                <RefreshCw className="h-2.5 w-2.5 ml-1" />
+                <RefreshCw className="h-3 w-3 ml-1 text-muted-foreground" />
               </Button>
               {showRemoveButton && (
                 <Button

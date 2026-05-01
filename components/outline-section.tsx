@@ -9,8 +9,9 @@ import { Input } from "@/components/ui/input"
 import type { Section } from "@/lib/types"
 import { cn, getSectionStyles } from "@/lib/utils"
 import { SortableContext, verticalListSortingStrategy, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, KeyboardSensor, TouchSensor, type DragStartEvent, type DragOverEvent, type DragEndEvent, defaultAnnouncements } from "@dnd-kit/core"
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, KeyboardSensor, TouchSensor, type DragStartEvent, type DragOverEvent, type DragEndEvent } from "@dnd-kit/core"
 import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers"
+import { createAnnouncements } from "@/lib/dnd-announcements"
 
 interface OutlineSectionProps {
   section: Section
@@ -81,39 +82,17 @@ export function OutlineSection({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
-  const announcements = {
-    ...defaultAnnouncements,
-    onDragStart({ active }: DragStartEvent) {
-      const activeBlock = section.blocks.find((b) => b.id === active.id)
-      return `Picked up block ${activeBlock?.label || active.id}.`
-    },
-    onDragOver({ active, over }: DragOverEvent) {
-      if (over) {
-        const activeBlock = section.blocks.find((b) => b.id === active.id)
-        const overBlock = section.blocks.find((b) => b.id === over.id)
-        return `Block ${activeBlock?.label || active.id} was moved over block ${overBlock?.label || over.id}.`
-      }
-      return `Block ${active.id} is no longer over a droppable area.`
-    },
-    onDragEnd({ active, over }: DragEndEvent) {
-      if (over) {
-        const activeBlock = section.blocks.find((b) => b.id === active.id)
-        const overBlock = section.blocks.find((b) => b.id === over.id)
-        return `Block ${activeBlock?.label || active.id} was dropped over block ${overBlock?.label || over.id}.`
-      }
-      return `Block ${active.id} was dropped.`
-    },
-    onDragCancel({ active }: DragEndEvent) {
-      return `Dragging was cancelled. Block ${active.id} was dropped.`
-    },
-  }
+  const announcements = createAnnouncements("block", section.blocks, (b) => b.label)
 
   return (
     <Card
       ref={cardRef}
       className={cn("transition-all border rounded-2xl shadow-sm overflow-hidden outline-none", getSectionStyles(section.type))}
     >
-      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 pt-6 pl-10 pr-4 sm:px-8 gap-3">
+      <CardHeader className={cn(
+        "flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 pt-6 pr-4 sm:px-8 gap-3",
+        section.type === "body" ? "pl-10" : "pl-4 sm:pl-8"
+      )}>
         <div className="flex items-center gap-3 min-w-[200px] group/title">
           {isEditingTitle ? (
             <Input
@@ -147,21 +126,21 @@ export function OutlineSection({
               e.stopPropagation();
               onResetTitle(sectionIndex);
             }}
-            className="h-7 px-2 text-[10px] font-bold uppercase tracking-wider hover:bg-background/50 text-inherit"
+            className="h-7 px-2 text-xs font-bold uppercase tracking-wider hover:bg-background/50 text-inherit"
             aria-label={`Reset title for section ${section.title} to default`}
           >
             <span className="hidden sm:inline">Reset Title</span>
-            <RefreshCw className="h-3 w-3 sm:ml-1.5" />
+            <RefreshCw className="h-3.5 w-3.5 sm:ml-1.5 text-muted-foreground" />
           </Button>
           <Button
             variant="outline"
             size="xs"
             onClick={onAddBlock}
-            className="h-7 px-2 text-[10px] font-bold uppercase tracking-wider bg-background/50 hover:bg-background border"
+            className="h-7 px-2 text-xs font-bold uppercase tracking-wider bg-background/50 hover:bg-background border"
             aria-label={`Add a new block to section ${section.title}`}
           >
             <span>Add Block</span>
-            <Plus className="h-3 w-3 ml-1.5" />
+            <Plus className="h-3.5 w-3.5 ml-1.5 text-muted-foreground" />
           </Button>
           {section.type === "body" && (
             <Button
