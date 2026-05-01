@@ -13,7 +13,6 @@ import {
   type DragStartEvent,
   type DragOverEvent,
   type DragEndEvent,
-  defaultAnnouncements,
 } from "@dnd-kit/core"
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers"
@@ -26,6 +25,7 @@ import Footer from "@/components/footer"
 import { ExportModal } from "@/components/export-modal"
 import { BackupModal } from "@/components/backup-modal"
 import { useSermonOutline } from "@/hooks/use-sermon-outline"
+import { createAnnouncements } from "@/lib/dnd-announcements"
 import {
   Dialog,
   DialogContent,
@@ -51,6 +51,9 @@ export default function SermonOutlinePlanner() {
     addBlockToSection,
     removeBlock,
     removeSection,
+    confirmRemoveSection,
+    cancelRemoveSection,
+    sectionToDelete,
     handleExport,
     isExporting,
     isSaving,
@@ -120,40 +123,15 @@ export default function SermonOutlinePlanner() {
 
   if (!mounted) return <div className="min-h-screen bg-background" />
 
-  const announcements = {
-    ...defaultAnnouncements,
-    onDragStart({ active }: DragStartEvent) {
-      const activeSection = sections.find((s) => s.id === active.id)
-      return `Picked up section ${activeSection?.title || active.id}.`
-    },
-    onDragOver({ active, over }: DragOverEvent) {
-      if (over) {
-        const activeSection = sections.find((s) => s.id === active.id)
-        const overSection = sections.find((s) => s.id === over.id)
-        return `Section ${activeSection?.title || active.id} was moved over section ${overSection?.title || over.id}.`
-      }
-      return `Section ${active.id} is no longer over a droppable area.`
-    },
-    onDragEnd({ active, over }: DragEndEvent) {
-      if (over) {
-        const activeSection = sections.find((s) => s.id === active.id)
-        const overSection = sections.find((s) => s.id === over.id)
-        return `Section ${activeSection?.title || active.id} was dropped over section ${overSection?.title || over.id}.`
-      }
-      return `Section ${active.id} was dropped.`
-    },
-    onDragCancel({ active }: DragEndEvent) {
-      return `Dragging was cancelled. Section ${active.id} was dropped.`
-    },
-  }
+  const announcements = createAnnouncements("section", sections, (s) => s.title)
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <span id="dnd-instructions" className="sr-only">
         To pick up a draggable item, press the space bar. While dragging, use the arrow keys to move the item. Press space again to drop the item in its new position, or press escape to cancel.
       </span>
-      <div className="container mx-auto px-4 py-8 max-w-6xl pb-24">
-        <header className="mb-10 space-y-6">
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-6xl pb-24">
+        <header className="mb-8 sm:mb-10 space-y-6">
           <div className="flex justify-between items-center gap-4">
             <div className="flex items-center gap-3 group">
               <div className="p-2 bg-pastel-blue/40 border-2 border-pastel-border-blue rounded-xl shadow-sm transition-transform group-hover:rotate-3">
@@ -177,8 +155,8 @@ export default function SermonOutlinePlanner() {
             </Button>
           </div>
 
-          <nav className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-card/40 backdrop-blur-md rounded-2xl border border-border shadow-sm">
-            <div className="flex flex-wrap items-center gap-2">
+          <nav className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-3 sm:p-4 bg-card/40 backdrop-blur-md rounded-2xl border border-border shadow-sm">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
               <Button
                 onClick={saveOutlineToLocalStorage}
                 variant="pastel"
@@ -205,6 +183,7 @@ export default function SermonOutlinePlanner() {
               onClick={handleResetAll}
               variant="pastel-rose"
               size="sm"
+              className="w-full md:w-auto"
               aria-label="Reset the entire sermon outline"
             >
               <RefreshCw className="h-4 w-4 mr-1.5" />
@@ -229,6 +208,27 @@ export default function SermonOutlinePlanner() {
                 </Button>
                 <Button variant="destructive" onClick={confirmResetAll} className="flex-1 order-1 sm:order-2">
                   Yes, Reset
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={sectionToDelete !== null} onOpenChange={(open) => !open && cancelRemoveSection()}>
+          <DialogContent className="rounded-2xl border border-pastel-border-rose shadow-xl sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-center">Remove Section?</DialogTitle>
+            </DialogHeader>
+            <div className="mt-4 space-y-6">
+              <p className="text-center text-muted-foreground text-sm font-medium">
+                Are you sure you want to remove "{sectionToDelete !== null ? sections[sectionToDelete]?.title : ""}"? This action cannot be undone.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-3">
+                <Button variant="outline" onClick={cancelRemoveSection} className="flex-1 order-2 sm:order-1">
+                  Cancel
+                </Button>
+                <Button variant="destructive" onClick={confirmRemoveSection} className="flex-1 order-1 sm:order-2">
+                  Yes, Remove
                 </Button>
               </div>
             </div>
