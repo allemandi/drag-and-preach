@@ -131,25 +131,25 @@ export function OutlineBlock({
 
         <div className="flex-grow space-y-3 group/block">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="relative min-w-[120px] flex items-center group/label">
+            <div className="flex items-center gap-2 flex-grow overflow-hidden">
+              <div className="relative min-w-[80px] xs:min-w-[120px] max-w-full flex items-center group/label">
                 {isEditingLabel ? (
                   <Input
                     value={labelValue}
                     onChange={handleLabelChange}
                     onBlur={handleLabelBlur}
                     onKeyDown={handleLabelKeyDown}
-                    className="h-7 text-[10px] font-bold rounded-md bg-background border-2 w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
+                    className="h-7 text-[10px] sm:text-xs font-bold rounded-md bg-background border-2 w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
                     autoFocus
                     aria-label={`Edit label for ${block.label}`}
                   />
                 ) : (
                   <button
-                    className="text-xs font-bold text-inherit opacity-70 uppercase tracking-widest cursor-pointer hover:opacity-100 transition-all px-1.5 py-0.5 bg-muted/30 rounded w-full border-2 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:bg-muted/50 flex items-center justify-between"
+                    className="text-[10px] sm:text-xs font-bold text-inherit opacity-70 uppercase tracking-widest cursor-pointer hover:opacity-100 transition-all px-1.5 py-0.5 bg-muted/30 rounded w-full border-2 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:bg-muted/50 flex items-center justify-between overflow-hidden"
                     onClick={() => setIsEditingLabel(true)}
                     aria-label={`Edit label: ${block.label}`}
                   >
-                    <span>{block.label}</span>
+                    <span className="truncate mr-1">{block.label}</span>
                     <Pencil className="h-3 w-3 text-muted-foreground opacity-40 group-hover/label:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
                   </button>
                 )}
@@ -164,11 +164,11 @@ export function OutlineBlock({
                   e.stopPropagation();
                   onResetLabel();
                 }}
-                className="h-6 px-1.5 text-xs font-bold uppercase tracking-tight hover:bg-muted/50 rounded-md text-inherit"
+                className="h-6 px-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-tight hover:bg-muted/50 rounded-md text-inherit shrink-0"
                 aria-label={`Reset label for block ${block.label} to default`}
               >
-                <span>Reset</span>
-                <RefreshCw className="h-3 w-3 ml-1 text-muted-foreground" />
+                <span className="hidden xs:inline">Reset</span>
+                <RefreshCw className="h-3 w-3 xs:ml-1 text-muted-foreground" />
               </Button>
               {showRemoveButton && (
                 <Button

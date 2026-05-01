@@ -126,7 +126,7 @@ export function OutlineSection({
               e.stopPropagation();
               onResetTitle(sectionIndex);
             }}
-            className="h-7 px-2 text-xs font-bold uppercase tracking-wider hover:bg-background/50 text-inherit"
+            className="h-7 px-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider hover:bg-background/50 text-inherit"
             aria-label={`Reset title for section ${section.title} to default`}
           >
             <span className="hidden sm:inline">Reset Title</span>
@@ -136,11 +136,11 @@ export function OutlineSection({
             variant="outline"
             size="xs"
             onClick={onAddBlock}
-            className="h-7 px-2 text-xs font-bold uppercase tracking-wider bg-background/50 hover:bg-background border"
+            className="h-7 px-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-background/50 hover:bg-background border"
             aria-label={`Add a new block to section ${section.title}`}
           >
-            <span>Add Block</span>
-            <Plus className="h-3.5 w-3.5 ml-1.5 text-muted-foreground" />
+            <span className="hidden xs:inline">Add Block</span>
+            <Plus className="h-3.5 w-3.5 xs:ml-1.5 text-muted-foreground" />
           </Button>
           {section.type === "body" && (
             <Button
