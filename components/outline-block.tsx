@@ -110,28 +110,28 @@ export function OutlineBlock({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "rounded-xl border p-4 transition-all duration-200 shadow-sm outline-none",
+        "rounded-xl border p-2.5 sm:p-4 transition-all duration-200 shadow-sm outline-none",
         isDragging ? "shadow-xl scale-[1.02] ring-2 ring-primary/20 bg-card" : "",
         getBlockStyles(block.type)
       )}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-2 sm:gap-3">
         <button
           {...attributes}
           {...listeners}
-          className="flex-shrink-0 cursor-grab mt-1 p-1.5 rounded-md hover:bg-muted transition-colors bg-muted/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="flex-shrink-0 cursor-grab mt-1 p-1 sm:p-1.5 rounded-md hover:bg-muted transition-colors bg-muted/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           data-drag-handle
           aria-label={`Drag to reorder block: ${block.label}`}
           aria-roledescription="drag handle"
           aria-describedby="dnd-instructions"
           style={{ touchAction: 'none' }}
         >
-          <GripVertical className="h-4 w-4 text-muted-foreground" />
+          <GripVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
         </button>
 
-        <div className="flex-grow space-y-3 group/block">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 flex-grow overflow-hidden">
+        <div className="flex-grow space-y-2 sm:space-y-3 group/block min-w-0">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 flex-grow min-w-0 overflow-hidden">
               <div className="relative min-w-[80px] xs:min-w-[120px] max-w-full flex items-center group/label">
                 {isEditingLabel ? (
                   <Input
@@ -184,7 +184,7 @@ export function OutlineBlock({
             </div>
           </div>
 
-          <div className="min-h-[60px] w-full" style={{ whiteSpace: 'pre-line' }}>
+          <div className="min-h-[50px] sm:min-h-[60px] w-full" style={{ whiteSpace: 'pre-line' }}>
             {isEditing ? (
               <textarea
                 ref={textareaRef}
@@ -193,7 +193,7 @@ export function OutlineBlock({
                 onBlur={handleContentBlur}
                 onKeyDown={handleContentKeyDown}
                 className={cn(
-                  "w-full min-h-[70px] p-3 rounded-lg bg-muted/20 focus:outline-none focus:ring-2 transition-all text-sm font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary",
+                  "w-full min-h-[60px] sm:min-h-[70px] p-2 sm:p-3 rounded-lg bg-muted/20 focus:outline-none focus:ring-2 transition-all text-sm font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary",
                   getTextAreaStyles(block.type)
                 )}
                 placeholder={block.placeholder}
@@ -204,15 +204,15 @@ export function OutlineBlock({
             ) : (
               <button
                 className={cn(
-                  "w-full min-h-[60px] p-3 rounded-lg transition-all cursor-text text-sm font-medium border-2 border-transparent group-hover/block:border-muted-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary flex flex-col text-left",
+                  "w-full min-h-[50px] sm:min-h-[60px] p-2 sm:p-3 rounded-lg transition-all cursor-text text-sm font-medium border-2 border-transparent group-hover/block:border-muted-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary flex flex-col text-left",
                   content ? "bg-muted/5 text-foreground" : "bg-muted/20 text-muted-foreground/50 dark:text-muted-foreground/60 italic"
                 )}
                 onClick={() => setIsEditing(true)}
                 aria-label={content ? `Edit content for ${block.label}` : `Add content to ${block.label}`}
               >
-                <div className="flex-grow">{content || block.placeholder}</div>
+                <div className="flex-grow break-words">{content || block.placeholder}</div>
                 <div className="self-end mt-1 opacity-20 group-hover/block:opacity-100 transition-opacity">
-                  <Pencil className="h-3.5 w-3.5 text-muted-foreground/50" aria-hidden="true" />
+                  <Pencil className="h-3 sm:h-3.5 w-3 sm:w-3.5 text-muted-foreground/50" aria-hidden="true" />
                 </div>
               </button>
             )}

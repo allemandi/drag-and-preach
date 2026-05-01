@@ -130,8 +130,8 @@ export default function SermonOutlinePlanner() {
       <span id="dnd-instructions" className="sr-only">
         To pick up a draggable item, press the space bar. While dragging, use the arrow keys to move the item. Press space again to drop the item in its new position, or press escape to cancel.
       </span>
-      <div className="container mx-auto px-4 py-8 max-w-6xl pb-24">
-        <header className="mb-10 space-y-6">
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-6xl pb-24">
+        <header className="mb-8 sm:mb-10 space-y-6">
           <div className="flex justify-between items-center gap-4">
             <div className="flex items-center gap-3 group">
               <div className="p-2 bg-pastel-blue/40 border-2 border-pastel-border-blue rounded-xl shadow-sm transition-transform group-hover:rotate-3">
@@ -155,8 +155,8 @@ export default function SermonOutlinePlanner() {
             </Button>
           </div>
 
-          <nav className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-card/40 backdrop-blur-md rounded-2xl border border-border shadow-sm">
-            <div className="flex flex-wrap items-center gap-2">
+          <nav className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-3 sm:p-4 bg-card/40 backdrop-blur-md rounded-2xl border border-border shadow-sm">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
               <Button
                 onClick={saveOutlineToLocalStorage}
                 variant="pastel"
@@ -183,6 +183,7 @@ export default function SermonOutlinePlanner() {
               onClick={handleResetAll}
               variant="pastel-rose"
               size="sm"
+              className="w-full md:w-auto"
               aria-label="Reset the entire sermon outline"
             >
               <RefreshCw className="h-4 w-4 mr-1.5" />
