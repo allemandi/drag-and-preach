@@ -24,6 +24,7 @@ import { useTheme } from "next-themes"
 import Footer from "@/components/footer"
 import { ExportModal } from "@/components/export-modal"
 import { BackupModal } from "@/components/backup-modal"
+import JsonLd from "@/components/json-ld"
 import { useSermonOutline } from "@/hooks/use-sermon-outline"
 import { createAnnouncements } from "@/lib/dnd-announcements"
 import {
@@ -127,6 +128,7 @@ export default function SermonOutlinePlanner() {
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <JsonLd />
       <span id="dnd-instructions" className="sr-only">
         To pick up a draggable item, press the space bar. While dragging, use the arrow keys to move the item. Press space again to drop the item in its new position, or press escape to cancel.
       </span>
