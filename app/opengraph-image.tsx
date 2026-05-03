@@ -1,8 +1,9 @@
 import { ImageResponse } from "next/og"
+import { SEO_CONFIG } from "@/lib/seo-constants"
 
 export const runtime = "edge"
 
-export const alt = "Drag and Preach | Modern Sermon Planner & Outliner"
+export const alt = SEO_CONFIG.title
 export const size = {
   width: 1200,
   height: 630,
@@ -63,7 +64,7 @@ export default async function Image() {
             textAlign: "center",
           }}
         >
-          Drag and Preach
+          {SEO_CONFIG.siteName}
         </div>
         <div
           style={{
@@ -74,7 +75,7 @@ export default async function Image() {
             maxWidth: "800px",
           }}
         >
-          Effortlessly organize, structure, and export your sermons.
+          {SEO_CONFIG.description}
         </div>
       </div>
     ),

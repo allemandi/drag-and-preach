@@ -5,6 +5,7 @@ import { Inter } from "next/font/google"
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider"
 import Favicon from "@/components/ui/favicon"
+import { SEO_CONFIG } from "@/lib/seo-constants"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -18,56 +19,32 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://drag-and-preach.netlify.app"),
+  metadataBase: new URL(SEO_CONFIG.url),
   title: {
-    default: "Drag and Preach | Modern Sermon Planner & Outliner",
-    template: "%s | Drag and Preach",
+    default: SEO_CONFIG.title,
+    template: `%s | ${SEO_CONFIG.siteName}`,
   },
-  description:
-    "Effortlessly organize, structure, and export your sermons with Drag and Preach. A modern drag-and-drop planner designed for pastors, preachers, and teachers.",
-  keywords: [
-    "sermon planner",
-    "sermon outliner",
-    "preaching",
-    "pastor tools",
-    "drag and drop",
-    "sermon preparation",
-    "homiletics",
-    "church technology",
-  ],
-  authors: [{ name: "allemandi" }],
-  creator: "allemandi",
-  publisher: "Drag and Preach",
+  description: SEO_CONFIG.description,
+  keywords: SEO_CONFIG.keywords,
+  authors: [{ name: SEO_CONFIG.author }],
+  creator: SEO_CONFIG.author,
+  publisher: SEO_CONFIG.siteName,
   alternates: {
     canonical: "/",
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
   openGraph: {
-    title: "Drag and Preach | Modern Sermon Planner & Outliner",
-    description: "Effortlessly organize, structure, and export your sermons with a modern drag-and-drop planner.",
+    title: SEO_CONFIG.title,
+    description: SEO_CONFIG.description,
     type: "website",
-    url: "https://drag-and-preach.netlify.app/",
-    siteName: "Drag and Preach",
+    url: SEO_CONFIG.url,
+    siteName: SEO_CONFIG.siteName,
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Drag and Preach | Modern Sermon Planner & Outliner",
-    description: "Effortlessly organize, structure, and export your sermons with a modern drag-and-drop planner.",
-    creator: "@allemandi",
-  },
-  verification: {
-    google: "google-site-verification-placeholder",
+    title: SEO_CONFIG.title,
+    description: SEO_CONFIG.description,
+    creator: SEO_CONFIG.twitterHandle,
   },
 }
 

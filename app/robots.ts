@@ -6,6 +6,5 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://drag-and-preach.netlify.app/sitemap.xml",
   }
 }

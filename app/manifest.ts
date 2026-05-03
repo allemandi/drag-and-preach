@@ -1,10 +1,11 @@
 import { MetadataRoute } from "next"
+import { SEO_CONFIG } from "@/lib/seo-constants"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Drag and Preach",
+    name: SEO_CONFIG.siteName,
     short_name: "DragPreach",
-    description: "Modern Sermon Planner & Outliner",
+    description: SEO_CONFIG.description,
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
