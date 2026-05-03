@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og"
 import { SEO_CONFIG } from "@/lib/seo-constants"
 
-export const runtime = "edge"
+export const dynamic = "force-static"
 
 export const alt = SEO_CONFIG.title
 export const size = {

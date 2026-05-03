@@ -141,8 +141,9 @@ export default function SermonOutlinePlanner() {
               </div>
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Drag and Preach</h1>
+                <h2 className="sr-only">Modern Sermon Planner & Outliner</h2>
                 <p className="text-sm text-muted-foreground font-medium hidden sm:block">
-                  Sleek, professional sermon organization.
+                  Sleek, professional sermon organization for pastors.
                 </p>
               </div>
             </div>
