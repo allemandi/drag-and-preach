@@ -39,7 +39,7 @@ export function SortableSection({ id, children, title }: SortableSectionProps & 
     >
       <button
         type="button"
-        className="absolute top-6 left-2 sm:left-4 cursor-grab p-1 rounded hover:bg-muted z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
+        className="absolute top-6 left-2 sm:left-4 cursor-grab p-1 rounded hover:bg-muted hover:text-primary transition-all z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 active:cursor-grabbing"
         {...attributes}
         {...listeners}
         data-drag-handle

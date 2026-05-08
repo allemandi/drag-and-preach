@@ -12,21 +12,29 @@ export const createAnnouncements = <T extends { id: string }>(
   },
   onDragOver({ active, over }: DragOverEvent) {
     if (over) {
-      const activeItem = items.find((i) => i.id === active.id)
-      const overItem = items.find((i) => i.id === over.id)
+      const activeIndex = items.findIndex((i) => i.id === active.id)
+      const overIndex = items.findIndex((i) => i.id === over.id)
+      const activeItem = items[activeIndex]
+      const overItem = items[overIndex]
       const activeName = activeItem ? getTitle(activeItem) : active.id
       const overName = overItem ? getTitle(overItem) : over.id
-      return `${itemName} ${activeName} was moved over ${itemName} ${overName}.`
+
+      const position = activeIndex <= overIndex ? "after" : "before"
+
+      return `${itemName} ${activeName} was moved ${position} ${itemName} ${overName}.`
     }
     return `${itemName} ${active.id} is no longer over a droppable area.`
   },
   onDragEnd({ active, over }: DragEndEvent) {
     if (over) {
-      const activeItem = items.find((i) => i.id === active.id)
-      const overItem = items.find((i) => i.id === over.id)
+      const activeIndex = items.findIndex((i) => i.id === active.id)
+      const overIndex = items.findIndex((i) => i.id === over.id)
+      const activeItem = items[activeIndex]
+      const overItem = items[overIndex]
       const activeName = activeItem ? getTitle(activeItem) : active.id
       const overName = overItem ? getTitle(overItem) : over.id
-      return `${itemName} ${activeName} was dropped over ${itemName} ${overName}.`
+
+      return `${itemName} ${activeName} was dropped into position ${overIndex + 1}.`
     }
     return `${itemName} ${active.id} was dropped.`
   },

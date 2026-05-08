@@ -8,10 +8,11 @@ import { useState, useEffect, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import type { Section } from "@/lib/types"
 import { cn, getSectionStyles } from "@/lib/utils"
-import { SortableContext, verticalListSortingStrategy, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, KeyboardSensor, TouchSensor, type DragStartEvent, type DragOverEvent, type DragEndEvent } from "@dnd-kit/core"
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { DndContext, closestCenter, type DragEndEvent } from "@dnd-kit/core"
 import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers"
 import { createAnnouncements } from "@/lib/dnd-announcements"
+import { useDndSensors } from "@/hooks/use-dnd-sensors"
 
 interface OutlineSectionProps {
   section: Section
@@ -24,7 +25,7 @@ interface OutlineSectionProps {
   onRemoveSection: () => void
   onAddBlock: () => void
   onRemoveBlock: (blockIndex: number) => void
-  onBlockDragEnd: (event: any) => void
+  onBlockDragEnd: (event: DragEndEvent) => void
   isNew?: boolean
   newBlockId?: string | null
 }
@@ -76,11 +77,7 @@ export function OutlineSection({
     }
   }
 
-  const sensors = useSensors(
-    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  )
+  const sensors = useDndSensors()
 
   const announcements = createAnnouncements("block", section.blocks, (b) => b.label)
 
