@@ -5,16 +5,11 @@ import { useState, useMemo, useEffect, useRef } from "react"
 import {
   DndContext,
   closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  TouchSensor,
   type DragStartEvent,
   type DragOverEvent,
   type DragEndEvent,
 } from "@dnd-kit/core"
-import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers"
 import { OutlineSection } from "@/components/outline-section"
 import { SortableSection } from "@/components/sortable-section"
@@ -26,6 +21,7 @@ import { ExportModal } from "@/components/export-modal"
 import { BackupModal } from "@/components/backup-modal"
 import JsonLd from "@/components/json-ld"
 import { useSermonOutline } from "@/hooks/use-sermon-outline"
+import { useDndSensors } from "@/hooks/use-dnd-sensors"
 import { createAnnouncements } from "@/lib/dnd-announcements"
 import {
   Dialog,
@@ -73,11 +69,7 @@ export default function SermonOutlinePlanner() {
   const [mounted, setMounted] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const sensors = useSensors(
-    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  )
+  const sensors = useDndSensors()
 
   useEffect(() => {
     setMounted(true)
