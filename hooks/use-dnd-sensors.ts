@@ -1,3 +1,4 @@
+import { useMemo } from "react"
 import {
   KeyboardSensor,
   PointerSensor,
@@ -8,15 +9,16 @@ import {
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable"
 
 export function useDndSensors() {
-  return useSensors(
-    useSensor(TouchSensor, {
-      activationConstraint: { delay: 250, tolerance: 5 },
-    }),
-    useSensor(PointerSensor, {
-      activationConstraint: { distance: 5 },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  )
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: { delay: 100, tolerance: 5 },
+  })
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: { distance: 5 },
+  })
+  const keyboardSensor = useSensor(KeyboardSensor, {
+    coordinateGetter: sortableKeyboardCoordinates,
+  })
+
+  const sensors = useSensors(touchSensor, pointerSensor, keyboardSensor)
+  return useMemo(() => sensors, [sensors])
 }

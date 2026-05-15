@@ -4,7 +4,8 @@ import type React from "react"
 import { useState, useMemo, useEffect, useRef } from "react"
 import {
   DndContext,
-  closestCenter,
+  closestCorners,
+  DragOverlay,
   type DragStartEvent,
   type DragOverEvent,
   type DragEndEvent,
@@ -13,6 +14,7 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers"
 import { OutlineSection } from "@/components/outline-section"
 import { SortableSection } from "@/components/sortable-section"
+import { SectionOverlay } from "@/components/ui/drag-overlays"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, Save, Plus, Moon, Sun, RefreshCw, Copy } from "lucide-react"
 import { useTheme } from "next-themes"
@@ -32,6 +34,7 @@ import {
 import { cn } from "@/lib/utils"
 
 export default function SermonOutlinePlanner() {
+  const [activeSectionId, setActiveId] = useState<string | null>(null)
   const {
     sections,
     bodySectionIds,
@@ -114,9 +117,21 @@ export default function SermonOutlinePlanner() {
 
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark")
 
-  if (!mounted) return <div className="min-h-screen bg-background" />
+  const announcements = useMemo(
+    () => createAnnouncements("section", sections, (s) => s.title),
+    [sections]
+  )
 
-  const announcements = createAnnouncements("section", sections, (s) => s.title)
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string)
+  }
+
+  const handleDragEndWrapper = (event: DragEndEvent) => {
+    setActiveId(null)
+    handleSectionDragEnd(event)
+  }
+
+  if (!mounted) return <div className="min-h-screen bg-background" />
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -238,13 +253,13 @@ export default function SermonOutlinePlanner() {
               sectionIndex={0}
               onContentChange={handleContentChange}
               onLabelChange={handleLabelChange}
-              onResetLabel={(bi) => handleResetLabel(0, bi)}
+              onResetLabel={handleResetLabel}
               onTitleChange={handleTitleChange}
               onResetTitle={handleResetTitle}
-              onRemoveSection={() => removeSection(0)}
-              onAddBlock={() => addBlockToSection(0)}
-              onRemoveBlock={bi => removeBlock(0, bi)}
-              onBlockDragEnd={(e) => handleBlockDragEnd(e, 0)}
+              onRemoveSection={removeSection}
+              onAddBlock={addBlockToSection}
+              onRemoveBlock={removeBlock}
+              onBlockDragEnd={handleBlockDragEnd}
               newBlockId={newBlockId}
             />
           )}
@@ -252,9 +267,11 @@ export default function SermonOutlinePlanner() {
           {/* Draggable Body Sections */}
           <DndContext
             sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleSectionDragEnd}
-            modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEndWrapper}
+            onDragCancel={() => setActiveId(null)}
+            modifiers={[restrictToVerticalAxis]}
             accessibility={{ announcements }}
           >
             <SortableContext items={bodySectionIds} strategy={verticalListSortingStrategy}>
@@ -268,21 +285,29 @@ export default function SermonOutlinePlanner() {
                         sectionIndex={index}
                         onContentChange={handleContentChange}
                         onLabelChange={handleLabelChange}
-                        onResetLabel={(bi) => handleResetLabel(index, bi)}
+                        onResetLabel={handleResetLabel}
                         onTitleChange={handleTitleChange}
                         onResetTitle={handleResetTitle}
-                        onRemoveSection={() => removeSection(index)}
-                        onAddBlock={() => addBlockToSection(index)}
-                        onRemoveBlock={bi => removeBlock(index, bi)}
-                        onBlockDragEnd={(e) => handleBlockDragEnd(e, index)}
+                        onRemoveSection={removeSection}
+                        onAddBlock={addBlockToSection}
+                        onRemoveBlock={removeBlock}
+                        onBlockDragEnd={handleBlockDragEnd}
                         isNew={section.id === newSectionId}
                         newBlockId={newBlockId}
+                        isDragging={section.id === activeSectionId}
                       />
                     </SortableSection>
                   );
                 })}
               </div>
             </SortableContext>
+            <DragOverlay adjustScale={true} dropAnimation={null}>
+              {activeSectionId ? (
+                <div className="w-full cursor-grabbing">
+                  <SectionOverlay section={sections.find(s => s.id === activeSectionId)!} />
+                </div>
+              ) : null}
+            </DragOverlay>
           </DndContext>
 
           <div className="flex justify-center py-6">
@@ -304,13 +329,13 @@ export default function SermonOutlinePlanner() {
               sectionIndex={sections.length - 1}
               onContentChange={handleContentChange}
               onLabelChange={handleLabelChange}
-              onResetLabel={(bi) => handleResetLabel(sections.length - 1, bi)}
+              onResetLabel={handleResetLabel}
               onTitleChange={handleTitleChange}
               onResetTitle={handleResetTitle}
-              onRemoveSection={() => removeSection(sections.length - 1)}
-              onAddBlock={() => addBlockToSection(sections.length - 1)}
-              onRemoveBlock={bi => removeBlock(sections.length - 1, bi)}
-              onBlockDragEnd={(e) => handleBlockDragEnd(e, sections.length - 1)}
+              onRemoveSection={removeSection}
+              onAddBlock={addBlockToSection}
+              onRemoveBlock={removeBlock}
+              onBlockDragEnd={handleBlockDragEnd}
               newBlockId={newBlockId}
             />
           )}
