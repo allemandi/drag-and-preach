@@ -39,7 +39,7 @@ export const OutlineBlock = memo(function OutlineBlock({
 }: OutlineBlockProps) {
   const blockId = `block-${block.id}`
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging: isSorting } = useSortable({
     id: block.id,
     data: {
       type: "block",
@@ -48,13 +48,13 @@ export const OutlineBlock = memo(function OutlineBlock({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition: isDragging ? undefined : transition,
-    opacity: isDragging ? 0.6 : 1,
-    zIndex: isDragging ? 50 : 0,
+    transition: isDragging || isSorting ? undefined : transition,
+    opacity: isDragging || isSorting ? 0.6 : 1,
+    zIndex: isDragging || isSorting ? 50 : 0,
   }
 
 
-  if (isDragging) {
+  if (isDragging || isSorting) {
     return (
       <div
         ref={setNodeRef}
