@@ -67,6 +67,14 @@ export default function Footer() {
                 <li>Drag by the grip icons (⋮⋮) to reorder sections and blocks.</li>
                 <li>Click any title or textbox to edit text.</li>
                 <li>Export your outline using the toolbar (PDF, DOCX, TXT, Markdown).</li>
+                <li>
+                  <strong>Keyboard Shortcuts:</strong>
+                  <ul className="list-circle pl-5 mt-1 space-y-1 text-xs">
+                    <li><kbd className="px-1 py-0.5 rounded border bg-muted">Ctrl</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">S</kbd> : Save</li>
+                    <li><kbd className="px-1 py-0.5 rounded border bg-muted">Ctrl</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">Alt</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">N</kbd> : New Section</li>
+                    <li><kbd className="px-1 py-0.5 rounded border bg-muted">Ctrl</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">Alt</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">R</kbd> : Reset All</li>
+                  </ul>
+                </li>
                 <li>Remember to Save and Backup regularly!</li>
               </ul>
             </div>

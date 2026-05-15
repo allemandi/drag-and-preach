@@ -15,49 +15,42 @@ export function generateId(): string {
   return crypto.randomUUID()
 }
 
-const THEME_CONFIG: Record<string, { border: string; bg: string; text: string; ring: string }> = {
+interface ThemeStyles {
+  section: string;
+  block: string;
+  textarea: string;
+}
+
+const THEME_CONFIG: Record<string, ThemeStyles> = {
   intro: {
-    border: "pastel-border-blue",
-    bg: "pastel-blue",
-    text: "pastel-text-blue",
-    ring: "pastel-border-blue/40",
+    section: "border-pastel-border-blue bg-pastel-blue/10 text-pastel-text-blue",
+    block: "bg-background border-pastel-border-blue/50 hover:border-pastel-border-blue text-pastel-text-blue",
+    textarea: "focus:ring-pastel-border-blue/40 border-pastel-border-blue/20",
   },
   body: {
-    border: "pastel-border-green",
-    bg: "pastel-green",
-    text: "pastel-text-green",
-    ring: "pastel-border-green/40",
+    section: "border-pastel-border-green bg-pastel-green/10 text-pastel-text-green",
+    block: "bg-background border-pastel-border-green/50 hover:border-pastel-border-green text-pastel-text-green",
+    textarea: "focus:ring-pastel-border-green/40 border-pastel-border-green/20",
   },
   conclusion: {
-    border: "pastel-border-amber",
-    bg: "pastel-amber",
-    text: "pastel-text-amber",
-    ring: "pastel-border-amber/40",
+    section: "border-pastel-border-amber bg-pastel-amber/10 text-pastel-text-amber",
+    block: "bg-background border-pastel-border-amber/50 hover:border-pastel-border-amber text-pastel-text-amber",
+    textarea: "focus:ring-pastel-border-amber/40 border-pastel-border-amber/20",
   },
   default: {
-    border: "pastel-border-purple",
-    bg: "pastel-purple",
-    text: "pastel-text-purple",
-    ring: "pastel-border-purple/40",
+    section: "border-pastel-border-purple bg-pastel-purple/10 text-pastel-text-purple",
+    block: "bg-background border-pastel-border-purple/50 hover:border-pastel-border-purple text-pastel-text-purple",
+    textarea: "focus:ring-pastel-border-purple/40 border-pastel-border-purple/20",
   },
 }
 
 const getTheme = (type: string) => THEME_CONFIG[type] || THEME_CONFIG.default
 
-export const getSectionStyles = (type: string) => {
-  const theme = getTheme(type)
-  return `border-${theme.border} bg-${theme.bg}/10 text-${theme.text}`
-}
+export const getSectionStyles = (type: string) => getTheme(type).section
 
-export const getBlockStyles = (type: string) => {
-  const theme = getTheme(type)
-  return `bg-background border-${theme.border}/50 hover:border-${theme.border} text-${theme.text}`
-}
+export const getBlockStyles = (type: string) => getTheme(type).block
 
-export const getTextAreaStyles = (type: string) => {
-  const theme = getTheme(type)
-  return `focus:ring-${theme.ring} border-${theme.border}/20`
-}
+export const getTextAreaStyles = (type: string) => getTheme(type).textarea
 
 export function formatOutline(sections: Section[], format: "md" | "txt" | "pdf" | "docx"): string | Promise<string> {
   switch (format) {

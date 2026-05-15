@@ -114,9 +114,12 @@ export default function SermonOutlinePlanner() {
 
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark")
 
-  if (!mounted) return <div className="min-h-screen bg-background" />
+  const announcements = useMemo(
+    () => createAnnouncements("section", sections, (s) => s.title),
+    [sections]
+  )
 
-  const announcements = createAnnouncements("section", sections, (s) => s.title)
+  if (!mounted) return <div className="min-h-screen bg-background" />
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
