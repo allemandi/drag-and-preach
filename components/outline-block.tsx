@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { memo } from "react"
 
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
@@ -13,22 +14,28 @@ import { cn, getBlockStyles, getTextAreaStyles } from "@/lib/utils"
 
 interface OutlineBlockProps {
   block: OutlineBlockType
-  onChange: (newContent: string) => void
-  onLabelChange: (newLabel: string) => void
-  onResetLabel: () => void
-  onRemoveBlock: () => void
+  blockIndex: number
+  sectionIndex: number
+  onContentChange: (sectionIndex: number, blockIndex: number, newContent: string) => void
+  onLabelChange: (sectionIndex: number, blockIndex: number, newLabel: string) => void
+  onResetLabel: (sectionIndex: number, blockIndex: number) => void
+  onRemoveBlock: (sectionIndex: number, blockIndex: number) => void
   showRemoveButton: boolean
   isNew?: boolean
+  isDragging?: boolean
 }
 
-export function OutlineBlock({
+export const OutlineBlock = memo(function OutlineBlock({
   block,
-  onChange,
+  blockIndex,
+  sectionIndex,
+  onContentChange,
   onLabelChange,
   onResetLabel,
   onRemoveBlock,
   showRemoveButton,
   isNew = false,
+  isDragging = false,
 }: OutlineBlockProps) {
   const blockId = `block-${block.id}`
 
@@ -41,11 +48,23 @@ export function OutlineBlock({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: isDragging ? undefined : transition,
     opacity: isDragging ? 0.6 : 1,
     zIndex: isDragging ? 50 : 0,
   }
 
+
+  if (isDragging) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className={cn(
+          "rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 min-h-[100px] w-full",
+        )}
+      />
+    )
+  }
 
   return (
     <div
@@ -78,7 +97,7 @@ export function OutlineBlock({
                 <EditableField
                   id={`${blockId}-label`}
                   value={block.label}
-                  onSave={onLabelChange}
+                  onSave={(newLabel) => onLabelChange(sectionIndex, blockIndex, newLabel)}
                   label="block label"
                   className="text-[10px] sm:text-xs font-bold text-inherit opacity-70 uppercase tracking-widest px-1.5 py-0.5 bg-muted/30 rounded w-full min-w-0"
                   inputClassName="h-7 text-[10px] sm:text-xs font-bold rounded-md bg-background border-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
@@ -95,7 +114,7 @@ export function OutlineBlock({
                 size="xs"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onResetLabel();
+                  onResetLabel(sectionIndex, blockIndex);
                 }}
                 className="h-6 px-1.5 xs:px-2 text-[10px] sm:text-xs font-bold uppercase tracking-tight hover:bg-muted/50 rounded-md text-inherit shrink-0 flex items-center gap-1"
                 aria-label={`Reset label for block ${block.label} to default`}
@@ -107,7 +126,7 @@ export function OutlineBlock({
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  onClick={onRemoveBlock}
+                  onClick={() => onRemoveBlock(sectionIndex, blockIndex)}
                   className="h-6 w-6 rounded-md hover:bg-destructive/10 hover:text-destructive transition-colors"
                 >
                   <X className="h-3.5 w-3.5" aria-hidden="true" />
@@ -121,7 +140,7 @@ export function OutlineBlock({
             <EditableArea
               id={`${blockId}-content`}
               value={block.content}
-              onSave={onChange}
+              onSave={(newContent) => onContentChange(sectionIndex, blockIndex, newContent)}
               label={`content for ${block.label}`}
               placeholder={block.placeholder}
               textareaClassName={cn(
@@ -139,4 +158,4 @@ export function OutlineBlock({
       </div>
     </div>
   )
-}
+})
