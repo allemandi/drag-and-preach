@@ -21,7 +21,7 @@ export function SortableSection({ id, children, title }: SortableSectionProps & 
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition: 'opacity 100ms ease, transform 200ms ease',
+    transition: isDragging ? 'opacity 100ms ease' : 'opacity 100ms ease, transform 200ms ease',
     opacity: isDragging ? 0.6 : 1,
     position: "relative" as const,
     zIndex: isDragging ? 50 : 0,
