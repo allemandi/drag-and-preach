@@ -101,6 +101,7 @@ export const OutlineBlock = memo(function OutlineBlock({
                   label="block label"
                   className="text-[10px] sm:text-xs font-bold text-inherit opacity-70 uppercase tracking-widest px-1.5 py-0.5 bg-muted/30 rounded w-full min-w-0"
                   inputClassName="h-7 text-[10px] sm:text-xs font-bold rounded-md bg-background border-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
+                  autoFocus={isNew}
                   renderValue={(val) => (
                     <span className="truncate mr-1">{val}</span>
                   )}
@@ -151,7 +152,6 @@ export const OutlineBlock = memo(function OutlineBlock({
                 "min-h-[50px] sm:min-h-[60px] p-2 sm:p-3 rounded-lg text-sm font-medium group-hover/block:border-muted-foreground/10",
                 block.content ? "bg-muted/5 text-foreground" : "bg-muted/20 text-muted-foreground/50 dark:text-muted-foreground/60 italic"
               )}
-              autoFocus={isNew}
             />
           </div>
         </div>

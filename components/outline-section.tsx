@@ -102,6 +102,7 @@ export const OutlineSection = memo(function OutlineSection({
             label="section title"
             className="text-base sm:text-xl font-bold tracking-tight text-inherit py-1 min-w-0 w-full"
             inputClassName="h-8 sm:h-9 text-base sm:text-xl font-bold bg-background/50 border-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary w-full"
+            autoFocus={isNew}
             renderValue={(val) => (
               <CardTitle className="text-inherit font-bold truncate">
                 {val}
@@ -182,6 +183,18 @@ export const OutlineSection = memo(function OutlineSection({
             ) : null}
           </DragOverlay>
         </DndContext>
+        <div className="pt-2 flex justify-center">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onAddBlock(sectionIndex)}
+            className="w-full py-6 border-2 border-dashed border-muted-foreground/20 hover:border-muted-foreground/50 hover:bg-muted/50 transition-all group"
+            aria-label={`Add another block to section ${section.title}`}
+          >
+            <Plus className="h-4 w-4 mr-2 text-muted-foreground group-hover:text-primary transition-colors" />
+            <span className="text-muted-foreground font-medium group-hover:text-primary transition-colors">Add Block</span>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )
