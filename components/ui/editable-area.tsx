@@ -93,10 +93,10 @@ export function EditableArea({
         className
       )}
       onClick={() => setIsEditing(true)}
-      aria-label={value ? `Edit ${label}` : `Add ${label}`}
+      aria-label={value ? `Edit ${label}: ${value.substring(0, 50)}${value.length > 50 ? "..." : ""}` : `Add ${label}`}
     >
       <div className="flex-grow break-words w-full">
-        {value || <span className="opacity-50 italic">{placeholder}</span>}
+        {value || <span className="opacity-50 italic">{placeholder || `Click to add ${label}`}</span>}
       </div>
       <div className="self-end mt-1 opacity-20 group-hover/editable:opacity-100 group-focus-visible/editable:opacity-100 transition-opacity">
         <Pencil className="h-3 sm:h-3.5 w-3 sm:w-3.5 text-muted-foreground/50" aria-hidden="true" />

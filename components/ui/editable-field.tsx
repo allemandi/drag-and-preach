@@ -76,9 +76,9 @@ export function EditableField({
         className
       )}
       onClick={() => setIsEditing(true)}
-      aria-label={`Edit ${label}: ${value}`}
+      aria-label={value ? `Edit ${label}: ${value}` : `Add ${label}`}
     >
-      {renderValue ? renderValue(value) : <span>{value}</span>}
+      {renderValue ? renderValue(value) : <span>{value || <span className="opacity-50 italic">Click to add {label}</span>}</span>}
       <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4 opacity-20 group-hover/editable:opacity-100 group-focus-visible/editable:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
     </button>
   )
