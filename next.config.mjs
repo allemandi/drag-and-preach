@@ -13,7 +13,6 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   experimental: {
-    optimizeCss: true, // Optimizes CSS (if using CSS modules)
     scrollRestoration: true, // Smoother scroll behavior
   },
   // Cache tuning for development
