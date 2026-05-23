@@ -60,7 +60,7 @@ export function EditableField({
         onChange={(e) => setLocalValue(e.target.value)}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
-        className={cn("h-auto py-1", inputClassName)}
+        className={cn("h-auto py-1 focus-visible:ring-offset-2", inputClassName)}
         autoFocus
         aria-label={`Edit ${label}`}
       />
@@ -72,7 +72,7 @@ export function EditableField({
       id={id ? `${id}-button` : undefined}
       type="button"
       className={cn(
-        "group/editable flex items-center gap-2 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-md border-2 border-transparent",
+        "group/editable flex items-center gap-2 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:rounded-md border-2 border-transparent",
         className
       )}
       onClick={() => setIsEditing(true)}

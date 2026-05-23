@@ -74,7 +74,7 @@ export function EditableArea({
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         className={cn(
-          "w-full min-h-[60px] p-2 rounded-lg bg-muted/20 focus:outline-none focus:ring-2 transition-all text-sm font-medium",
+          "w-full min-h-[60px] p-2 rounded-lg bg-muted/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all text-sm font-medium",
           textareaClassName
         )}
         placeholder={placeholder}
@@ -89,7 +89,7 @@ export function EditableArea({
       id={id ? `${id}-button` : undefined}
       type="button"
       className={cn(
-        "group/editable w-full text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-md flex flex-col border-2 border-transparent",
+        "group/editable w-full text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:rounded-md flex flex-col border-2 border-transparent",
         className
       )}
       onClick={() => setIsEditing(true)}

@@ -173,6 +173,8 @@ export default function SermonOutlinePlanner() {
                 size="sm"
                 disabled={isSaving}
                 aria-busy={isSaving}
+                title="Save to local storage (Ctrl+S)"
+                aria-label={isSaving ? "Saving outline" : "Save outline to local storage (Ctrl+S)"}
               >
                 {isSaving ? (
                   <RefreshCw className="h-4 w-4 mr-1.5 animate-spin" />
@@ -194,7 +196,8 @@ export default function SermonOutlinePlanner() {
               variant="pastel-rose"
               size="sm"
               className="w-full md:w-auto"
-              aria-label="Reset the entire sermon outline"
+              title="Reset the entire sermon outline (Ctrl+Alt+R)"
+              aria-label="Reset the entire sermon outline (Ctrl+Alt+R)"
             >
               <RefreshCw className="h-4 w-4 mr-1.5" />
               <span>Reset All</span>
@@ -276,29 +279,36 @@ export default function SermonOutlinePlanner() {
           >
             <SortableContext items={bodySectionIds} strategy={verticalListSortingStrategy}>
               <div className="space-y-8">
-                {sections.map((section, index) => {
-                  if (section.type !== "body") return null;
-                  return (
-                    <SortableSection key={section.id} id={section.id} title={section.title}>
-                      <OutlineSection
-                        section={section}
-                        sectionIndex={index}
-                        onContentChange={handleContentChange}
-                        onLabelChange={handleLabelChange}
-                        onResetLabel={handleResetLabel}
-                        onTitleChange={handleTitleChange}
-                        onResetTitle={handleResetTitle}
-                        onRemoveSection={removeSection}
-                        onAddBlock={addBlockToSection}
-                        onRemoveBlock={removeBlock}
-                        onBlockDragEnd={handleBlockDragEnd}
-                        isNew={section.id === newSectionId}
-                        newBlockId={newBlockId}
-                        isDragging={section.id === activeSectionId}
-                      />
-                    </SortableSection>
-                  );
-                })}
+                {sections.filter(s => s.type === "body").length === 0 ? (
+                  <div className="text-center py-12 border-2 border-dashed border-muted-foreground/20 rounded-2xl bg-muted/5">
+                    <p className="text-muted-foreground font-medium">No body sections yet.</p>
+                    <p className="text-xs text-muted-foreground/60 mt-1">Click the button below to add your first point.</p>
+                  </div>
+                ) : (
+                  sections.map((section, index) => {
+                    if (section.type !== "body") return null;
+                    return (
+                      <SortableSection key={section.id} id={section.id} title={section.title}>
+                        <OutlineSection
+                          section={section}
+                          sectionIndex={index}
+                          onContentChange={handleContentChange}
+                          onLabelChange={handleLabelChange}
+                          onResetLabel={handleResetLabel}
+                          onTitleChange={handleTitleChange}
+                          onResetTitle={handleResetTitle}
+                          onRemoveSection={removeSection}
+                          onAddBlock={addBlockToSection}
+                          onRemoveBlock={removeBlock}
+                          onBlockDragEnd={handleBlockDragEnd}
+                          isNew={section.id === newSectionId}
+                          newBlockId={newBlockId}
+                          isDragging={section.id === activeSectionId}
+                        />
+                      </SortableSection>
+                    );
+                  })
+                )}
               </div>
             </SortableContext>
             <DragOverlay adjustScale={true} dropAnimation={null}>
@@ -316,6 +326,8 @@ export default function SermonOutlinePlanner() {
               size="xl"
               variant="pastel-green"
               className="flex items-center gap-2 group shadow-md"
+              title="Add a new body section (Ctrl+Alt+N)"
+              aria-label="Add a new body section (Ctrl+Alt+N)"
             >
               <Plus className="h-5 w-5 transition-transform group-hover:rotate-90" />
               <span className="text-lg font-bold">Add New Body Section</span>
