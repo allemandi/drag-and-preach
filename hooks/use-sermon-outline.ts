@@ -479,9 +479,9 @@ export function useSermonOutline() {
       toast({
         title: "Outline Saved",
         description: "Your sermon outline has been saved to local storage.",
-        duration: 3000,
+        duration: 2000,
       })
-    }, 500)
+    }, 200)
   }, [sections, toast])
 
   const saveOutlineAsJson = useCallback(() => {
