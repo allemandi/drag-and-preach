@@ -165,7 +165,7 @@ export default function SermonOutlinePlanner() {
             </Button>
           </div>
 
-          <nav className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-3 sm:p-4 bg-card/40 backdrop-blur-md rounded-2xl border border-border shadow-sm">
+          <nav className="sticky top-4 z-40 flex flex-col md:flex-row md:items-center justify-between gap-4 p-3 sm:p-4 bg-card/60 backdrop-blur-lg rounded-2xl border border-border shadow-md transition-all duration-300">
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
               <Button
                 onClick={saveOutlineToLocalStorage}
