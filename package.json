@@ -24,7 +24,7 @@
     "clsx": "^2.1.1",
     "docx": "^9.7.1",
     "jspdf": "^4.2.1",
-    "lucide-react": "1.20.0",
+    "lucide-react": "1.21.0",
     "next": "16.2.9",
     "next-themes": "latest",
     "react": "^19.2.7",
@@ -43,14 +43,14 @@
     "@types/node": "^25",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@vitejs/plugin-react": "^6.0.3",
     "eslint": "^10.5.0",
     "eslint-config-next": "16.2.9",
     "jsdom": "^29.1.1",
     "postcss": "^8.5.15",
     "tailwindcss": "^4.2.1",
     "typescript": "^6.0.3",
-    "vite": "^8.0.16",
+    "vite": "^8.1.0",
     "vitest": "^4.1.9"
   }
 }
