@@ -30,12 +30,26 @@ export function EditableField({
 }: EditableFieldProps) {
   const [isEditing, setIsEditing] = React.useState(autoFocus)
   const [localValue, setLocalValue] = React.useState(value)
+  const buttonRef = React.useRef<HTMLButtonElement>(null)
+  const wasEditingRef = React.useRef(isEditing)
+  const isCancelingRef = React.useRef(false)
 
   React.useEffect(() => {
     setLocalValue(value)
   }, [value])
 
+  React.useEffect(() => {
+    if (wasEditingRef.current && !isEditing) {
+      buttonRef.current?.focus()
+    }
+    wasEditingRef.current = isEditing
+  }, [isEditing])
+
   const handleBlur = () => {
+    if (isCancelingRef.current) {
+      isCancelingRef.current = false
+      return
+    }
     if (localValue !== value) {
       onSave(localValue)
     }
@@ -46,6 +60,7 @@ export function EditableField({
     if (e.key === "Enter") {
       handleBlur()
     } else if (e.key === "Escape") {
+      isCancelingRef.current = true
       setLocalValue(value)
       onCancel?.()
       setIsEditing(false)
@@ -69,6 +84,7 @@ export function EditableField({
 
   return (
     <button
+      ref={buttonRef}
       id={id ? `${id}-button` : undefined}
       type="button"
       className={cn(
