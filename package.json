@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:unit": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@dnd-kit/core": "latest",
@@ -47,6 +48,7 @@
     "eslint": "^10.7.0",
     "eslint-config-next": "16.2.10",
     "jsdom": "^30.0.1",
+    "patch-package": "^8.0.1",
     "postcss": "^8.5.26",
     "tailwindcss": "^4.2.1",
     "typescript": "7.0.2",
