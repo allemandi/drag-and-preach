@@ -7,11 +7,10 @@ import {
   closestCorners,
   DragOverlay,
   type DragStartEvent,
-  type DragOverEvent,
   type DragEndEvent,
 } from "@dnd-kit/core"
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
-import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers"
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
 import { OutlineSection } from "@/components/outline-section"
 import { SortableSection } from "@/components/sortable-section"
 import { SectionOverlay } from "@/components/ui/drag-overlays"
@@ -31,7 +30,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { cn } from "@/lib/utils"
 
 export default function SermonOutlinePlanner() {
   const [activeSectionId, setActiveId] = useState<string | null>(null)
@@ -234,7 +232,7 @@ export default function SermonOutlinePlanner() {
             </DialogHeader>
             <div className="mt-4 space-y-6">
               <p className="text-center text-muted-foreground text-sm font-medium">
-                Are you sure you want to remove "{sectionToDelete !== null ? sections[sectionToDelete]?.title : ""}"? This action cannot be undone.
+                Are you sure you want to remove &quot;{sectionToDelete !== null ? sections[sectionToDelete]?.title : ""}&quot;? This action cannot be undone.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-3">
                 <Button variant="outline" onClick={cancelRemoveSection} className="flex-1 order-2 sm:order-1">
