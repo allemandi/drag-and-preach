@@ -1,0 +1,7 @@
+diff --git a/node_modules/typescript/lib/typescript.js b/node_modules/typescript/lib/typescript.js
+new file mode 100644
+index 0000000..806c6cc
+--- /dev/null
++++ b/node_modules/typescript/lib/typescript.js
+@@ -0,0 +1 @@
++module.exports = require("../");
