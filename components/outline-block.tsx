@@ -119,6 +119,7 @@ export const OutlineBlock = memo(function OutlineBlock({
                 }}
                 className="h-6 px-1.5 xs:px-2 text-[10px] sm:text-xs font-bold uppercase tracking-tight hover:bg-muted/50 rounded-md text-inherit shrink-0 flex items-center gap-1"
                 aria-label={`Reset label for block ${block.label} to default`}
+                title={`Reset label for block ${block.label} to default`}
               >
                 <span className="hidden xs:inline">Reset</span>
                 <RefreshCw className="h-3 w-3 text-muted-foreground" />
@@ -129,6 +130,8 @@ export const OutlineBlock = memo(function OutlineBlock({
                   size="icon-sm"
                   onClick={() => onRemoveBlock(sectionIndex, blockIndex)}
                   className="h-6 w-6 rounded-md hover:bg-destructive/10 hover:text-destructive transition-colors"
+                  title={`Remove block: ${block.label}`}
+                  aria-label={`Remove block: ${block.label}`}
                 >
                   <X className="h-3.5 w-3.5" aria-hidden="true" />
                   <span className="sr-only">Remove block: {block.label}</span>

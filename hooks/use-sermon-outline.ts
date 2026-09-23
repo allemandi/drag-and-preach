@@ -186,33 +186,37 @@ export function useSermonOutline() {
       const { active, over } = event
       if (!over || active.id === over.id) return
 
-      const oldIndex = sections.findIndex((section) => section.id === active.id)
-      const newIndex = sections.findIndex((section) => section.id === over.id)
+      setSections((prev) => {
+        const oldIndex = prev.findIndex((section) => section.id === active.id)
+        const newIndex = prev.findIndex((section) => section.id === over.id)
 
-      const sectionType = sections[oldIndex].type
-      if (sectionType === "intro" || sectionType === "conclusion") {
-        toast({
-          title: "Cannot Move Section",
-          description: "Introduction and Conclusion sections cannot be moved.",
-          variant: "destructive",
-          duration: 3000,
-        })
-        return
-      }
+        if (oldIndex === -1 || newIndex === -1) return prev
 
-      if (newIndex === 0 || newIndex === sections.length - 1) {
-        toast({
-          title: "Cannot Move Section",
-          description: "Body sections must remain between Introduction and Conclusion.",
-          variant: "destructive",
-          duration: 3000,
-        })
-        return
-      }
+        const sectionType = prev[oldIndex].type
+        if (sectionType === "intro" || sectionType === "conclusion") {
+          toast({
+            title: "Cannot Move Section",
+            description: "Introduction and Conclusion sections cannot be moved.",
+            variant: "destructive",
+            duration: 3000,
+          })
+          return prev
+        }
 
-      setSections((prev) => arrayMove(prev, oldIndex, newIndex))
+        if (newIndex === 0 || newIndex === prev.length - 1) {
+          toast({
+            title: "Cannot Move Section",
+            description: "Body sections must remain between Introduction and Conclusion.",
+            variant: "destructive",
+            duration: 3000,
+          })
+          return prev
+        }
+
+        return arrayMove(prev, oldIndex, newIndex)
+      })
     },
-    [sections, toast]
+    [toast]
   )
 
   const handleContentChange = useCallback((sectionIndex: number, blockIndex: number, content: string) => {
@@ -273,124 +277,141 @@ export function useSermonOutline() {
   }, [toast])
 
   const addBodySection = useCallback(() => {
-    let maxBodyNumber = 0
-    sections.forEach((section) => {
-      if (section.type === "body") {
-        const match = section.id.match(/body-section-(\d+)/)
-        if (match) {
-          const num = Number.parseInt(match[1], 10)
-          if (num > maxBodyNumber) {
-            maxBodyNumber = num
+    setSections((prev) => {
+      let maxBodyNumber = 0
+      prev.forEach((section) => {
+        if (section.type === "body") {
+          const match = section.id.match(/body-section-(\d+)/)
+          if (match) {
+            const num = Number.parseInt(match[1], 10)
+            if (num > maxBodyNumber) {
+              maxBodyNumber = num
+            }
           }
         }
+      })
+
+      const newBodyNumber = maxBodyNumber + 1
+      const conclusionIndex = prev.findIndex((section) => section.type === "conclusion")
+
+      const newBodySection: Section = {
+        id: `body-section-${newBodyNumber}`,
+        title: `Body Section ${newBodyNumber}`,
+        defaultTitle: `Body Section ${newBodyNumber}`,
+        type: "body",
+        blocks: [
+          {
+            id: `body-${newBodyNumber}-topic`,
+            label: "Main Point / Topic Sentence",
+            defaultLabel: "Main Point / Topic Sentence",
+            placeholder: "Introduce point, relate to thesis:\n'Faith is constantly challenged, and we know...'",
+            content: "",
+            type: "body",
+          },
+          {
+            id: `body-${newBodyNumber}-scripture`,
+            label: "Scripture",
+            defaultLabel: "Scripture",
+            placeholder: "Job 42:1–6.",
+            content: "",
+            type: "body",
+          },
+          {
+            id: `body-${newBodyNumber}-explanation`,
+            label: "Explanation",
+            defaultLabel: "Explanation",
+            placeholder: "Unpack the meaning or lesson from the Scripture:\n'Job accepts it's okay to be...'",
+            content: "",
+            type: "body",
+          },
+          {
+            id: `body-${newBodyNumber}-application`,
+            label: "Application",
+            defaultLabel: "Application",
+            placeholder: "How does this apply to today?\n'We all know that...",
+            content: "",
+            type: "body",
+          },
+          {
+            id: `body-${newBodyNumber}-transition`,
+            label: "Summary Sentence",
+            defaultLabel: "Summary Sentence",
+            placeholder: "Tie and transition:\n'The passage teaches us that we can only.",
+            content: "",
+            type: "body",
+          },
+        ],
       }
-    })
 
-    const newBodyNumber = maxBodyNumber + 1
-    const conclusionIndex = sections.findIndex((section) => section.type === "conclusion")
+      setNewSectionId(newBodySection.id)
 
-    const newBodySection: Section = {
-      id: `body-section-${newBodyNumber}`,
-      title: `Body Section ${newBodyNumber}`,
-      defaultTitle: `Body Section ${newBodyNumber}`,
-      type: "body",
-      blocks: [
-        {
-          id: `body-${newBodyNumber}-topic`,
-          label: "Main Point / Topic Sentence",
-          defaultLabel: "Main Point / Topic Sentence",
-          placeholder: "Introduce point, relate to thesis:\n'Faith is constantly challenged, and we know...'",
-          content: "",
-          type: "body",
-        },
-        {
-          id: `body-${newBodyNumber}-scripture`,
-          label: "Scripture",
-          defaultLabel: "Scripture",
-          placeholder: "Job 42:1–6.",
-          content: "",
-          type: "body",
-        },
-        {
-          id: `body-${newBodyNumber}-explanation`,
-          label: "Explanation",
-          defaultLabel: "Explanation",
-          placeholder: "Unpack the meaning or lesson from the Scripture:\n'Job accepts it's okay to be...'",
-          content: "",
-          type: "body",
-        },
-        {
-          id: `body-${newBodyNumber}-application`,
-          label: "Application",
-          defaultLabel: "Application",
-          placeholder: "How does this apply to today?\n'We all know that...",
-          content: "",
-          type: "body",
-        },
-        {
-          id: `body-${newBodyNumber}-transition`,
-          label: "Summary Sentence",
-          defaultLabel: "Summary Sentence",
-          placeholder: "Tie and transition:\n'The passage teaches us that we can only.",
-          content: "",
-          type: "body",
-        },
-      ],
-    }
+      toast({
+        title: "Section Added",
+        description: `Body Section ${newBodyNumber} has been added to your outline.`,
+        duration: 3000,
+      })
 
-    setSections((prev) => {
       const newSections = [...prev]
-      newSections.splice(conclusionIndex, 0, newBodySection)
+      const targetIndex = conclusionIndex !== -1 ? conclusionIndex : newSections.length
+      newSections.splice(targetIndex, 0, newBodySection)
       return newSections
     })
-    setNewSectionId(newBodySection.id)
-
-    toast({
-      title: "Section Added",
-      description: `Body Section ${newBodyNumber} has been added to your outline.`,
-      duration: 3000,
-    })
-  }, [sections, toast])
+  }, [toast])
 
   const addBlockToSection = useCallback(
     (sectionIndex: number, label = "New Block") => {
-      const section = sections[sectionIndex]
       const id = generateId()
-      const newBlock: OutlineBlock = {
-        id: id,
-        label: label,
-        defaultLabel: label,
-        placeholder: "Add your content here...",
-        content: "",
-        type: section.type,
-      }
 
-      setSections((prev) => prev.map((s, i) => (i === sectionIndex ? { ...s, blocks: [...s.blocks, newBlock] } : s)))
-      setNewBlockId(id)
+      setSections((prev) => {
+        const section = prev[sectionIndex]
+        if (!section) return prev
 
-      toast({
-        title: "Block Added",
-        description: `A new block has been added to ${section.title}.`,
-        duration: 2000,
+        const newBlock: OutlineBlock = {
+          id: id,
+          label: label,
+          defaultLabel: label,
+          placeholder: "Add your content here...",
+          content: "",
+          type: section.type,
+        }
+
+        setNewBlockId(id)
+
+        toast({
+          title: "Block Added",
+          description: `A new block has been added to ${section.title}.`,
+          duration: 2000,
+        })
+
+        return prev.map((s, i) => (i === sectionIndex ? { ...s, blocks: [...s.blocks, newBlock] } : s))
       })
     },
-    [sections, toast]
+    [toast]
   )
 
   const removeBlock = useCallback(
     (sectionIndex: number, blockIndex: number) => {
-      if (sections[sectionIndex].blocks.length <= 1) {
-        toast({
-          title: "Cannot Remove Block",
-          description: "A section must have at least one block.",
-          variant: "destructive",
-          duration: 3000,
-        })
-        return
-      }
+      setSections((prev) => {
+        const section = prev[sectionIndex]
+        if (!section) return prev
 
-      setSections((prev) =>
-        prev.map((s, i) =>
+        if (section.blocks.length <= 1) {
+          toast({
+            title: "Cannot Remove Block",
+            description: "A section must have at least one block.",
+            variant: "destructive",
+            duration: 3000,
+          })
+          return prev
+        }
+
+        toast({
+          title: "Block Removed",
+          description: "The block has been removed from your outline.",
+          duration: 2000,
+        })
+
+        return prev.map((s, i) =>
           i === sectionIndex
             ? {
                 ...s,
@@ -398,33 +419,32 @@ export function useSermonOutline() {
               }
             : s
         )
-      )
-
-      toast({
-        title: "Block Removed",
-        description: "The block has been removed from your outline.",
-        duration: 2000,
       })
     },
-    [sections, toast]
+    [toast]
   )
 
   const removeSection = useCallback(
     (sectionIndex: number) => {
-      const sectionType = sections[sectionIndex].type
-      if (sectionType === "intro" || sectionType === "conclusion") {
-        toast({
-          title: "Cannot Remove Section",
-          description: "Introduction and Conclusion sections cannot be removed.",
-          variant: "destructive",
-          duration: 3000,
-        })
-        return
-      }
+      setSections((prev) => {
+        const section = prev[sectionIndex]
+        if (!section) return prev
 
-      setSectionToDelete(sectionIndex)
+        if (section.type === "intro" || section.type === "conclusion") {
+          toast({
+            title: "Cannot Remove Section",
+            description: "Introduction and Conclusion sections cannot be removed.",
+            variant: "destructive",
+            duration: 3000,
+          })
+          return prev
+        }
+
+        setSectionToDelete(sectionIndex)
+        return prev
+      })
     },
-    [sections, toast]
+    [toast]
   )
 
   const confirmRemoveSection = useCallback(() => {

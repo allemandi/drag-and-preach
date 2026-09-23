@@ -121,6 +121,7 @@ export const OutlineSection = memo(function OutlineSection({
             }}
             className="h-7 px-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider hover:bg-background/50 text-inherit flex items-center gap-1.5"
             aria-label={`Reset title for section ${section.title} to default`}
+            title={`Reset title for section ${section.title} to default`}
           >
             <span className="hidden sm:inline">Reset Title</span>
             <RefreshCw className="h-3.5 w-3.5 text-muted-foreground" />
@@ -131,6 +132,7 @@ export const OutlineSection = memo(function OutlineSection({
             onClick={() => onAddBlock(sectionIndex)}
             className="h-7 px-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-background/50 hover:bg-background border"
             aria-label={`Add a new block to section ${section.title}`}
+            title={`Add a new block to section ${section.title}`}
           >
             <span className="hidden xs:inline">Add Block</span>
             <Plus className="h-3.5 w-3.5 xs:ml-1.5 text-muted-foreground" />
@@ -141,6 +143,8 @@ export const OutlineSection = memo(function OutlineSection({
               size="icon-sm"
               onClick={() => onRemoveSection(sectionIndex)}
               className="h-7 w-7 rounded-md hover:bg-destructive/10 hover:text-destructive"
+              title={`Remove section: ${section.title}`}
+              aria-label={`Remove section: ${section.title}`}
             >
               <X className="h-4 w-4" aria-hidden="true" />
               <span className="sr-only">Remove section: {section.title}</span>

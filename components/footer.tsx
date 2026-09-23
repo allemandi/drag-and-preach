@@ -64,15 +64,15 @@ export default function Footer() {
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground">Welcome to Drag and Preach! Here&apos;s a quick guide:</p>
               <ul className="list-disc pl-6 space-y-2 text-sm">
-                <li>Drag by the grip icons (⋮⋮) to reorder sections and blocks.</li>
-                <li>Click any title or textbox to edit text.</li>
+                <li>Drag by the grip icons (⋮⋮) to reorder sections and blocks. You can also focus a drag handle with <kbd className="px-1 py-0.5 rounded border bg-muted text-xs">Tab</kbd>, press <kbd className="px-1 py-0.5 rounded border bg-muted text-xs">Space</kbd> to pick up, move with arrow keys, and press <kbd className="px-1 py-0.5 rounded border bg-muted text-xs">Space</kbd> to drop.</li>
+                <li>Click any title or text box to edit. Press <kbd className="px-1 py-0.5 rounded border bg-muted text-xs">Enter</kbd> (fields) or <kbd className="px-1 py-0.5 rounded border bg-muted text-xs">Ctrl</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted text-xs">Enter</kbd> (text areas) to save, or <kbd className="px-1 py-0.5 rounded border bg-muted text-xs">Esc</kbd> to cancel.</li>
                 <li>Export your outline using the toolbar (PDF, DOCX, TXT, Markdown).</li>
                 <li>
                   <strong>Keyboard Shortcuts:</strong>
                   <ul className="list-circle pl-5 mt-1 space-y-1 text-xs">
-                    <li><kbd className="px-1 py-0.5 rounded border bg-muted">Ctrl</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">S</kbd> : Save</li>
-                    <li><kbd className="px-1 py-0.5 rounded border bg-muted">Ctrl</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">Alt</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">N</kbd> : New Section</li>
-                    <li><kbd className="px-1 py-0.5 rounded border bg-muted">Ctrl</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">Alt</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">R</kbd> : Reset All</li>
+                    <li><kbd className="px-1 py-0.5 rounded border bg-muted">Ctrl</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">S</kbd> : Save to Local Storage</li>
+                    <li><kbd className="px-1 py-0.5 rounded border bg-muted">Ctrl</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">Alt</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">N</kbd> : Add Body Section</li>
+                    <li><kbd className="px-1 py-0.5 rounded border bg-muted">Ctrl</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">Alt</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted">R</kbd> : Reset Workspace</li>
                   </ul>
                 </li>
                 <li>Remember to Save and Backup regularly!</li>
