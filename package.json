@@ -23,10 +23,10 @@
     "@radix-ui/react-toast": "1.2.23",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "docx": "^9.7.1",
+    "docx": "^9.7.2",
     "jspdf": "^4.2.1",
     "lucide-react": "1.41.0",
-    "next": "16.3.4",
+    "next": "16.3.6",
     "next-themes": "latest",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -38,7 +38,7 @@
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "4.3.3",
-    "@testing-library/dom": "^10.0.0",
+    "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@types/node": "^26",
@@ -46,13 +46,13 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "eslint": "^10.10.0",
-    "eslint-config-next": "16.3.4",
+    "eslint-config-next": "16.3.6",
     "jsdom": "^30.0.1",
     "patch-package": "^8.0.1",
     "postcss": "^8.5.28",
     "tailwindcss": "^4.2.1",
     "typescript": "7.0.2",
     "vite": "^8.2.2",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.2"
   }
 }
