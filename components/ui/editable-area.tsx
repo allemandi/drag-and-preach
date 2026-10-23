@@ -82,16 +82,21 @@ export function EditableArea({
     e.target.style.height = `${e.target.scrollHeight}px`
   }
 
+  const fallbackId = React.useId()
+  const elementId = id || fallbackId
+  const hintId = `${elementId}-hint`
+
   if (isEditing) {
     return (
       <div className="w-full space-y-1">
         <textarea
-          id={id ? `${id}-textarea` : undefined}
+          id={`${elementId}-textarea`}
           ref={textareaRef}
           value={localValue}
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
+          aria-describedby={hintId}
           className={cn(
             "w-full min-h-[60px] p-2 rounded-lg bg-muted/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all text-sm font-medium",
             textareaClassName
@@ -100,7 +105,7 @@ export function EditableArea({
           rows={1}
           aria-label={`Edit ${label}`}
         />
-        <p className="text-[10px] text-muted-foreground/80 font-medium px-1 flex items-center justify-between">
+        <p id={hintId} className="text-[10px] text-muted-foreground/80 font-medium px-1 flex items-center justify-between">
           <span>Press <kbd className="px-1 py-0.5 rounded border bg-muted text-[9px]">Ctrl</kbd> + <kbd className="px-1 py-0.5 rounded border bg-muted text-[9px]">Enter</kbd> to save</span>
           <span><kbd className="px-1 py-0.5 rounded border bg-muted text-[9px]">Esc</kbd> to cancel</span>
         </p>
@@ -111,7 +116,7 @@ export function EditableArea({
   return (
     <button
       ref={buttonRef}
-      id={id ? `${id}-button` : undefined}
+      id={`${elementId}-button`}
       type="button"
       className={cn(
         "group/editable w-full text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:rounded-md flex flex-col border-2 border-transparent",

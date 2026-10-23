@@ -165,8 +165,8 @@ export default function SermonOutlinePlanner() {
             </Button>
           </div>
 
-          <nav className="sticky top-4 z-40 flex flex-col md:flex-row md:items-center justify-between gap-4 p-3 sm:p-4 bg-card/60 backdrop-blur-lg rounded-2xl border border-border shadow-md transition-all duration-300">
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+          <nav className="sticky top-4 z-40 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 p-3 sm:p-4 bg-card/60 backdrop-blur-lg rounded-2xl border border-border shadow-md transition-all duration-300" aria-label="Sermon Toolbar">
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 onClick={saveOutlineToLocalStorage}
                 variant="pastel"
@@ -184,7 +184,7 @@ export default function SermonOutlinePlanner() {
                 <span>{isSaving ? "Saving..." : "Save"}</span>
               </Button>
               <BackupModal onDownload={saveOutlineAsJson} onUpload={triggerFileInput} />
-              <Button onClick={copyToClipboard} variant="pastel-amber" size="sm">
+              <Button onClick={copyToClipboard} variant="pastel-amber" size="sm" aria-label="Copy outline text to clipboard">
                 <Copy className="h-4 w-4 mr-1.5" />
                 <span>Copy</span>
               </Button>
@@ -195,14 +195,14 @@ export default function SermonOutlinePlanner() {
               onClick={handleResetAll}
               variant="pastel-rose"
               size="sm"
-              className="w-full md:w-auto"
+              className="shrink-0"
               title="Reset the entire sermon outline (Ctrl+Alt+R)"
               aria-label="Reset the entire sermon outline (Ctrl+Alt+R)"
             >
               <RefreshCw className="h-4 w-4 mr-1.5" />
               <span>Reset All</span>
             </Button>
-            <input type="file" ref={fileInputRef} onChange={onFileChange} accept=".json" className="hidden" />
+            <input type="file" ref={fileInputRef} onChange={onFileChange} accept=".json" className="hidden" aria-label="Upload sermon backup JSON file" tabIndex={-1} />
           </nav>
         </header>
 
