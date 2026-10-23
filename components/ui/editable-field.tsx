@@ -67,10 +67,13 @@ export function EditableField({
     }
   }
 
+  const fallbackId = React.useId()
+  const elementId = id || fallbackId
+
   if (isEditing) {
     return (
       <Input
-        id={id ? `${id}-input` : undefined}
+        id={`${elementId}-input`}
         value={localValue}
         onChange={(e) => setLocalValue(e.target.value)}
         onBlur={handleBlur}
@@ -85,7 +88,7 @@ export function EditableField({
   return (
     <button
       ref={buttonRef}
-      id={id ? `${id}-button` : undefined}
+      id={`${elementId}-button`}
       type="button"
       className={cn(
         "group/editable flex items-center gap-2 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:rounded-md border-2 border-transparent",

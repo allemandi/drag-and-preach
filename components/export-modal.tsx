@@ -35,7 +35,13 @@ export function ExportModal({ onExport, isExporting }: ExportModalProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="pastel-purple" size="sm" disabled={isExporting}>
+        <Button
+          variant="pastel-purple"
+          size="sm"
+          disabled={isExporting}
+          aria-busy={isExporting}
+          aria-label={isExporting ? "Exporting outline..." : "Open export options dialog"}
+        >
           {isExporting ? <Loader2 className="h-4 w-4 mr-1.5 animate-spin" /> : <FileText className="h-4 w-4 mr-1.5" />}
           <span>{isExporting ? "Exporting..." : "Export"}</span>
         </Button>
@@ -54,6 +60,7 @@ export function ExportModal({ onExport, isExporting }: ExportModalProps) {
               onClick={() => handleExport(option.format)}
               variant={option.variant}
               disabled={isExporting}
+              aria-label={`Export outline as ${option.label}`}
               className="w-full h-20 flex flex-col items-center justify-center gap-1.5 rounded-xl hover:scale-[1.02] active:scale-95 transition-all"
             >
               {isExporting ? (

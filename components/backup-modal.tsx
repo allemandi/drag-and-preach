@@ -28,7 +28,7 @@ export function BackupModal({ onDownload, onUpload }: BackupModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="pastel-green" size="sm">
+        <Button variant="pastel-green" size="sm" aria-label="Open backup options dialog">
           <Database className="h-4 w-4 mr-1.5" />
           <span>Backup</span>
         </Button>
@@ -44,6 +44,7 @@ export function BackupModal({ onDownload, onUpload }: BackupModalProps) {
           <Button
             onClick={() => handleAction(onDownload)}
             variant="pastel-blue"
+            aria-label="Download backup JSON file"
             className="w-full h-16 text-sm font-bold flex flex-col items-center justify-center gap-1 rounded-xl hover:scale-[1.02] active:scale-95 transition-all"
           >
             <Download className="h-5 w-5" />
@@ -52,6 +53,7 @@ export function BackupModal({ onDownload, onUpload }: BackupModalProps) {
           <Button
             onClick={() => handleAction(onUpload)}
             variant="pastel-amber"
+            aria-label="Load backup JSON file"
             className="w-full h-16 text-sm font-bold flex flex-col items-center justify-center gap-1 rounded-xl hover:scale-[1.02] active:scale-95 transition-all"
           >
             <Upload className="h-5 w-5" />
