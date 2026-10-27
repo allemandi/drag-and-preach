@@ -2092,17 +2092,15 @@ doctrine@^2.1.0:
   dependencies:
     esutils "^2.0.2"
 
-docx@^9.12.0:
-  version "9.12.0"
-  resolved "https://registry.yarnpkg.com/docx/-/docx-9.12.0.tgz#824d5e936e8834d4dd457d75831284dfd0e1fbd9"
-  integrity sha512-pRxdJP7cJpqhSxzfhlB01RToOFMAY7+QJ59zT2LowpXjS2q5fAnrvAuQIyGgkuBxTcXii0LFqM96GFjhQcTicQ==
+docx@^9.14.0:
+  version "9.14.0"
+  resolved "https://registry.yarnpkg.com/docx/-/docx-9.14.0.tgz#8d0f1290a3e9ef8c4e0413c64b22d8d74fa63a81"
+  integrity sha512-3QGcC5CUBvyYZsFPpuKy9Mv1j4BOoKjH9angjjDzrqx2GnnXH6ogt/CUVQ3gexN46yKDsl8gcOFNl0jjvlDxhg==
   dependencies:
     "@types/node" "^26.6.2"
     hash.js "^1.1.7"
     jszip "^3.10.1"
     nanoid "^6.0.1"
-    xml "^1.0.1"
-    xml-js "^1.6.8"
 
 dom-accessibility-api@^0.5.9:
   version "0.5.16"
@@ -3494,10 +3492,10 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-lucide-react@1.59.0:
-  version "1.59.0"
-  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-1.59.0.tgz#6ae4ef53a70718e2e6793f958eac2f8012bfa80a"
-  integrity sha512-5qgMyyCPU6OvnKpLS2t693+ZtiqA8oaSweWoUows0BLFKFf6V75m4+CptpmohZHpD5IuOVIBXHBBiv2vpLJmtw==
+lucide-react@1.61.0:
+  version "1.61.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-1.61.0.tgz#e17337bb8b4729b285956fe43384173bf2f8f474"
+  integrity sha512-v2SQPPPNjnr+BlhL9Spuzmo5yR+hLkftfuE4E3jaxdNPgSH0hJKPcLJBP7yAta87jQNPsSERS59PJjCJ/CorBA==
 
 lz-string@^1.5.0:
   version "1.5.0"
@@ -4127,11 +4125,6 @@ safe-regex-test@^1.0.3, safe-regex-test@^1.1.0:
     call-bound "^1.0.2"
     es-errors "^1.3.0"
     is-regex "^1.2.1"
-
-sax@^1.2.4:
-  version "1.5.0"
-  resolved "https://registry.npmjs.org/sax/-/sax-1.5.0.tgz"
-  integrity sha512-21IYA3Q5cQf089Z6tgaUTr7lDAyzoTPx5HRtbhsME8Udispad8dC/+sziTNugOEx54ilvatQ9YCzl4KQLPcRHA==
 
 saxes@^6.0.0:
   version "6.0.0"
@@ -4845,22 +4838,10 @@ word-wrap@^1.2.5:
   resolved "https://registry.npmjs.org/word-wrap/-/word-wrap-1.2.5.tgz"
   integrity sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==
 
-xml-js@^1.6.8:
-  version "1.6.11"
-  resolved "https://registry.npmjs.org/xml-js/-/xml-js-1.6.11.tgz"
-  integrity sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==
-  dependencies:
-    sax "^1.2.4"
-
 xml-name-validator@^5.0.0:
   version "5.0.0"
   resolved "https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-5.0.0.tgz"
   integrity sha512-EvGK8EJ3DhaHfbRlETOWAS5pO9MZITeauHKJyb8wyajUfQUenkIg2MvLDTZ4T/TgIcm3HU0TFBgWWboAZ30UHg==
-
-xml@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/xml/-/xml-1.0.1.tgz"
-  integrity sha512-huCv9IH9Tcf95zuYCsQraZtWnJvBtLVE0QHMOs8bWyZAFZNDcYjsPq1nEx8jKA9y+Beo9v+7OBPRisQTjinQMw==
 
 xmlchars@^2.2.0:
   version "2.2.0"
