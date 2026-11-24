@@ -2141,10 +2141,10 @@ doctrine@^2.1.0:
   dependencies:
     esutils "^2.0.2"
 
-docx@^9.15.4:
-  version "9.15.4"
-  resolved "https://registry.yarnpkg.com/docx/-/docx-9.15.4.tgz#b870508565523e9b5a4ec9476fbdb8af244196ce"
-  integrity sha512-5UUTdR+eE7KVeNroYYt6K0Ixi9yez18BBKnypz3XyQSR8FsVYTiZ4vqKZr83JHjYPAgO+Tw7T/+13KyITpkgFw==
+docx@^9.16.0:
+  version "9.16.0"
+  resolved "https://registry.yarnpkg.com/docx/-/docx-9.16.0.tgz#cec1ef2bd6706ad8b2d90aeea47270e06c50f2d5"
+  integrity sha512-fvAuqxV0705bEQ9OGPLt6onJqufGJTMS+b7PtRxNktea+iPWYgc1zO+OQBMW9ZmRLj9THTnOeiAoxTDz2ub0Fw==
   dependencies:
     "@types/node" "^26.6.2"
     fflate "^0.8.3"
@@ -3427,10 +3427,10 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-lucide-react@1.73.0:
-  version "1.73.0"
-  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-1.73.0.tgz#70fb4bfc2a547bcb724cbc65e5feb8410adbbaa3"
-  integrity sha512-fVOzGviL9mTfHenG1PbCfIceavyGlnpYNSYr+aGZHLRymAJ7DTP6KHuqt0uBkCKAoenr1UVkwSbDIYt2xIesEQ==
+lucide-react@1.77.0:
+  version "1.77.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-1.77.0.tgz#4d37be5f21367ba69edbc45bda7ae71fb4c74303"
+  integrity sha512-VS6sOi8ZUH1qm6swBL/tpI4xAhB6pFTdHvw3pfCJD+DaTJwpyynVzfOS6mdyMZ+OCdY/GMSQbqinOMOPbNSrQA==
 
 lz-string@^1.5.0:
   version "1.5.0"
